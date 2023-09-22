@@ -3,12 +3,12 @@ import { HydratedDocument } from 'mongoose';
 
 export type UserDocument = HydratedDocument<UserEntity>;
 
-@Schema({ collection: 'Staffing.users' })
+@Schema({ collection: 'users' })
 export class UserEntity {
   @Prop({ type: String, required: true, unique: true, index: true })
   email: string;
 
-  @Prop({ type: String, required: true, select: false })
+  @Prop({ type: String, required: true })
   password: string;
 
   @Prop({ type: String, required: true })

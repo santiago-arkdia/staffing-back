@@ -6,6 +6,7 @@ import { UserEntity, UserDocument } from './../entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { error } from 'console';
+// import { LoginUserDto } from '../dto/loginUser.dto';
 
 export type User = any;
 
@@ -13,18 +14,22 @@ export type User = any;
 export class UsersService {
   constructor(
     @InjectModel(UserEntity.name)
-    private readonly userModel: Model<UserDocument>
+    private readonly userModel: Model<UserDocument>,
   ) {}
-
 
   async createUser(createUserDto: CreateUserDto) {
     const newUser = new this.userModel(createUserDto);
-    console.log('estoy aca');
     return newUser.save();
   }
 
-  async findUserLogin(username: string): Promise<User | undefined> {
-    return this.userModel.find((user) => user.username === username);
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    try {
+      const user = await this.userModel.findOne({ email }).exec();
+      console.log(user);
+      return user;
+    } catch (error) {
+      throw new Error(`Error searching for user by email: ${error.message}`);
+    }
   }
 
   async findAllUsers(): Promise<User[]> {
@@ -66,7 +71,6 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    // Busca el usuario por ID y elimínalo de la base de datos
     const deletedUser = await this.userModel.findByIdAndRemove(id);
     if (!deletedUser) {
       throw new error(`El usuario con ID ${id} no se encontró`);

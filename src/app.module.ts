@@ -12,7 +12,7 @@ import { ConnectionController } from './connection.controller';
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_DATABASE_URL, {
-      autoIndex: true,
+      autoIndex: true
     }),
     UsersModule,
     AuthModule,
