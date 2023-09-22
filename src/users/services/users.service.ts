@@ -5,7 +5,6 @@ import { UpdateUserDto } from './../dto/update-user.dto';
 import { UserEntity, UserDocument } from './../entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { error } from 'console';
 // import { LoginUserDto } from '../dto/loginUser.dto';
 
 export type User = any;
@@ -17,9 +16,38 @@ export class UsersService {
     private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto) {
+  // async createUser(createUserDto: CreateUserDto) {
+  //   const newUser = new this.userModel(createUserDto);
+  //   return newUser.save();
+  // }
+  async createUser(currentUser: UserEntity, createUserDto: CreateUserDto) {
+    if (!this.canCreateUser(currentUser.role, createUserDto.role)) {
+      throw new Error('No tienes permiso para crear este tipo de usuario.');
+    }
+
     const newUser = new this.userModel(createUserDto);
     return newUser.save();
+  }
+
+  private readonly rolesPermitted: Record<string, string[]> = {
+    Admin: ['Admin','Nomina','GestorCuenta','Terminaciones','TerminacionesAnalista','AnalistaNomina','Vinculaciones','VinculacionesAnalista','SeguridadSocial','SeguridadSoAnalista','Juridico','JuridicoAnalista','Cliente','Colaborador'],
+    Nomina: ['GestorCuenta','Terminaciones','TerminacionesAnalista','AnalistaNomina','Vinculaciones','VinculacionesAnalista','SeguridadSocial','SeguridadSoAnalista','Juridico','JuridicoAnalista'],
+    Terminaciones: ['TerminacionesAnalista'],
+    Vinculaciones:['VinculacionesAnalista'],
+    SeguridadSocial: ['SeguridadSocial','SeguridadSoAnalista'],
+    Juridico:['Juridico','JuridicoAnalista'],
+    Cliente:['Cliente','Colaborador']
+  };
+
+  private canCreateUser(currentUserRole: string, newUserRole: string): boolean {
+    console.log(currentUserRole)
+    const permittedRoles = this.rolesPermitted[currentUserRole];
+    if (permittedRoles) {
+      console.log("estoy aca, es permitido", permittedRoles)
+      return permittedRoles.includes(newUserRole);
+    } else {
+      return false; 
+    }
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
@@ -42,7 +70,7 @@ export class UsersService {
     const user = await this.userModel.findById(id).exec();
 
     if (!user) {
-      throw new error('Usuario no encontrado');
+      throw new Error('Usuario no encontrado');
     }
 
     if (updateUserDto.description !== undefined) {
@@ -71,7 +99,7 @@ export class UsersService {
   async remove(id: string) {
     const deletedUser = await this.userModel.findByIdAndRemove(id);
     if (!deletedUser) {
-      throw new error(`El usuario con ID ${id} no se encontró`);
+      throw new Error(`El usuario con ID ${id} no se encontró`);
     }
     return `Usuario con ID ${id} eliminado correctamente`;
   }

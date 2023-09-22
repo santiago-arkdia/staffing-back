@@ -10,6 +10,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './../services/users.service';
 import { CreateUserDto } from './../dto/create-user.dto';
@@ -17,6 +18,7 @@ import { UpdateUserDto } from './../dto/update-user.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { UserEntity } from './../entities/user.entity';
 
 @ApiBearerAuth()
 @ApiTags('usuarios')
@@ -26,9 +28,14 @@ export class UsersController {
 
   @UseGuards(AuthGuard)
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
+  createUser(@Body() createUserDto: CreateUserDto, @Req() req) {
+    const currentUser: UserEntity = req.user; 
+    return this.usersService.createUser(currentUser, createUserDto);
   }
+  // @Post()
+  // createUser(@Body() createUserDto: CreateUserDto) {
+  //   return this.usersService.createUser(createUserDto);
+  // }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
