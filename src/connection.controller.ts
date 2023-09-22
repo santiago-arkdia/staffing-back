@@ -10,7 +10,6 @@ export class ConnectionController {
   async checkConnection() {
     try {
       await this.usersService.checkMongoDBConnection();
-      console.log('Connected to MongoDB Atlas')
       return 'Connected to MongoDB Atlas';
     } catch (error) {
       return 'Not connected to MongoDB Atlas';

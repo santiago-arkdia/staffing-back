@@ -9,50 +9,48 @@ import {
   Delete,
   NotFoundException,
   InternalServerErrorException,
-  // Param,
-  // Delete,
-  // UseGuards,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './../services/users.service';
 import { CreateUserDto } from './../dto/create-user.dto';
 import { UpdateUserDto } from './../dto/update-user.dto';
-// import { ApiBearerAuth } from '@nestjs/swagger';
-// import { AuthGuard } from 'src/auth/auth.guard';
-// import { UserService } from './../services/users.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiTags } from '@nestjs/swagger';
 
-// @ApiBearerAuth()
+@ApiBearerAuth()
 @ApiTags('usuarios')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @Post()
   createUser(@Body() createUserDto: CreateUserDto) {
-    console.log("mirame")
     return this.usersService.createUser(createUserDto);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(id, updateUserDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   findAllUsers() {
     return this.usersService.findAllUsers();
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    // return this.usersService.remove(id);
     try {
       const result = await this.usersService.remove(id);
       return { message: result };

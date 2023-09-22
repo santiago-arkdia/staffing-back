@@ -25,7 +25,6 @@ export class UsersService {
   async findByEmail(email: string): Promise<UserEntity | null> {
     try {
       const user = await this.userModel.findOne({ email }).exec();
-      console.log(user);
       return user;
     } catch (error) {
       throw new Error(`Error searching for user by email: ${error.message}`);
@@ -65,7 +64,6 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    console.log(`This action returns a #${id} user`);
     const user = await this.userModel.findById(id).exec();
     return user;
   }
