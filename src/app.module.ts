@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConnectionController } from './connection.controller';
-// import { CorsMiddleware } from '@nestjs/platform-express';
+import { AllowAnyIPMiddleware } from './middleware/auth.middleware';
 
 @Module({
   imports: [
@@ -21,9 +21,9 @@ import { ConnectionController } from './connection.controller';
   controllers: [AppController, ConnectionController],
   providers: [AppService],
 })
-export class AppModule {}
-// export class AppModule implements NestModule {
-//   configure(consumer: MiddlewareConsumer) {
-//     consumer.apply(CorsMiddleware).forRoutes('*');
-//   }
-// }
+// export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AllowAnyIPMiddleware).forRoutes('*'); // Aplica la middleware a todas las rutas
+  }
+}
