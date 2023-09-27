@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe({
     transform: true, // Transforma los valores recibidos en instancias de clases DTO
     whitelist: true, // Elimina campos no decorados con validadores

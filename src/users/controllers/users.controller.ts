@@ -30,6 +30,7 @@ export class UsersController {
   @Post()
   createUser(@Body() createUserDto: CreateUserDto, @Req() req) {
     const currentUser: UserEntity = req.user; 
+    console.log("currentUser",currentUser)
     return this.usersService.createUser(currentUser, createUserDto);
   }
   // @Post()

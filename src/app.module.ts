@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConnectionController } from './connection.controller';
+// import { CorsMiddleware } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -21,3 +22,8 @@ import { ConnectionController } from './connection.controller';
   providers: [AppService],
 })
 export class AppModule {}
+// export class AppModule implements NestModule {
+//   configure(consumer: MiddlewareConsumer) {
+//     consumer.apply(CorsMiddleware).forRoutes('*');
+//   }
+// }
