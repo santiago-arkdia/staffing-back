@@ -45,6 +45,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   role: string;
+
+  
 }
 
 export class UpdateAuthorDto extends PartialType(

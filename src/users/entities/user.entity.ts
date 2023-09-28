@@ -2,8 +2,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type UserDocument = HydratedDocument<UserEntity>;
 
+export type UserDocument = HydratedDocument<UserEntity>;
+@Schema()
+export class ServiceEntity {
+  @Prop()
+  nameService: string;
+
+  @Prop()
+  enabled: boolean;
+}
 @Schema({ collection: 'users' })
 export class UserEntity {
   @Prop({ type: String, required: true, unique: true, index: true })
@@ -32,6 +40,9 @@ export class UserEntity {
 
   @Prop({ type: String })
   image: string;
+
+  @Prop([ServiceEntity])
+  services: ServiceEntity[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserEntity);

@@ -19,6 +19,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './../entities/user.entity';
+import { UpdateUserServiceDto } from '../dto/update-services-user.dto';
 
 @ApiBearerAuth()
 @ApiTags('usuarios')
@@ -42,6 +43,15 @@ export class UsersController {
   @Patch(':id')
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(id, updateUserDto);
+  }
+
+
+  //patch para servicios
+  @UseGuards(AuthGuard)
+  @Patch('services/:id')
+  updateServisesUser(@Param('id') id: string, @Body() updateUserServiceDto: UpdateUserServiceDto) {
+    console.log(updateUserServiceDto)
+    return this.usersService.updateUser(id, updateUserServiceDto);
   }
 
   @UseGuards(AuthGuard)

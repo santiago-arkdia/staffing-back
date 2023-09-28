@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './../dto/create-user.dto';
 import { UpdateUserDto } from './../dto/update-user.dto';
+import  {UpdateUserServiceDto}  from './../dto/update-services-user.dto';
 import { UserEntity, UserDocument } from './../entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -102,5 +103,23 @@ export class UsersService {
       throw new Error(`El usuario con ID ${id} no se encontró`);
     }
     return `Usuario con ID ${id} eliminado correctamente`;
+  }
+
+  async updateServisesUser(
+    id: string,
+    updateUserServiceDto: UpdateUserServiceDto,
+  ): Promise<UserEntity> {
+    const user = await this.userModel.findById(id).exec();
+
+    if (!user) {
+      throw new Error('Usuario no encontrado');
+    }
+    if (updateUserServiceDto.services !== undefined) {
+      user.services = updateUserServiceDto.services;
+    }
+
+    await user.save();
+
+    return user;
   }
 }
