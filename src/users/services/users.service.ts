@@ -74,6 +74,30 @@ export class UsersService {
     }
   }
 
+
+  // async createUser(
+  //   currentUser: UserEntity,
+  //   createUserDto: CreateUserDto,
+  //   createdByEmail: string,
+  // ) {
+  //   if (!this.canCreateUser(currentUser.role, createUserDto.role)) {
+  //     throw new Error('No tienes permiso para crear este tipo de usuario.');
+  //   }
+  //   const newUser = new this.userModel(createUserDto);
+  //   newUser.createdBy = createdByEmail;
+  //   return newUser.save();
+  // }
+
+
+  async getRolesPermitted(currentUser: any): Promise<string[] | null> {
+    // console.log(currentUser)
+    if (currentUser && currentUser.role in this.rolesPermitted) {
+      return this.rolesPermitted[currentUser.role];
+    } else {
+      return null;
+    }
+  }
+  
   async findByEmail(email: string): Promise<UserEntity | null> {
     try {
       const user = await this.userModel.findOne({ email }).exec();

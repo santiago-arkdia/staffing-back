@@ -9,7 +9,7 @@ export class UserEntity {
   @Prop({ type: String, required: true, unique: true, index: true })
   email: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true})
   password: string;
 
   @Prop({ type: String, required: true })

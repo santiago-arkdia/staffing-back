@@ -29,14 +29,28 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Post()
   createUser(@Body() createUserDto: CreateUserDto, @Req() req) {
-    const currentUser: UserEntity = req.user; 
+    const currentUser: UserEntity = req.user;
     const createdByEmail = currentUser.email;
-    return this.usersService.createUser(currentUser, createUserDto, createdByEmail);
+    return this.usersService.createUser(
+      currentUser,
+      createUserDto,
+      createdByEmail,
+    );
   }
   // @Post()
   // createUser(@Body() createUserDto: CreateUserDto) {
   //   return this.usersService.createUser(createUserDto);
   // }
+
+  @UseGuards(AuthGuard)
+  @Get('roles-permitted')
+  async getRolesPermitted(@Req() req){
+    // console.log("roles permited", req)
+    const currentUser: UserEntity = req.user; // Supongo que tu usuario actual está en req.user
+    // console.log(currentUser)
+    return this.usersService.getRolesPermitted(currentUser);
+    // return currentUser
+  }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
@@ -64,9 +78,26 @@ export class UsersController {
       return { message: result };
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw error; 
+        throw error;
       }
-      throw new InternalServerErrorException(`El usuario con ID ${id} no se encontró`); 
+      throw new InternalServerErrorException(
+        `El usuario con ID ${id} no se encontró`,
+      );
     }
   }
+
+  // @Get('roles-permitted')
+  // async getRolesPermitted(@Req() req): Promise<string[]> {
+  //   const currentUser: UserEntity = req.user; // Supongo que tu usuario actual está en req.user
+  //   return this.usersService.getRolesPermitted(currentUser);
+  // }
+
+  // @UseGuards(AuthGuard)
+  // @Post()
+  // createUser(@Body() createUserDto: CreateUserDto, @Req() req) {
+  //   const currentUser: UserEntity = req.user;
+  //   const createdByEmail = currentUser.email;
+  //   return this.usersService.createUser(currentUser, createUserDto, createdByEmail);
+  // }
+
 }
