@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from 'src/users/dto/loginUser.dto';
 
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
