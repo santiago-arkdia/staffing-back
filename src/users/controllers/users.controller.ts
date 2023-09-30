@@ -22,7 +22,7 @@ import { UserEntity } from './../entities/user.entity';
 
 @ApiBearerAuth()
 @ApiTags('usuarios')
-@Controller('users')
+@Controller('api/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -30,8 +30,8 @@ export class UsersController {
   @Post()
   createUser(@Body() createUserDto: CreateUserDto, @Req() req) {
     const currentUser: UserEntity = req.user; 
-    console.log("currentUser",currentUser)
-    return this.usersService.createUser(currentUser, createUserDto);
+    const createdByEmail = currentUser.email;
+    return this.usersService.createUser(currentUser, createUserDto, createdByEmail);
   }
   // @Post()
   // createUser(@Body() createUserDto: CreateUserDto) {

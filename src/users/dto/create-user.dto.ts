@@ -45,6 +45,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   role: string;
+
+  // @ApiProperty()
+  // @IsString()
+  // @IsEmail()
+  // createdBy: string;
 }
 
 export class UpdateAuthorDto extends PartialType(

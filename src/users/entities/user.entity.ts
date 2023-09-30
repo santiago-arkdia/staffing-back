@@ -32,6 +32,9 @@ export class UserEntity {
 
   @Prop({ type: String })
   image: string;
+
+  @Prop({ type: String})
+  createdBy: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserEntity);

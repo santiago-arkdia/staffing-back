@@ -16,37 +16,61 @@ export class UsersService {
     private readonly userModel: Model<UserDocument>,
   ) {}
 
-  // async createUser(createUserDto: CreateUserDto) {
-  //   const newUser = new this.userModel(createUserDto);
-  //   return newUser.save();
-  // }
-  async createUser(currentUser: UserEntity, createUserDto: CreateUserDto) {
+  async createUser(
+    currentUser: UserEntity,
+    createUserDto: CreateUserDto,
+    createdByEmail: string,
+  ) {
     if (!this.canCreateUser(currentUser.role, createUserDto.role)) {
       throw new Error('No tienes permiso para crear este tipo de usuario.');
     }
-
     const newUser = new this.userModel(createUserDto);
+    newUser.createdBy = createdByEmail;
     return newUser.save();
   }
 
   private readonly rolesPermitted: Record<string, string[]> = {
-    Admin: ['Admin','Nomina','GestorCuenta','Terminaciones','TerminacionesAnalista','AnalistaNomina','Vinculaciones','VinculacionesAnalista','SeguridadSocial','SeguridadSoAnalista','Juridico','JuridicoAnalista','Cliente','Colaborador'],
-    Nomina: ['GestorCuenta','Terminaciones','TerminacionesAnalista','AnalistaNomina','Vinculaciones','VinculacionesAnalista','SeguridadSocial','SeguridadSoAnalista','Juridico','JuridicoAnalista'],
+    Admin: [
+      'Admin',
+      'Nomina',
+      'GestorCuenta',
+      'Terminaciones',
+      'TerminacionesAnalista',
+      'AnalistaNomina',
+      'Vinculaciones',
+      'VinculacionesAnalista',
+      'SeguridadSocial',
+      'SeguridadSoAnalista',
+      'Juridico',
+      'JuridicoAnalista',
+      'Cliente',
+      'Colaborador',
+    ],
+    Nomina: [
+      'GestorCuenta',
+      'Terminaciones',
+      'TerminacionesAnalista',
+      'AnalistaNomina',
+      'Vinculaciones',
+      'VinculacionesAnalista',
+      'SeguridadSocial',
+      'SeguridadSoAnalista',
+      'Juridico',
+      'JuridicoAnalista',
+    ],
     Terminaciones: ['TerminacionesAnalista'],
-    Vinculaciones:['VinculacionesAnalista'],
-    SeguridadSocial: ['SeguridadSocial','SeguridadSoAnalista'],
-    Juridico:['Juridico','JuridicoAnalista'],
-    Cliente:['Cliente','Colaborador']
+    Vinculaciones: ['VinculacionesAnalista'],
+    SeguridadSocial: ['SeguridadSocial', 'SeguridadSoAnalista'],
+    Juridico: ['Juridico', 'JuridicoAnalista'],
+    Cliente: ['Cliente', 'Colaborador'],
   };
 
   private canCreateUser(currentUserRole: string, newUserRole: string): boolean {
-    console.log(currentUserRole)
     const permittedRoles = this.rolesPermitted[currentUserRole];
     if (permittedRoles) {
-      console.log("estoy aca, es permitido", permittedRoles)
       return permittedRoles.includes(newUserRole);
     } else {
-      return false; 
+      return false;
     }
   }
 
@@ -85,9 +109,7 @@ export class UsersService {
       //  Falta aplicar mecanismos de seguridad, como el hash de la contraseña
       user.password = updateUserDto.password;
     }
-
     await user.save();
-
     return user;
   }
 
