@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   MinLength,
   IsNumber,
+  IsOptional,
 } from 'class-validator';
 import { ApiProperty, PartialType, OmitType } from '@nestjs/swagger';
 
@@ -15,17 +16,17 @@ export class CreateUserDto {
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   lastname: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   documentType: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   documentNumber: number;
 
@@ -45,6 +46,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   role: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  cellphone: string;
 
   // @ApiProperty()
   // @IsString()

@@ -15,13 +15,13 @@ export class UserEntity {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: false })
   lastname: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: false })
   documentType: string;
 
-  @Prop({ type: Number, required: true, unique: true, index: true })
+  @Prop({ type: Number, required: false, unique: true, index: true })
   documentNumber: number;
 
   @Prop({ type: String, required: true, default: 'user' })

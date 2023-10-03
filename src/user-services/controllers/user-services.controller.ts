@@ -11,14 +11,14 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { ServicesService } from './../services/user-services.service';
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 // import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
+// import { AdminGuard } from 'src/auth/admin.guard';
 
 @ApiBearerAuth()
 @ApiTags('Servicios-usuarios')
@@ -26,21 +26,22 @@ import { AdminGuard } from 'src/auth/guards/admin.guard';
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard) 
   @Get()
   async findAll() {
+    console.log("Fin all services")
     const services = await this.servicesService.findAll();
     return { services };
   }
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @Get(':role')
   async findByRole(@Param('role') role: string) {
     const services = await this.servicesService.findByRole(role);
     return { services };
   }
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @Post()
   async create(@Body() createServiceDto: CreateServiceDto) {
     const existingService = await this.servicesService.findByRole(
@@ -56,7 +57,7 @@ export class ServicesController {
     return this.servicesService.createService(createServiceDto);
   }
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -75,7 +76,7 @@ export class ServicesController {
     return updatedService;
   }
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @Delete(':role')
   async remove(@Param('role') role: string) {
     const existingService = await this.servicesService.findByRole(role);

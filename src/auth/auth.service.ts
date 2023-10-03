@@ -22,4 +22,18 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
+  
+  async getUserRole(userId: string): Promise<string | null> {
+    // Recupera el usuario por su ID desde tu servicio de usuarios
+    const user = await this.usersService.findOne(userId);
+
+    // Verifica si se encontró un usuario
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
+
+    // Devuelve el rol del usuario
+    return user.role; // Asume que la propiedad 'role' existe en tu modelo de usuario
+  }
 }
+

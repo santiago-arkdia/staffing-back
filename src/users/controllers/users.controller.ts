@@ -45,11 +45,9 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Get('roles-permitted')
   async getRolesPermitted(@Req() req){
-    // console.log("roles permited", req)
-    const currentUser: UserEntity = req.user; // Supongo que tu usuario actual está en req.user
+    const currentUser: UserEntity = req.user; 
     // console.log(currentUser)
     return this.usersService.getRolesPermitted(currentUser);
-    // return currentUser
   }
 
   @UseGuards(AuthGuard)

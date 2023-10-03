@@ -60,61 +60,75 @@
 // }
 
 
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+// import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 
-@Injectable()
-export class AdminGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
-    const user = request;
-    console.log(request.rawHeaders[1])
-    // console.log(user)
+// @Injectable()
+// export class AdminGuard implements CanActivate {
+//   canActivate(context: ExecutionContext): boolean {
 
-    if (user && user.role === 'Admin') {
-      return true;
-    }
+//     const request = context.switchToHttp().getRequest();
+//     const user = request;
+//     console.log(request.rawHeaders[1])
 
-    return false;
-  }
-}
-
-
-// import { Controller, Get, Request, UseGuards } from '@nestjs/common';
-// import { AuthGuard } from '../auth.guard';
-// import { AuthController } from '../auth.controller'; // Asegúrate de importar el servicio AuthService
-
-// @Controller('auth')
-// export class AdminGuard {
-//   constructor(private authService: AuthController) {} // Inyecta el servicio AuthService
-
-//   @UseGuards(AuthGuard)
-//   @Get('profile')
-//   async getProfile(@Request() req) {
-//     try {
-//       // Obtén el usuario desde la solicitud
-//       const user = req.user; // Suponiendo que el usuario se almacena en req.user
-
-//       if (user) {
-//         // Si hay un usuario en la solicitud, obtén su rol utilizando el servicio AuthService
-//         const userRole = await this.authService.getProfile(user.id); // Supongamos que tienes un método getUserRole en AuthService
-
-//         if (userRole === 'Admin') {
-//           // Realiza la lógica para usuarios administradores
-//           return 'Perfil de administrador';
-//         } else {
-//           // Realiza la lógica para otros roles
-//           return 'Perfil de otro tipo de usuario';
-//         }
-//       } else {
-//         return 'No se encontró un usuario en la solicitud';
-//       }
-//     } catch (error) {
-//       // Maneja errores si es necesario
-//       throw error;
+//     if (user && user.role === 'Admin') {
+//       return true;
 //     }
+
+//     return false;
 //   }
 // }
 
+
+// import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+// import { Reflector } from '@nestjs/core';
+
+// @Injectable()
+// export class AdminGuard implements CanActivate {
+//   constructor(private readonly reflector: Reflector) {}
+//   canActivate(context: ExecutionContext): boolean {
+//     console.log("aca ando")
+    
+//     const request = context.switchToHttp().getRequest();
+//     console.log(request)
+//     const user = request.user; // Suponiendo que el usuario actual se encuentra en la propiedad 'user' de la solicitud
+
+//     if (!user || user.role !== 'admin') {
+//       return false; // El usuario no tiene el rol de 'admin', por lo que se deniega el acceso
+//     }
+
+//     return true; // El usuario tiene el rol de 'admin', por lo que se permite el acceso
+//   }
+// }
+
+
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { AuthService } from './auth.service';
+
+@Injectable()
+export class AdminGuard implements CanActivate {
+  constructor(private authService: AuthService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+
+    // Obtén el usuario desde la solicitud
+    const user = request.user; // Suponiendo que el usuario se almacena en req.user
+
+    if (!user) {
+      return false; // Si no hay usuario, la autorización falla
+    }
+
+    // Usa el servicio AuthService para obtener el rol del usuario
+    const userRole = await this.authService.getUserRole(user.id);
+
+    // Verifica si el rol es "Admin" (o el rol que uses para administradores)
+    if (userRole === 'Admin') {
+      return true; // Si el usuario es un administrador, la autorización es exitosa
+    }
+
+    return false; // Si el usuario no es un administrador, la autorización falla
+  }
+}
 // auth.guard.ts
 
 // import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
