@@ -15,6 +15,7 @@ import { LoginDto } from 'src/users/dto/loginUser.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 
+
 @ApiTags('Auth usuarios')
 @Controller('api/auth')
 export class AuthController {
@@ -23,6 +24,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   signIn(@Body() loginDto: LoginDto) {
+    console.log(loginDto)
     return this.authService.signIn(loginDto);
   }
 

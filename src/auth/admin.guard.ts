@@ -101,34 +101,34 @@
 // }
 
 
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { AuthService } from './auth.service';
+// import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+// import { AuthService } from './auth.service';
 
-@Injectable()
-export class AdminGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
+// @Injectable()
+// export class AdminGuard implements CanActivate {
+//   constructor(private authService: AuthService) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+//   async canActivate(context: ExecutionContext): Promise<boolean> {
+//     const request = context.switchToHttp().getRequest();
 
-    // Obtén el usuario desde la solicitud
-    const user = request.user; // Suponiendo que el usuario se almacena en req.user
+//     // Obtén el usuario desde la solicitud
+//     const user = request.user; // Suponiendo que el usuario se almacena en req.user
 
-    if (!user) {
-      return false; // Si no hay usuario, la autorización falla
-    }
+//     if (!user) {
+//       return false; // Si no hay usuario, la autorización falla
+//     }
 
-    // Usa el servicio AuthService para obtener el rol del usuario
-    const userRole = await this.authService.getUserRole(user.id);
+//     // Usa el servicio AuthService para obtener el rol del usuario
+//     const userRole = await this.authService.getUserRole(user.id);
 
-    // Verifica si el rol es "Admin" (o el rol que uses para administradores)
-    if (userRole === 'Admin') {
-      return true; // Si el usuario es un administrador, la autorización es exitosa
-    }
+//     // Verifica si el rol es "Admin" (o el rol que uses para administradores)
+//     if (userRole === 'Admin') {
+//       return true; // Si el usuario es un administrador, la autorización es exitosa
+//     }
 
-    return false; // Si el usuario no es un administrador, la autorización falla
-  }
-}
+//     return false; // Si el usuario no es un administrador, la autorización falla
+//   }
+// }
 // auth.guard.ts
 
 // import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
@@ -160,3 +160,123 @@ export class AdminGuard implements CanActivate {
 //     return false; // Denegar el acceso si el rol no coincide
 //   }
 // }
+
+
+// import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+// import { Reflector } from '@nestjs/core';
+// import { JwtService } from '@nestjs/jwt';
+
+// @Injectable()
+// export class AdminGuard implements CanActivate {
+//   constructor(
+//     private readonly reflector: Reflector,
+//     private readonly jwtService: JwtService,
+//   ) {}
+
+//   canActivate(context: ExecutionContext): boolean {
+//     console.log("Aca esta, si valida")
+//     const roles = this.reflector.get<string[]>('role', context.getHandler());
+//     console.log("roles", roles)
+//     if (!roles || !roles.includes('Admin')) {
+//       return true;
+//     }
+
+//     const request = context.switchToHttp().getRequest();
+//     console.log(request)
+//     const authHeader = request.headers.authorization;
+//     console.log(authHeader)
+//     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+//       return false;
+//     }
+
+//     const token = authHeader.substring(7);
+//     console.log(token)
+//     try {
+//       const decoded = this.jwtService.verify(token);
+//       console.log(decoded)
+//       return decoded.isAdmin === true;
+//     } catch (err) {
+//       return false;
+//     }
+//   }
+// }
+
+
+// import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+// import { Reflector } from '@nestjs/core';
+// import { JwtService } from '@nestjs/jwt';
+// import { HttpException, HttpStatus } from '@nestjs/common';
+
+// @Injectable()
+// export class AdminGuard implements CanActivate {
+//   constructor(
+//     private readonly reflector: Reflector,
+//     private readonly jwtService: JwtService,
+//   ) {}
+
+//   canActivate(context: ExecutionContext): boolean {
+//     const roles = this.reflector.get<string[]>('roles', context.getHandler());
+//     console.log("role", roles)
+//     if (!roles || !roles.includes('admin')) {
+//       return true;
+//     }
+
+//     const request = context.switchToHttp().getRequest();
+//     const authHeader = request.headers.authorization;
+//     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+//       throw new HttpException('No se proporcionó un token de autenticación', HttpStatus.UNAUTHORIZED);
+//     }
+
+//     const token = authHeader.substring(7);
+//     try {
+//       const decoded = this.jwtService.verify(token);
+//       if (decoded.isAdmin !== true) {
+//         throw new HttpException('No tienes permiso para acceder a este recurso', HttpStatus.FORBIDDEN);
+//       }
+//       return true;
+//     } catch (err) {
+//       throw new HttpException('No tienes permiso para acceder a este recurso', HttpStatus.FORBIDDEN);
+//     }
+//   }
+// }
+
+
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { HttpException, HttpStatus } from '@nestjs/common';
+
+@Injectable()
+export class AdminGuard implements CanActivate {
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    
+    if (!roles || !roles.includes('Admin')) {
+      return true; // No se requiere autenticación de administrador para esta ruta
+    }
+
+    const request = context.switchToHttp().getRequest();
+    const authHeader = request.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new HttpException('No se proporcionó un token de autenticación', HttpStatus.UNAUTHORIZED);
+    }
+
+    const token = authHeader.substring(7);
+
+    try {
+      const decoded = this.jwtService.verify(token);
+      if (!decoded.isAdmin) {
+        throw new HttpException('No tienes permiso para acceder a este recurso', HttpStatus.FORBIDDEN);
+      }
+      return true; // Usuario autenticado como administrador
+    } catch (err) {
+      throw new HttpException('Token JWT no válido', HttpStatus.UNAUTHORIZED);
+    }
+  }
+}
