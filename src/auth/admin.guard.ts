@@ -255,20 +255,22 @@ export class AdminGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
-    
-    if (!roles || !roles.includes('admin')) {
+    console.log(roles)
+    if (!roles || !roles.includes('Admin')) {
       return true; // No se requiere autenticación de administrador para esta ruta
     }
 
     const request = context.switchToHttp().getRequest();
+    console.log(request)
     const authHeader = request.headers.authorization;
+    console.log(authHeader)
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new HttpException('No se proporcionó un token de autenticación', HttpStatus.UNAUTHORIZED);
     }
 
     const token = authHeader.substring(7);
-
+    console.log(token)
     try {
       const decoded = this.jwtService.verify(token);
       if (!decoded.isAdmin) {
