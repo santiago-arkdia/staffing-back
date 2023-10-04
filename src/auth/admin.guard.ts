@@ -256,7 +256,7 @@ export class AdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
     
-    if (!roles || !roles.includes('Admin')) {
+    if (!roles || !roles.includes('admin')) {
       return true; // No se requiere autenticación de administrador para esta ruta
     }
 

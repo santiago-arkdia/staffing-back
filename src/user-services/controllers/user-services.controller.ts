@@ -11,14 +11,15 @@ import {
   Param,
   Post,
   Put,
-  // UseGuards,
+  UseGuards,
 } from '@nestjs/common';
 import { ServicesService } from './../services/user-services.service';
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 // import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiTags } from '@nestjs/swagger';
-// import { AdminGuard } from 'src/auth/admin.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @ApiBearerAuth()
 @ApiTags('Servicios-usuarios')
@@ -26,7 +27,8 @@ import { ApiTags } from '@nestjs/swagger';
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
-  // @UseGuards(AdminGuard) 
+  @UseGuards(AdminGuard) 
+  @Roles('Admin')
   @Get()
   async findAll() {
     console.log("Fin all services")
