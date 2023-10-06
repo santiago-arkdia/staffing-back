@@ -1,47 +1,4 @@
 /* eslint-disable prettier/prettier */
-// import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-// import { Reflector } from '@nestjs/core';
-// import { JwtService } from '@nestjs/jwt';
-// import { HttpException, HttpStatus } from '@nestjs/common';
-
-// @Injectable()
-// export class AdminGuard implements CanActivate {
-//   constructor(
-//     private readonly reflector: Reflector,
-//     private readonly jwtService: JwtService,
-//   ) {}
-
-//   canActivate(context: ExecutionContext): boolean {
-//     const roles = this.reflector.get<string[]>('roles', context.getHandler());
-//     console.log(roles)
-//     if (!roles || !roles.includes('Admin')) {
-//       return true; // No se requiere autenticación de administrador para esta ruta
-//     }
-
-//     const request = context.switchToHttp().getRequest();
-//     // console.log(request)
-//     const authHeader = request.headers.authorization;
-//     console.log(authHeader)
-
-//     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-//       throw new HttpException('No se proporcionó un token de autenticación', HttpStatus.UNAUTHORIZED);
-//     }
-
-//     const token = authHeader.substring(7);
-//     console.log("token", token)
-//     try {
-//       const decoded = this.jwtService.verify(token);
-//       console.log("decoded", decoded)
-//       if (!decoded.isAdmin) {
-//         throw new HttpException('No tienes permiso para acceder a este recurso', HttpStatus.FORBIDDEN);
-//       }
-//       return true; // Usuario autenticado como administrador
-//     } catch (err) {
-//       throw new HttpException('Token JWT no válido', HttpStatus.UNAUTHORIZED);
-//     }
-//   }
-// }
-
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';

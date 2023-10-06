@@ -14,10 +14,10 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './../services/users.service';
 import { CreateUserDto } from './../dto/create-user.dto';
+import { CreateUserClientDto } from './../dto/create-user-client.dto';
 import { UpdateUserDto } from './../dto/update-user.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './../entities/user.entity';
 
 @ApiBearerAuth()
@@ -34,6 +34,18 @@ export class UsersController {
     return this.usersService.createUser(
       currentUser,
       createUserDto,
+      createdByEmail,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Post("/client")
+  createUserClient(@Body() createUserClient: CreateUserClientDto, @Req() req) {
+    const currentUser: UserEntity = req.user;
+    const createdByEmail = currentUser.email;
+    return this.usersService.createUserClient(
+      currentUser,
+      createUserClient,
       createdByEmail,
     );
   }
@@ -67,6 +79,13 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
+
+  // @UseGuards(AuthGuard)
+  // @Get(':role')
+  // findByRole(@Param('role') role: string) {
+  //   console.log(role)
+  //   return this.usersService.findByRole(role);
+  // }
 
   @UseGuards(AuthGuard)
   @Delete(':id')

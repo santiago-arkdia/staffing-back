@@ -5,10 +5,13 @@ import {
   IsNotEmpty,
   MinLength,
   IsNumber,
+  IsOptional,
+  // IsDate,
+  IsBoolean,
 } from 'class-validator';
 import { ApiProperty, PartialType, OmitType } from '@nestjs/swagger';
 
-export class CreateUserDto {
+export class CreateUserClientDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -17,23 +20,13 @@ export class CreateUserDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  lastname: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  documentType: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  documentNumber: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
   @IsEmail()
   email: string;
+  
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  cellphone: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -47,16 +40,30 @@ export class CreateUserDto {
   role: string;
 
   // @ApiProperty()
-  // @IsOptional()
-  // @IsNumber()
-  // cellphone: string;
+  // @IsDate()
+  // dateClose : Date;
+
+  @ApiProperty()
+  @IsString()
+  frequencyPay: string;
 
   // @ApiProperty()
-  // @IsString()
-  // @IsEmail()
-  // createdBy: string;
+  // @IsDate()
+  // payDay: Date;
+
+  @ApiProperty()
+  @IsString()
+  frequencyPayBonus: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  projected: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
+  chat : boolean;
 }
 
 export class UpdateAuthorDto extends PartialType(
-  OmitType(CreateUserDto, ['name']),
+  OmitType(CreateUserClientDto, ['name']),
 ) {}

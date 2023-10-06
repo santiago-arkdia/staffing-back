@@ -10,7 +10,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConnectionController } from './connection.controller';
 import { AllowAnyIPMiddleware } from './middleware/auth.middleware';
 import { AuthService } from './auth/auth.service';
-// import { AdminGuard } from './auth/admin.guard';
 
 
 @Module({
@@ -27,7 +26,7 @@ import { AuthService } from './auth/auth.service';
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],
 })
-// export class AppModule {}
+
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AllowAnyIPMiddleware).forRoutes('*'); // Aplica la middleware a todas las rutas

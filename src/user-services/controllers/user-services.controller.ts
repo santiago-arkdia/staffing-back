@@ -27,8 +27,6 @@ import { Roles } from 'src/auth/roles.decorator';
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
-  @UseGuards(AdminGuard) 
-  @Roles('Admin')
   @Get()
   async findAll() {
     console.log("Fin all services")
@@ -36,14 +34,14 @@ export class ServicesController {
     return { services };
   }
 
-  // @UseGuards(AdminGuard)
   @Get(':role')
   async findByRole(@Param('role') role: string) {
     const services = await this.servicesService.findByRole(role);
     return { services };
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard) 
+  @Roles('Admin')
   @Post()
   async create(@Body() createServiceDto: CreateServiceDto) {
     const existingService = await this.servicesService.findByRole(
@@ -59,7 +57,8 @@ export class ServicesController {
     return this.servicesService.createService(createServiceDto);
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard) 
+  @Roles('Admin')
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -78,7 +77,8 @@ export class ServicesController {
     return updatedService;
   }
 
-  // @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard) 
+  @Roles('Admin')
   @Delete(':role')
   async remove(@Param('role') role: string) {
     const existingService = await this.servicesService.findByRole(role);

@@ -5,7 +5,7 @@ import { UpdateUserDto } from './../dto/update-user.dto';
 import { UserEntity, UserDocument } from './../entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-// import { LoginUserDto } from '../dto/loginUser.dto';
+import { CreateUserClientDto } from '../dto/create-user-client.dto';
 
 export type User = any;
 
@@ -29,39 +29,52 @@ export class UsersService {
     return newUser.save();
   }
 
+  async createUserClient(
+    currentUser: UserEntity,
+    createUserClientDto: CreateUserClientDto,
+    createdByEmail: string,
+  ) {
+    if (!this.canCreateUser(currentUser.role, createUserClientDto.role)) {
+      throw new Error('No tienes permiso para crear este tipo de usuario.');
+    }
+    const newUser = new this.userModel(createUserClientDto);
+    newUser.createdBy = createdByEmail;
+    return newUser.save();
+  }
+
   private readonly rolesPermitted: Record<string, string[]> = {
     Admin: [
       'Admin',
       'Nomina',
-      'GestorCuenta',
+      'Gestor_Cuenta',
       'Terminaciones',
-      'TerminacionesAnalista',
-      'AnalistaNomina',
+      'Terminaciones_Analista',
+      'Analista_Nomina',
       'Vinculaciones',
-      'VinculacionesAnalista',
-      'SeguridadSocial',
-      'SeguridadSoAnalista',
+      'Vinculaciones_Analista',
+      'Seguridad_Social',
+      'Seguridad_So_Analista',
       'Juridico',
-      'JuridicoAnalista',
+      'Juridico_Analista',
       'Cliente',
       'Colaborador',
     ],
     Nomina: [
-      'GestorCuenta',
+      'Gestor_Cuenta',
       'Terminaciones',
-      'TerminacionesAnalista',
-      'AnalistaNomina',
+      'Terminaciones_Analista',
+      'Analista_Nomina',
       'Vinculaciones',
-      'VinculacionesAnalista',
-      'SeguridadSocial',
-      'SeguridadSoAnalista',
+      'Vinculaciones_Analista',
+      'Seguridad_Social',
+      'Seguridad_So_Analista',
       'Juridico',
-      'JuridicoAnalista',
+      'Juridico_Analista',
     ],
-    Terminaciones: ['TerminacionesAnalista'],
-    Vinculaciones: ['VinculacionesAnalista'],
-    SeguridadSocial: ['SeguridadSocial', 'SeguridadSoAnalista'],
-    Juridico: ['Juridico', 'JuridicoAnalista'],
+    Terminaciones: ['Terminaciones_Analista'],
+    Vinculaciones: ['Vinculaciones_Analista'],
+    SeguridadSocial: ['Seguridad_Social', 'Seguridad_So_Analista'],
+    Juridico: ['Juridico', 'Juridico_Analista'],
     Cliente: ['Cliente', 'Colaborador'],
   };
 
@@ -74,21 +87,6 @@ export class UsersService {
     }
   }
 
-
-  // async createUser(
-  //   currentUser: UserEntity,
-  //   createUserDto: CreateUserDto,
-  //   createdByEmail: string,
-  // ) {
-  //   if (!this.canCreateUser(currentUser.role, createUserDto.role)) {
-  //     throw new Error('No tienes permiso para crear este tipo de usuario.');
-  //   }
-  //   const newUser = new this.userModel(createUserDto);
-  //   newUser.createdBy = createdByEmail;
-  //   return newUser.save();
-  // }
-
-
   async getRolesPermitted(currentUser: any): Promise<string[] | null> {
     // console.log(currentUser)
     if (currentUser && currentUser.role in this.rolesPermitted) {
@@ -97,7 +95,7 @@ export class UsersService {
       return null;
     }
   }
-  
+
   async findByEmail(email: string): Promise<UserEntity | null> {
     try {
       const user = await this.userModel.findOne({ email }).exec();
@@ -106,6 +104,15 @@ export class UsersService {
       throw new Error(`Error searching for user by email: ${error.message}`);
     }
   }
+
+  // async findByRole(role: string): Promise<any | null> {
+  //   try {
+  //     const user = await this.userModel.find({ role }).exec();
+  //     return user;
+  //   } catch (error) {
+  //     throw new Error(`Error searching for user by email: ${error.message}`);
+  //   }
+  // }
 
   async findAllUsers(): Promise<User[]> {
     return this.userModel.find().exec();
@@ -143,7 +150,7 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    const deletedUser = await this.userModel.findByIdAndRemove(id);
+    const deletedUser = await this.userModel.findByIdAndRemove(id).exec();
     if (!deletedUser) {
       throw new Error(`El usuario con ID ${id} no se encontró`);
     }
