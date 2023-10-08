@@ -1,5 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+import { ModuleParameterization } from 'src/modules/module-parameterization/entities/module-parameterization.entity';
 import { UserEntity } from 'src/modules/users/entities/user.entity';
 
 @Schema()
@@ -10,8 +11,8 @@ export class Client {
   @Prop({ type: String, required: true })
   phone: string;
 
-  // @Prop()
-  // closeBillingDate: Date;
+  @Prop({ type: Date })
+  closeBillingDate: Date;
 
   @Prop()
   payrollFrequency: string;
@@ -19,8 +20,8 @@ export class Client {
   @Prop()
   payDay: number;
 
-  // @Prop({ type: Date })
-  // premiumPaymentDate: Date;
+  @Prop({ type: Date })
+  premiumPaymentDate: Date;
 
   @Prop()
   projected: boolean;
@@ -33,6 +34,9 @@ export class Client {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: UserEntity;
+
+  @Prop({ type: mongoose.Schema.Types.Array, ref: 'ModuleParameterization' })
+  moduleParameterization: ModuleParameterization[];
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);

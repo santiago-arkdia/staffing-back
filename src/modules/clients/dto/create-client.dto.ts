@@ -1,5 +1,6 @@
 import { Schema, Prop } from '@nestjs/mongoose';
-import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsNumber, IsObject, IsString } from 'class-validator';
+import { ModuleParameterization } from 'src/modules/module-parameterization/entities/module-parameterization.entity';
 
 @Schema()
 export class CreateClientsDto{
@@ -9,8 +10,8 @@ export class CreateClientsDto{
   @IsString()
   phone: string;
 
-//   @IsDate()
-//   closeBillingDate: Date;
+  @IsString()
+  closeBillingDate: Date;
 
   @IsString()
   payrollFrequency: string;
@@ -18,8 +19,8 @@ export class CreateClientsDto{
   @IsNumber()
   payDay: number;
 
-//   @IsDate()
-//   premiumPaymentDate: Date;
+  @IsString()
+  premiumPaymentDate: Date;
 
   @IsBoolean()
   projected: boolean;
@@ -32,4 +33,7 @@ export class CreateClientsDto{
 
   @IsString()
   user: string;
+
+  @IsObject()
+  moduleParameterization: ModuleParameterization[];
 }

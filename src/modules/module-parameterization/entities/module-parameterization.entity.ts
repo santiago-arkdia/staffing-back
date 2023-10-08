@@ -3,6 +3,9 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 @Schema({ collection: 'module-parameterization' })
 export class ModuleParameterization {
   @Prop({ type: String, required: true })
+  role: string;
+
+  @Prop({ type: String, required: true })
   module: string;
 
   @Prop({ type: String, required: true })

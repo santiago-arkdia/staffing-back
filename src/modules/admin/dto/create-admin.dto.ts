@@ -16,7 +16,7 @@ export class CreateAdminsDto{
   @IsNumber()
   documentNumber: string;
 
-  @IsNumber()
+  @IsString()
   type: string;
 
   @IsString()

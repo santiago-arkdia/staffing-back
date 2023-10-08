@@ -4,6 +4,9 @@ import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
 @Schema()
 export class CreateModuleParameterizationsDto{
   @IsString()
+  role: string;
+
+  @IsString()
   module: string;
 
   @IsString()

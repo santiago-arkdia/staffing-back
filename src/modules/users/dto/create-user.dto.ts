@@ -27,4 +27,7 @@ export class CreateUserDto {
   @IsString()
   role: string;
 
+  @IsString()
+  image: string;
+
 }

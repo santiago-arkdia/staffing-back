@@ -18,7 +18,7 @@ export class Admin {
   documentNumber: number;
 
   @Prop()
-  type: boolean;
+  type: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: UserEntity;

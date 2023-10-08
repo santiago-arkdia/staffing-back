@@ -17,6 +17,12 @@ export class UserEntity {
 
   @Prop({ type: String, required: true})
   role: string;
+
+  @Prop({ type: String, required: true})
+  image: string;
+
+  @Prop({ type: String})
+  createdBy: string;
   
 /*
   @Prop({ type: String, required: true })
