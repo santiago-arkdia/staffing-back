@@ -1,5 +1,5 @@
 import { Schema } from '@nestjs/mongoose';
-import { IsNumber, IsObject, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 import { ModuleParameterization } from 'src/modules/module-parameterization/entities/module-parameterization.entity';
 
 @Schema()
@@ -22,6 +22,6 @@ export class CreateAdminsDto{
   @IsString()
   user: string;
   
-  @IsObject()
+  @IsArray()
   moduleParameterization: ModuleParameterization[];
 }
