@@ -7,7 +7,9 @@ import { UserEntity, UserSchema } from './entities/user.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: UserEntity.name, schema: UserSchema }]), // Registra el modelo
+    MongooseModule.forFeature([{ 
+      name: UserEntity.name, schema: UserSchema }
+    ]), // Registra el modelo
   ],
   controllers: [UsersController],
   providers: [UsersService],

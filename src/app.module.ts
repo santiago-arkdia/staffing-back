@@ -10,6 +10,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConnectionController } from './connection.controller';
 import { AllowAnyIPMiddleware } from './middleware/auth.middleware';
 import { AuthService } from './auth/auth.service';
+import { NovedadesModule } from './novedades/novedades.module';
 
 
 @Module({
@@ -21,7 +22,7 @@ import { AuthService } from './auth/auth.service';
     UsersModule,
     AuthModule,
     ServicesModule,
-
+    NovedadesModule,
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],
