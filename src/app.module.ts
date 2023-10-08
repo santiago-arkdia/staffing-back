@@ -2,14 +2,22 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { ServicesModule } from './user-services/user-services.module';
-import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { ServicesModule } from './modules/user-services/user-services.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConnectionController } from './connection.controller';
 import { AllowAnyIPMiddleware } from './middleware/auth.middleware';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './modules/auth/auth.service';
+import { ClientsModule } from './modules/clients/clients.module';
+import { AdminsModule } from './modules/admin/admin.module';
+import { PayrollsModule } from './modules/payroll/payroll.module';
+import { CountrysModule } from './modules/business-configuration/country/country.module';
+import { RegionsModule } from './modules/business-configuration/regions/region.module';
+import { CentersCostssModule } from './modules/business-configuration/centers-costs/centers-costs.module';
+import { UtilityCentersModule } from './modules/business-configuration/utility-center/utility-center.module';
+import { ModuleParameterizationsModule } from './modules/module-parameterization/module-parameterization.module';
 
 
 @Module({
@@ -20,8 +28,15 @@ import { AuthService } from './auth/auth.service';
     }),
     UsersModule,
     AuthModule,
+    ClientsModule,
     ServicesModule,
-
+    AdminsModule,
+    PayrollsModule,
+    CountrysModule,
+    RegionsModule,
+    CentersCostssModule,
+    UtilityCentersModule,
+    ModuleParameterizationsModule
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],
