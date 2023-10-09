@@ -19,6 +19,7 @@ import { UtilityCentersModule } from './modules/business-configuration/utility-c
 import { ModuleParameterizationsModule } from './modules/module-parameterization/module-parameterization.module';
 import { ConceptsModule } from './modules/concepts/concepts.module';
 import { CategoriesNewsModule } from './modules/categories-news/categories-news.module';
+import { NoveltyModule } from './modules/novelty/novelty.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CategoriesNewsModule } from './modules/categories-news/categories-news.
     ModuleParameterizationsModule,
     ConceptsModule,
     CategoriesNewsModule,
+    NoveltyModule,
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],
