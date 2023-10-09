@@ -3,7 +3,6 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
-import { ServicesModule } from './modules/user-services/user-services.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -18,30 +17,31 @@ import { RegionsModule } from './modules/business-configuration/regions/region.m
 import { CentersCostssModule } from './modules/business-configuration/centers-costs/centers-costs.module';
 import { UtilityCentersModule } from './modules/business-configuration/utility-center/utility-center.module';
 import { ModuleParameterizationsModule } from './modules/module-parameterization/module-parameterization.module';
-
+import { ConceptsModule } from './modules/concepts/concepts.module';
+import { CategoriesNewsModule } from './modules/categories-news/categories-news.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_DATABASE_URL, {
-      autoIndex: true
+      autoIndex: true,
     }),
     UsersModule,
     AuthModule,
     ClientsModule,
-    ServicesModule,
     AdminsModule,
     PayrollsModule,
     CountrysModule,
     RegionsModule,
     CentersCostssModule,
     UtilityCentersModule,
-    ModuleParameterizationsModule
+    ModuleParameterizationsModule,
+    ConceptsModule,
+    CategoriesNewsModule,
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],
 })
-
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AllowAnyIPMiddleware).forRoutes('*'); // Aplica la middleware a todas las rutas
