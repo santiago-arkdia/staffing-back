@@ -19,9 +19,6 @@ export class ConceptsController {
     @Param('id') id: string,
     @Body() concept: Concept,
   ): Promise<Concept> {
-    console.log('aca');
-    console.log('concept', concept);
-    console.log('id', id);
     return await this.conceptService.update(id, concept);
   }
 
@@ -41,10 +38,5 @@ export class ConceptsController {
     @Param('value') value: string,
   ): Promise<Concept[]> {
     return await this.conceptService.findBy(by, value);
-  }
-
-  @Get('/test')
-  async test() {
-    return await this.conceptService.test();
   }
 }

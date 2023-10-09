@@ -33,10 +33,4 @@ export class ConceptsService {
     const query = { [by]: value };
     return await this.conceptModel.find(query).exec();
   }
-
-  async test() {
-    const tests = 'concept tests';
-    console.log(tests);
-    return await tests;
-  }
 }
