@@ -18,6 +18,7 @@ import { RegionsModule } from './modules/business-configuration/regions/region.m
 import { CentersCostssModule } from './modules/business-configuration/centers-costs/centers-costs.module';
 import { UtilityCentersModule } from './modules/business-configuration/utility-center/utility-center.module';
 import { ModuleParameterizationsModule } from './modules/module-parameterization/module-parameterization.module';
+import { RolessModule } from './modules/roles/roles.module';
 
 
 @Module({
@@ -36,7 +37,8 @@ import { ModuleParameterizationsModule } from './modules/module-parameterization
     RegionsModule,
     CentersCostssModule,
     UtilityCentersModule,
-    ModuleParameterizationsModule
+    ModuleParameterizationsModule,
+    RolessModule
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],

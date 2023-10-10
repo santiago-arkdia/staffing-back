@@ -125,7 +125,7 @@ export class UsersController {
 
 
 @ApiBearerAuth()
-@ApiTags('Usuarios')
+@ApiTags('Users')
 @Controller('api/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
