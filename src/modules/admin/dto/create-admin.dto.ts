@@ -21,6 +21,9 @@ export class CreateAdminsDto{
 
   @IsString()
   user: string;
+
+  @IsNumber()
+  state: number;
   
   @IsArray()
   moduleParameterization: ModuleParameterization[];
