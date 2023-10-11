@@ -19,6 +19,9 @@ export class CreatePayrollsDto{
   @IsString()
   user: string;
 
+  @IsString()
+  state: string;
+
   @IsArray()
   moduleParameterization: ModuleParameterization[];
 }

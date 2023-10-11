@@ -14,10 +14,10 @@ export class UtilityCenter {
   code: string;
 
   @Prop()
-  status: number;
+  state: number;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Region' })
-  state: Region;
+  region: Region;
 }
 
 export const UtilityCenterSchema = SchemaFactory.createForClass(UtilityCenter);
