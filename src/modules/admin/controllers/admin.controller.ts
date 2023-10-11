@@ -12,8 +12,6 @@ export class AdminController {
 
   @Post()
   async create(@Body() admin: CreateAdminsDto): Promise<Admin> {
-
-
     return await this.adminService.create(admin);
   }
 
@@ -40,5 +38,11 @@ export class AdminController {
   @Get(':by/:value/:key')
   async findByKey(@Param('by') by: string, @Param('value') value: string, @Param('key') key: string): Promise<Admin[]> {
     return await this.adminService.findBy(by, value, key);
+  }
+
+  @Post('findbyquery')
+  async findByQuery(@Body() query: []): Promise<Admin[]> {
+    console.log(query);
+    return await this.adminService.findByQuery(query);
   }
 }

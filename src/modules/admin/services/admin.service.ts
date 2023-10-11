@@ -41,4 +41,9 @@ export class AdminService {
     }
   }
 
+
+  async findByQuery(query: []): Promise<Admin[]> {
+    return await this.adminModel.find(query).exec();
+  }
+
 }

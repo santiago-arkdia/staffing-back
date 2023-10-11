@@ -20,6 +20,9 @@ export class Admin {
   @Prop()
   type: string;
 
+  @Prop()
+  state: number;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: UserEntity;
 

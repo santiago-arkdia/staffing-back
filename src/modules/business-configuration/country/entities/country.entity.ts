@@ -10,6 +10,9 @@ export class Country {
 
   @Prop()
   image: string;
+
+  @Prop()
+  state: number;
 }
 
 export const CountrySchema = SchemaFactory.createForClass(Country);

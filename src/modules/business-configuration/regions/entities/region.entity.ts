@@ -15,6 +15,9 @@ export class Region {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Country' })
   country: Country;
+
+  @Prop()
+  state: number;
 }
 
 export const RegionSchema = SchemaFactory.createForClass(Region);

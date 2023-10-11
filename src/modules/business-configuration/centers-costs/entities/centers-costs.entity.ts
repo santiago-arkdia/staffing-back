@@ -13,6 +13,9 @@ export class CentersCosts {
   @Prop()
   code: string;
 
+  @Prop()
+  state: number;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Region' })
   region: Region;
 }

@@ -5,6 +5,9 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 export class CategoriesNews {
   @Prop({ type: String, required: true })
   name: string;
+
+  @Prop()
+  state: number;
 }
 
 export const CategoriesNewsSchema = SchemaFactory.createForClass(CategoriesNews);
