@@ -13,6 +13,9 @@ export class ModuleParameterization {
   @Prop()
   active: boolean;
 
+  @Prop({ type: String, required: true })
+  path: string;
+  
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Roles' })
   role: Roles;
 }
