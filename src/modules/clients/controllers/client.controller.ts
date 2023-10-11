@@ -37,4 +37,28 @@ export class ClientController {
   async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Client[]> {
     return await this.clientService.findBy(by, value);
   }
+
+  /*@Get(':by/:value')
+  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Client[]> {
+    var query = this.clientService.findBy(by, value);
+    
+
+    if (this.clientSchema.properties[by].type === 'object') {
+      query = query.where(by, {
+        $elemMatch: {
+          [this.clientSchema.properties[by].fields[0].name]: value,
+        },
+      });
+    }
+
+    if (this.clientSchema.properties[by].type === 'object') {
+      query = query.where(by, {
+        $elemMatch: {
+          [this.clientSchema.properties[by].fields[0].name]: value,
+        },
+      });
+    }
+
+    return await query;
+  }*/
 }

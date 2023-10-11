@@ -25,8 +25,20 @@ export class AdminService {
     return await this.adminModel.findById(id).exec();
   }
 
-  async findBy(by: string, value: string): Promise<Admin[]> {
-    const query = { [by]: value };
-    return await this.adminModel.find(query).exec();
+  async findBy(by: string, value: string, key: string): Promise<Admin[]> {
+    if(key){
+      const query = {
+        [key]: {
+            $elemMatch: {
+                [by]: value,
+            },
+        },
+      };
+      return await this.adminModel.find(query).exec();
+    }else{
+      const query = { [by]: value };
+      return await this.adminModel.find(query).exec();
+    }
   }
+
 }

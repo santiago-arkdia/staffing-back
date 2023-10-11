@@ -34,6 +34,11 @@ export class AdminController {
 
   @Get(':by/:value')
   async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Admin[]> {
-    return await this.adminService.findBy(by, value);
+    return await this.adminService.findBy(by, value, null);
+  }
+
+  @Get(':by/:value/:key')
+  async findByKey(@Param('by') by: string, @Param('value') value: string, @Param('key') key: string): Promise<Admin[]> {
+    return await this.adminService.findBy(by, value, key);
   }
 }
