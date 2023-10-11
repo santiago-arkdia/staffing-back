@@ -20,6 +20,8 @@ import { ModuleParameterizationsModule } from './modules/module-parameterization
 import { ConceptsModule } from './modules/concepts/concepts.module';
 import { CategoriesNewsModule } from './modules/categories-news/categories-news.module';
 import { NoveltyModule } from './modules/novelty/novelty.module';
+import { EpsModule } from './modules/eps/eps.module';
+import { DiagnosisModule } from './modules/diagnosis/diagnosis.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { NoveltyModule } from './modules/novelty/novelty.module';
     ConceptsModule,
     CategoriesNewsModule,
     NoveltyModule,
+    EpsModule,
+    DiagnosisModule,
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],

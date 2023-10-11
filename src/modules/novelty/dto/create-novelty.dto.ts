@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsString } from 'class-validator';
+import { IsBoolean, IsString } from 'class-validator';
 
 @Schema()
 export class CreateNoveltyDto {
@@ -20,16 +20,16 @@ export class CreateNoveltyDto {
   numberInability: string;
 
   @IsString()
-  initialDate: string;
+  initialDate: Date;
 
   @IsString()
-  finalDate: string;
+  finalDate: Date;
 
   @IsString()
   typeOfAttention: string;
 
-  @IsString()
-  extension: string;
+  @IsBoolean()
+  extension: boolean;
 
   @IsString()
   eps: string;
