@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ApiTags } from '@nestjs/swagger';
 import { NoveltyService } from '../services/novelty.service';
 import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
@@ -13,6 +14,8 @@ export class NoveltyController {
 
   @Post()
   async create(@Body() novelty: CreateNoveltyDto): Promise<Novelty> {
+    novelty.initialDate = new Date(novelty.initialDate);
+    novelty.finalDate = new Date(novelty.finalDate);
     return await this.noveltyService.create(novelty);
   }
 
@@ -21,6 +24,8 @@ export class NoveltyController {
     @Param('id') id: string,
     @Body() updateNoveltyDto: UpdateNoveltyDto,
   ): Promise<UpdateNoveltyDto> {
+    updateNoveltyDto.initialDate = new Date(updateNoveltyDto.initialDate);
+    updateNoveltyDto.finalDate = new Date(updateNoveltyDto.finalDate);
     return await this.noveltyService.update(id, updateNoveltyDto);
   }
 

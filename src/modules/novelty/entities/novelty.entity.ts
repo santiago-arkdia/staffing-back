@@ -18,17 +18,17 @@ export class Novelty {
   @Prop()
   numberInability: string;
 
-  @Prop()
-  initialDate: string;
+  @Prop({ type: Date })
+  initialDate: Date;
 
-  @Prop()
-  finalDate: string;
+  @Prop({ type: Date })
+  finalDate: Date;
 
   @Prop()
   typeOfAttention: string;
 
   @Prop()
-  extension: string;
+  extension: boolean;
 
   @Prop()
   eps: string;
