@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Roles } from 'src/modules/roles/entities/roles.entity';
 
 export type UserDocument = HydratedDocument<UserEntity>;
 
@@ -15,8 +16,8 @@ export class UserEntity {
   @Prop({ type: String, required: true})
   password: string;
 
-  @Prop({ type: String, required: true})
-  role: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Roles' })
+  role: Roles;
 
   @Prop({ type: String, required: true})
   image: string;

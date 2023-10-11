@@ -52,9 +52,9 @@ export class UsersService {
     createUserDto: CreateUserDto,
     createdByEmail: string,
   ) {
-    if (!this.canCreateUser(currentUser.role, createUserDto.role)) {
-      throw new Error('No tienes permiso para crear este tipo de usuario.');
-    }
+    // if (!this.canCreateUser(currentUser.role, createUserDto.role)) {
+    //   throw new Error('No tienes permiso para crear este tipo de usuario.');
+    // }
     const newUser = new this.userModel(createUserDto);
     //newUser.createdBy = createdByEmail;
     return newUser.save();
@@ -65,9 +65,9 @@ export class UsersService {
     createUserClientDto: CreateUserClientDto,
     createdByEmail: string,
   ) {
-    if (!this.canCreateUser(currentUser.role, createUserClientDto.role)) {
-      throw new Error('No tienes permiso para crear este tipo de usuario.');
-    }
+    // if (!this.canCreateUser(currentUser.role, createUserClientDto.role)) {
+    //   throw new Error('No tienes permiso para crear este tipo de usuario.');
+    // }
     const newUser = new this.userModel(createUserClientDto);
     //newUser.createdBy = createdByEmail;
     return newUser.save();

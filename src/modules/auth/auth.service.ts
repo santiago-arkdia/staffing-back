@@ -3,6 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/services/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from 'src/modules/users/dto/loginUser.dto';
+import { Roles } from '../roles/entities/roles.entity';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
     };
   }
   
-  async getUserRole(userId: string): Promise<string | null> {
+  async getUserRole(userId: string): Promise<Roles> {
     // Recupera el usuario por su ID desde tu servicio de usuarios
     const user = await this.usersService.findOne(userId);
 
