@@ -7,7 +7,7 @@ export class AdminClient {
   email: string;
 
   @Prop({ type: String, required: true})
-  name: number;
+  name: string;
 
   @Prop({ type: String, required: true })
   password: string;
