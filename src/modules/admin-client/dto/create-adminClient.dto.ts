@@ -11,8 +11,11 @@ export class CreateClientsDto {
   phone: number;
 
   @IsString()
-  email: string;
+  user: string;
 
   @IsString()
-  password: string;
+  state: string;
+
+  @IsArray()
+  moduleParameterization: ModuleParameterization[];
 }

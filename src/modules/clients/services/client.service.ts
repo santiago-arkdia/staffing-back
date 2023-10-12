@@ -6,7 +6,9 @@ import { CreateClientsDto } from '../dto/create-client.dto';
 
 @Injectable()
 export class ClientService {
-  constructor(@InjectModel(Client.name) private readonly clientModel: Model<Client>) {}
+  constructor(
+    @InjectModel(Client.name) private readonly clientModel: Model<Client>,
+  ) {}
 
   async create(client: CreateClientsDto): Promise<Client> {
     const createdClient = new this.clientModel(client);
