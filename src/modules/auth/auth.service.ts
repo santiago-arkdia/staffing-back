@@ -4,6 +4,7 @@ import { UsersService } from '../users/services/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from 'src/modules/users/dto/loginUser.dto';
 import { Roles } from '../roles/entities/roles.entity';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,8 @@ export class AuthService {
     if (user?.password !== password) {
       throw new UnauthorizedException();
     }
-    const payload = { email: user.email, role: user.role };
+    
+    const payload = { id: user._id, email: user.email, role: user.role };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
