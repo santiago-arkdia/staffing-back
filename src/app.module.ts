@@ -23,6 +23,7 @@ import { CategoriesNewsModule } from './modules/categories-news/categories-news.
 import { NoveltyModule } from './modules/novelty/novelty.module';
 import { EpsModule } from './modules/eps/eps.module';
 import { DiagnosisModule } from './modules/diagnosis/diagnosis.module';
+import { AdminClientModule } from './modules/admin-client/admin-client.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { DiagnosisModule } from './modules/diagnosis/diagnosis.module';
     NoveltyModule,
     EpsModule,
     DiagnosisModule,
+    AdminClientModule,
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],
