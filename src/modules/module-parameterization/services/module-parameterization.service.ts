@@ -6,15 +6,29 @@ import { CreateModuleParameterizationsDto } from '../dto/create-module-parameter
 
 @Injectable()
 export class ModuleParameterizationService {
-  constructor(@InjectModel(ModuleParameterization.name) private readonly moduleParameterizationModel: Model<ModuleParameterization>) {}
+  constructor(
+    @InjectModel(ModuleParameterization.name)
+    private readonly moduleParameterizationModel: Model<ModuleParameterization>,
+  ) {}
 
-  async create(moduleParameterization: CreateModuleParameterizationsDto): Promise<ModuleParameterization> {
-    const createdModuleParameterization = new this.moduleParameterizationModel(moduleParameterization);
+  async create(
+    moduleParameterization: CreateModuleParameterizationsDto,
+  ): Promise<ModuleParameterization> {
+    const createdModuleParameterization = new this.moduleParameterizationModel(
+      moduleParameterization,
+    );
     return await createdModuleParameterization.save();
   }
 
-  async update(id: string, moduleParameterization: ModuleParameterization): Promise<ModuleParameterization> {
-    return await this.moduleParameterizationModel.findByIdAndUpdate(id, moduleParameterization, { new: true });
+  async update(
+    id: string,
+    moduleParameterization: ModuleParameterization,
+  ): Promise<ModuleParameterization> {
+    return await this.moduleParameterizationModel.findByIdAndUpdate(
+      id,
+      moduleParameterization,
+      { new: true },
+    );
   }
 
   async findAll(): Promise<ModuleParameterization[]> {

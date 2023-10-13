@@ -8,16 +8,28 @@ import { UsersService } from 'src/modules/users/services/users.service';
 @ApiTags('Module Parameterization')
 @Controller('api/module-parameterization')
 export class ModuleParameterizationController {
-  constructor(private readonly moduleParameterizationService: ModuleParameterizationService) {}
+  constructor(
+    private readonly moduleParameterizationService: ModuleParameterizationService,
+  ) {}
 
   @Post()
-  async create(@Body() moduleParameterization: CreateModuleParameterizationsDto): Promise<ModuleParameterization> {
-    return await this.moduleParameterizationService.create(moduleParameterization);
+  async create(
+    @Body() moduleParameterization: CreateModuleParameterizationsDto,
+  ): Promise<ModuleParameterization> {
+    return await this.moduleParameterizationService.create(
+      moduleParameterization,
+    );
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() moduleParameterization: ModuleParameterization): Promise<ModuleParameterization> {
-    return await this.moduleParameterizationService.update(id, moduleParameterization);
+  async update(
+    @Param('id') id: string,
+    @Body() moduleParameterization: ModuleParameterization,
+  ): Promise<ModuleParameterization> {
+    return await this.moduleParameterizationService.update(
+      id,
+      moduleParameterization,
+    );
   }
 
   @Get()
@@ -31,7 +43,10 @@ export class ModuleParameterizationController {
   }
 
   @Get(':by/:value')
-  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<ModuleParameterization[]> {
+  async findBy(
+    @Param('by') by: string,
+    @Param('value') value: string,
+  ): Promise<ModuleParameterization[]> {
     return await this.moduleParameterizationService.findBy(by, value);
   }
 }
