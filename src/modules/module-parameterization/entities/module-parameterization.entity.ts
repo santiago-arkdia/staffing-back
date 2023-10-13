@@ -15,11 +15,13 @@ export class ModuleParameterization {
 
   @Prop({ type: String, required: true })
   path: string;
-  
+
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Roles' })
   // role: Roles;
-  @Prop({ type: String})
+  @Prop({ type: String })
   role: string;
 }
 
-export const ModuleParameterizationSchema = SchemaFactory.createForClass(ModuleParameterization);
+export const ModuleParameterizationSchema = SchemaFactory.createForClass(
+  ModuleParameterization,
+);

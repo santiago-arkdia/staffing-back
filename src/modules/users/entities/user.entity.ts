@@ -10,7 +10,7 @@ export class UserEntity {
   // @Prop()
   // _id: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  // @Prop({ type: mongoose.Schema.Types.ObjectId })
   _id: mongoose.Types.ObjectId;
   
   @Prop({ type: String, required: true, unique: true, index: true })

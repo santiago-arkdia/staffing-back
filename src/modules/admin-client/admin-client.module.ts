@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { AdminClient, AdminClientSchema } from './entities/adminClient.entity';
 import { MongooseModule } from '@nestjs/mongoose';
