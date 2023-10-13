@@ -11,7 +11,7 @@ export class CreateModuleParameterizationsDto{
   @IsString()
   subModule: string;
 
-  @IsString()
+  @IsBoolean()
   active: boolean;
 
   @IsString()
