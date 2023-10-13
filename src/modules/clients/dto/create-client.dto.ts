@@ -34,6 +34,6 @@ export class CreateClientsDto{
   @IsString()
   user: string;
 
-  @IsObject()
-  moduleParameterization: ModuleParameterization;
+  @IsArray()
+  moduleParameterization: ModuleParameterization[];
 }
