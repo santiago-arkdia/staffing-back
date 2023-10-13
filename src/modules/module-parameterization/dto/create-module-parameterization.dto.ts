@@ -17,6 +17,6 @@ export class CreateModuleParameterizationsDto{
   @IsString()
   path: string;
 
-  @IsObject()
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Roles' })
   role: Roles;
 }
