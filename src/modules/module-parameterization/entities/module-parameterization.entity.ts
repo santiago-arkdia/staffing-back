@@ -19,7 +19,7 @@ export class ModuleParameterization {
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Roles' })
   // role: Roles;
   @Prop({ type: String})
-  createdBy: string;
+  role: string;
 }
 
 export const ModuleParameterizationSchema = SchemaFactory.createForClass(ModuleParameterization);
