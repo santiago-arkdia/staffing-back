@@ -21,4 +21,4 @@ export class AdminClient {
   user: UserEntity;
 }
 
-export const ClientSchema = SchemaFactory.createForClass(AdminClient);
+export const AdminClientSchema = SchemaFactory.createForClass(AdminClient);

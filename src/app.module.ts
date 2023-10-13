@@ -24,6 +24,7 @@ import { NoveltyModule } from './modules/novelty/novelty.module';
 import { EpsModule } from './modules/eps/eps.module';
 import { DiagnosisModule } from './modules/diagnosis/diagnosis.module';
 import { AdminClientModule } from './modules/admin-client/admin-client.module';
+import { GetAllUsersModule } from './modules/get-all-users/get-all-users.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { AdminClientModule } from './modules/admin-client/admin-client.module';
     EpsModule,
     DiagnosisModule,
     AdminClientModule,
+    GetAllUsersModule,
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],
