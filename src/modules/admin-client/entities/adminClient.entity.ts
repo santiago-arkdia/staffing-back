@@ -8,6 +8,9 @@ export class AdminClient {
   @Prop({ type: String, required: true})
   name: string;
 
+  @Prop({ type: String, required: true })
+  lastName: string;
+
   @Prop({ type: Number, required: true })
   phone: number;
 

@@ -6,6 +6,9 @@ import { ModuleParameterization } from 'src/modules/module-parameterization/enti
 export class CreateClientsDto {
   @IsString()
   name: string;
+  
+  @IsString()
+  lastName: string;
 
   @IsNumber()
   phone: number;
