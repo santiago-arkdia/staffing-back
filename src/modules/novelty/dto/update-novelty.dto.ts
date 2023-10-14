@@ -14,9 +14,9 @@ export class UpdateNoveltyDto {
   @IsString()
   performance?: string;
 
-  @IsOptional()
-  @IsString()
-  state?: string;
+  // @IsOptional()
+  // @IsString()
+  // state?: string;
 
   @IsOptional()
   @IsString()

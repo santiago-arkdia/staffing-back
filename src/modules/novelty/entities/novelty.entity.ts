@@ -3,6 +3,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
 import { Eps } from 'src/modules/eps/entities/eps.entity';
+import { NoveltyState } from 'src/modules/state-novelty/entities/novelty-state.entity';
 
 @Schema()
 export class Novelty {
@@ -12,8 +13,10 @@ export class Novelty {
   @Prop()
   performance: string;
 
-  @Prop()
-  state: string;
+  // @Prop()
+  // state: string;
+  @Prop({ type: mongoose.Schema.Types.Array, ref: 'Novelty-State' })
+  state: NoveltyState[];
 
   @Prop()
   type: string;

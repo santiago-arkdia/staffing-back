@@ -3,6 +3,7 @@ import { Schema } from '@nestjs/mongoose';
 import { IsArray, IsBoolean, IsString } from 'class-validator';
 import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
 import { Eps } from 'src/modules/eps/entities/eps.entity';
+import { NoveltyState } from 'src/modules/state-novelty/entities/novelty-state.entity';
 
 @Schema()
 export class CreateNoveltyDto {
@@ -12,8 +13,10 @@ export class CreateNoveltyDto {
   @IsString()
   performance: string;
 
-  @IsString()
-  state: string;
+  // @IsString()
+  // state: string;
+  @IsArray()
+  state: NoveltyState[];
 
   @IsString()
   type: string;
