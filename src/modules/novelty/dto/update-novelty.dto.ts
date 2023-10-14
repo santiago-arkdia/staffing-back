@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
 import { IsBoolean, IsDate, IsOptional, IsString } from 'class-validator';
+// import { DiagnosisModule } from 'src/modules/diagnosis/diagnosis.module';
+// import { Eps } from 'src/modules/eps/entities/eps.entity';
 
 @Schema()
 export class UpdateNoveltyDto {
@@ -40,13 +42,20 @@ export class UpdateNoveltyDto {
   @IsBoolean()
   extension?: boolean;
 
-  @IsOptional()
-  @IsString()
-  eps?: string;
+  // @IsOptional()
+  // @IsString()
+  // eps?: string;
 
-  @IsOptional()
-  @IsString()
-  diagnosis?: string;
+  // @IsOptional()
+  // @IsString()
+  // diagnosis?: string;
+  // @IsOptional()
+  // @IsArray()
+  // eps?: Eps[];
+
+  // @IsOptional()
+  // @IsArray()
+  // diagnosis?: DiagnosisModule[];
 
   @IsOptional()
   @IsString()

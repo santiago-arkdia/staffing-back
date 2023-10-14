@@ -1,5 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
+import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
+import { Eps } from 'src/modules/eps/entities/eps.entity';
 
 @Schema()
 export class Novelty {
@@ -30,11 +33,15 @@ export class Novelty {
   @Prop()
   extension: boolean;
 
-  @Prop()
-  eps: string;
+  // @Prop()
+  // eps: string;
+  @Prop({ type: mongoose.Schema.Types.Array, ref: 'eps' })
+  eps: Eps[];
 
-  @Prop()
-  diagnosis: string;
+  // @Prop()
+  // diagnosis: string;
+  @Prop({ type: mongoose.Schema.Types.Array, ref: 'diagnoses' })
+  diagnosis: Diagnosis[];
 
   @Prop()
   Description: string;

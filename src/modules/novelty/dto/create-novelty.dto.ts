@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsBoolean, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsString } from 'class-validator';
+import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
+import { Eps } from 'src/modules/eps/entities/eps.entity';
 
 @Schema()
 export class CreateNoveltyDto {
@@ -31,11 +33,15 @@ export class CreateNoveltyDto {
   @IsBoolean()
   extension: boolean;
 
-  @IsString()
-  eps: string;
+  // @IsString()
+  // eps: string;
+  @IsArray()
+  eps: Eps[];
 
-  @IsString()
-  diagnosis: string;
+  // @IsString()
+  // diagnosis: string;
+  @IsArray()
+  diagnosis: Diagnosis[];
 
   @IsString()
   Description: string;
