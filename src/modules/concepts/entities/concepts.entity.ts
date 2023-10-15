@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema()
+@Schema({ collection: 'concepts' })
 export class Concept {
   @Prop({ type: String, required: true })
   name: string;

@@ -26,6 +26,7 @@ import { DiagnosisModule } from './modules/diagnosis/diagnosis.module';
 import { AdminClientModule } from './modules/admin-client/admin-client.module';
 import { GetAllUsersModule } from './modules/get-all-users/get-all-users.module';
 import { StateNoveltyModule } from './modules/state-novelty/state-novelty.module';
+import { TypeNoveltyModule } from './modules/type-novelty/type-novelty.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { StateNoveltyModule } from './modules/state-novelty/state-novelty.module
     AdminClientModule,
     GetAllUsersModule,
     StateNoveltyModule,
+    TypeNoveltyModule,
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],

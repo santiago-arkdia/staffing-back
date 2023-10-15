@@ -6,9 +6,9 @@ import { IsBoolean, IsDate, IsOptional, IsString } from 'class-validator';
 
 @Schema()
 export class UpdateNoveltyDto {
-  @IsOptional()
-  @IsString()
-  name?: string;
+  // @IsOptional()
+  // @IsString()
+  // name?: string;
 
   @IsOptional()
   @IsString()
@@ -18,9 +18,9 @@ export class UpdateNoveltyDto {
   // @IsString()
   // state?: string;
 
-  @IsOptional()
-  @IsString()
-  type?: string;
+  // @IsOptional()
+  // @IsString()
+  // type?: string;
 
   @IsOptional()
   @IsString()

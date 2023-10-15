@@ -6,7 +6,9 @@ import { CreateAdminsDto } from '../dto/create-admin.dto';
 
 @Injectable()
 export class AdminService {
-  constructor(@InjectModel(Admin.name) private readonly adminModel: Model<Admin>) {}
+  constructor(
+    @InjectModel(Admin.name) private readonly adminModel: Model<Admin>,
+  ) {}
 
   async create(admin: CreateAdminsDto): Promise<Admin> {
     const createdAdmin = new this.adminModel(admin);
@@ -26,24 +28,22 @@ export class AdminService {
   }
 
   async findBy(by: string, value: string, key: string): Promise<Admin[]> {
-    if(key){
+    if (key) {
       const query = {
         [key]: {
-            $elemMatch: {
-                [by]: value,
-            },
+          $elemMatch: {
+            [by]: value,
+          },
         },
       };
       return await this.adminModel.find(query).exec();
-    }else{
+    } else {
       const query = { [by]: value };
       return await this.adminModel.find(query).exec();
     }
   }
 
-
   async findByQuery(query: []): Promise<Admin[]> {
     return await this.adminModel.find(query).exec();
   }
-
 }
