@@ -30,21 +30,36 @@ export class GetAllUsersService {
       .find()
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('user')
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
       .exec();
 
     const clients = await this.clientModel
       .find()
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('user')
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
       .exec();
 
     const payrolls = await this.payrollModel
       .find()
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('user')
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
       .exec();
 
     const totalAdmins = await this.adminModel.countDocuments().exec();
@@ -60,7 +75,6 @@ export class GetAllUsersService {
     users.total = totalAdmins + totalClients + totalayrolls;
     users.pages = totalPages;
     users.data = [...admins, ...clients, ...payrolls];
-    
 
     return users;
   }

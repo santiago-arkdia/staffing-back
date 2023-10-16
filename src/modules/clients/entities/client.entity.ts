@@ -37,6 +37,9 @@ export class Client {
 
   @Prop({ type: mongoose.Schema.Types.Array, ref: 'ModuleParameterization' })
   moduleParameterization: ModuleParameterization[];
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);

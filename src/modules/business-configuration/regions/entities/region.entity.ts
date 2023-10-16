@@ -18,6 +18,9 @@ export class Region {
 
   @Prop()
   state: number;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const RegionSchema = SchemaFactory.createForClass(Region);

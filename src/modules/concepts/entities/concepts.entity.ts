@@ -14,6 +14,9 @@ export class Concept {
 
   @Prop()
   additionalText: string;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const ConceptSchema = SchemaFactory.createForClass(Concept);

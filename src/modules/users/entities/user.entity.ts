@@ -27,6 +27,9 @@ export class UserEntity {
 
   @Prop({ type: String})
   createdBy: string;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
   
 /*
   @Prop({ type: String, required: true })

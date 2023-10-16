@@ -67,6 +67,9 @@ export class Novelty {
 
   @Prop()
   documentUpload: string;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const NoveltySchema = SchemaFactory.createForClass(Novelty);

@@ -1,9 +1,11 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
-@Schema()
+@Schema({ collection: 'roles' })
 export class Roles {
   
+  _id: mongoose.Types.ObjectId;
+
   @Prop({ type: String, required: true })
   role_key: string;
 
@@ -16,6 +18,8 @@ export class Roles {
   @Prop({ type: String, required: true })
   supervisor_role: string;
 
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const RolesSchema = SchemaFactory.createForClass(Roles);

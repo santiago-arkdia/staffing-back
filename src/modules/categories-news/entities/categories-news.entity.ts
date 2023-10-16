@@ -8,6 +8,9 @@ export class CategoriesNews {
 
   @Prop()
   state: number;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const CategoriesNewsSchema = SchemaFactory.createForClass(CategoriesNews);

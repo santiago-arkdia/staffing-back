@@ -13,6 +13,9 @@ export class Country {
 
   @Prop()
   state: number;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const CountrySchema = SchemaFactory.createForClass(Country);

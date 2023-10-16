@@ -20,6 +20,9 @@ export class ModuleParameterization {
   // role: Roles;
   @Prop({ type: String })
   role: string;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const ModuleParameterizationSchema = SchemaFactory.createForClass(

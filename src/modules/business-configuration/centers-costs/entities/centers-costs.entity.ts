@@ -18,6 +18,9 @@ export class CentersCosts {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Region' })
   region: Region;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const CentersCostsSchema = SchemaFactory.createForClass(CentersCosts);

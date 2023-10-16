@@ -28,6 +28,7 @@ import { GetAllUsersModule } from './modules/get-all-users/get-all-users.module'
 import { StateNoveltyModule } from './modules/state-novelty/state-novelty.module';
 import { TypeNoveltyModule } from './modules/type-novelty/type-novelty.module';
 import { UserSchema } from './modules/users/entities/user.entity';
+import { RolesSchema } from './modules/roles/entities/roles.entity';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { UserSchema } from './modules/users/entities/user.entity';
     }),
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
+      { name: 'Role', schema: RolesSchema },
     ]),
     UsersModule,
     AuthModule,

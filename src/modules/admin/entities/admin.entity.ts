@@ -28,6 +28,9 @@ export class Admin {
 
   @Prop({ type: mongoose.Schema.Types.Array, ref: 'ModuleParameterization' })
   moduleParameterization: ModuleParameterization[];
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const AdminSchema = SchemaFactory.createForClass(Admin);
