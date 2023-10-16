@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Admin } from '../entities/admin.entity';
-import { CreateAdminsDto } from '../dto/create-admin.dto';
+import { AdminsDto } from '../dto/admin.dto';
 
 @Injectable()
 export class AdminService {
@@ -10,12 +10,12 @@ export class AdminService {
     @InjectModel(Admin.name) private readonly adminModel: Model<Admin>,
   ) {}
 
-  async create(admin: CreateAdminsDto): Promise<Admin> {
+  async create(admin: AdminsDto): Promise<Admin> {
     const createdAdmin = new this.adminModel(admin);
     return await createdAdmin.save();
   }
 
-  async update(id: string, admin: CreateAdminsDto): Promise<Admin> {
+  async update(id: string, admin: AdminsDto): Promise<Admin> {
     return await this.adminModel.findByIdAndUpdate(id, admin, { new: true });
   }
 

@@ -71,11 +71,85 @@ export class GetAllUsersService {
       Math.ceil(totalClients / limit) +
       Math.ceil(totalayrolls / limit);
 
+    const createdAtComparator = (a, b) => {
+      return a.createdAt - b.createdAt;
+    };
+
     let users: any = {};
     users.total = totalAdmins + totalClients + totalayrolls;
     users.pages = totalPages;
     users.data = [...admins, ...clients, ...payrolls];
+    users.data.sort(createdAtComparator);
+
 
     return users;
   }
+
+
+  async getUsersByPageFilterDocumentName(page: number, limit: number, document: number, name: string): Promise<any[]> {
+
+    const query = { 
+      ["documentNumber"]: document,
+      ["name"]: name
+    };
+
+    const admins = await this.adminModel
+    .find(query)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .populate({
+      path: 'user',
+      populate: {
+        path: 'role',
+      },
+    })
+    .exec();
+
+    const clients = await this.clientModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
+
+    const payrolls = await this.payrollModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
+
+    const totalAdmins = await this.adminModel.countDocuments(query).exec();
+    const totalClients = await this.adminModel.countDocuments(query).exec();
+    const totalayrolls = await this.adminModel.countDocuments(query).exec();
+
+    const totalPages =
+      Math.ceil(totalAdmins / limit) +
+      Math.ceil(totalClients / limit) +
+      Math.ceil(totalayrolls / limit);
+
+    const createdAtComparator = (a, b) => {
+      return a.createdAt - b.createdAt;
+    };
+
+    let users: any = {};
+    users.total = totalAdmins + totalClients + totalayrolls;
+    users.pages = totalPages;
+    users.data = [...admins, ...clients, ...payrolls];
+    users.data.sort(createdAtComparator);
+
+
+    return users;
+  }
+  
 }

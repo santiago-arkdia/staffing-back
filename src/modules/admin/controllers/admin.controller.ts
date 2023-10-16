@@ -2,7 +2,7 @@ import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
 import { Admin } from '../entities/admin.entity';
 import { AdminService } from '../services/admin.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateAdminsDto } from '../dto/create-admin.dto';
+import { AdminsDto } from '../dto/admin.dto';
 import { UsersService } from 'src/modules/users/services/users.service';
 
 @ApiTags('Administrators')
@@ -11,12 +11,12 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post()
-  async create(@Body() admin: CreateAdminsDto): Promise<Admin> {
+  async create(@Body() admin: AdminsDto): Promise<Admin> {
     return await this.adminService.create(admin);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() admin: CreateAdminsDto): Promise<Admin> {
+  async update(@Param('id') id: string, @Body() admin: AdminsDto): Promise<Admin> {
     return await this.adminService.update(id, admin);
   }
 
