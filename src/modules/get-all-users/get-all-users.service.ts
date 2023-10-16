@@ -59,7 +59,8 @@ export class GetAllUsersService {
     let users: any = {};
     users.total = totalAdmins + totalClients + totalayrolls;
     users.pages = totalPages;
-    (users.data = admins), clients, payrolls;
+    users.data = [...admins, ...clients, ...payrolls];
+    
 
     return users;
   }
