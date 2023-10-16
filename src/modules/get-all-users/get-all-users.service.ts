@@ -5,6 +5,7 @@ import { Admin } from '../admin/entities/admin.entity';
 import { AdminClient } from '../admin-client/entities/adminClient.entity';
 import { Client } from '../clients/entities/client.entity';
 import { Payroll } from '../payroll/entities/payroll.entity';
+import { UserEntity } from '../users/entities/user.entity';
 
 @Injectable()
 export class GetAllUsersService {
@@ -14,6 +15,7 @@ export class GetAllUsersService {
     private readonly adminClientModel: Model<AdminClient>,
     @InjectModel(Client.name) private readonly clientModel: Model<Client>,
     @InjectModel(Payroll.name) private readonly payrollModel: Model<Payroll>,
+    @InjectModel(Payroll.name) private readonly userModel: Model<UserEntity>,
   ) {}
 
   async getAllUsers(): Promise<any[]> {
@@ -26,6 +28,40 @@ export class GetAllUsersService {
   }
 
   async getUsersByPage(page: number, limit: number): Promise<any[]> {
+
+
+    /*const usersWithRelatedData = await this.userModel.aggregate([
+      {
+        $lookup: {
+          from: 'admins',
+          localField: '_id',
+          foreignField: 'user',
+          as: 'admins',
+        },
+      },
+      {
+        $lookup: {
+          from: 'clients',
+          localField: '_id',
+          foreignField: 'user',
+          as: 'clients',
+        },
+      },
+      {
+        $lookup: {
+          from: 'payrolls', 
+          localField: '_id',
+          foreignField: 'user',
+          as: 'payrolls',
+        },
+      },
+    ]).allowDiskUse(true);
+
+
+    return usersWithRelatedData;*/
+    
+
+
     const admins = await this.adminModel
       .find()
       .skip((page - 1) * limit)
