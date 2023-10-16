@@ -136,8 +136,9 @@ export class UsersController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() payroll: UserEntity): Promise<UserEntity> {
-    return await this.usersService.update(id, payroll);
+  async update(@Param('id') id: string, @Body() user: UpdateUserDto): Promise<UserEntity> {
+    console.log("payroll");
+    return await this.usersService.update(id, user);
   }
 
   @Get()

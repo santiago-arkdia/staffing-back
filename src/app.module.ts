@@ -27,6 +27,7 @@ import { AdminClientModule } from './modules/admin-client/admin-client.module';
 import { GetAllUsersModule } from './modules/get-all-users/get-all-users.module';
 import { StateNoveltyModule } from './modules/state-novelty/state-novelty.module';
 import { TypeNoveltyModule } from './modules/type-novelty/type-novelty.module';
+import { UserSchema } from './modules/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -34,6 +35,9 @@ import { TypeNoveltyModule } from './modules/type-novelty/type-novelty.module';
     MongooseModule.forRoot(process.env.MONGO_DATABASE_URL, {
       autoIndex: true,
     }),
+    MongooseModule.forFeature([
+      { name: 'User', schema: UserSchema },
+    ]),
     UsersModule,
     AuthModule,
     ClientsModule,

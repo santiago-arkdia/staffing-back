@@ -1,19 +1,29 @@
 /* eslint-disable prettier/prettier */
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
-import { IsOptional, IsString, IsUrl, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  @IsOptional()
+
+  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
-  description?: string;
+  @IsEmail()
+  email: string;
 
-  @IsOptional()
-  @IsUrl()
-  image?: string;
-
-  @IsOptional()
+  @ApiProperty()
+  @IsNotEmpty()
   @IsString()
   @MinLength(8)
-  password?: string;
+  password: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  role: string;
+
+  @IsString()
+  image: string;
+
 }

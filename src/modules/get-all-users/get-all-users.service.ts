@@ -30,23 +30,37 @@ export class GetAllUsersService {
       .find()
       .skip((page - 1) * limit)
       .limit(limit)
+      .populate('user')
       .exec();
-    const adminClients = await this.adminClientModel
-      .find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
+
     const clients = await this.clientModel
       .find()
       .skip((page - 1) * limit)
       .limit(limit)
+      .populate('user')
       .exec();
+
     const payrolls = await this.payrollModel
       .find()
       .skip((page - 1) * limit)
       .limit(limit)
+      .populate('user')
       .exec();
 
-    return [...admins, ...adminClients, ...clients, ...payrolls];
+    const totalAdmins = await this.adminModel.countDocuments().exec();
+    const totalClients = await this.adminModel.countDocuments().exec();
+    const totalayrolls = await this.adminModel.countDocuments().exec();
+
+    const totalPages =
+      Math.ceil(totalAdmins / limit) +
+      Math.ceil(totalClients / limit) +
+      Math.ceil(totalayrolls / limit);
+
+    let users: any = {};
+    users.total = totalAdmins + totalClients + totalayrolls;
+    users.pages = totalPages;
+    (users.data = admins), clients, payrolls;
+
+    return users;
   }
 }

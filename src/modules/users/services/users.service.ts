@@ -23,7 +23,7 @@ export class UsersService {
     return await createdUser.save();
   }
 
-  async update(id: string, user: UserEntity): Promise<UserEntity> {
+  async update(id: string, user: UpdateUserDto): Promise<UserEntity> {
     return await this.userModel.findByIdAndUpdate(id, user, { new: true });
   }
 
@@ -159,9 +159,9 @@ export class UsersService {
       throw new Error('Usuario no encontrado');
     }
 
-    if (updateUserDto.description !== undefined) {
+    /*if (updateUserDto.description !== undefined) {
       //user.descripcion = updateUserDto.description;
-    }
+    }*/
 
     if (updateUserDto.image !== undefined) {
       //user.image = updateUserDto.image;

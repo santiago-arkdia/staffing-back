@@ -16,7 +16,7 @@ export class AdminController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() admin: Admin): Promise<Admin> {
+  async update(@Param('id') id: string, @Body() admin: CreateAdminsDto): Promise<Admin> {
     return await this.adminService.update(id, admin);
   }
 

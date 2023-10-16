@@ -15,7 +15,7 @@ export class AdminService {
     return await createdAdmin.save();
   }
 
-  async update(id: string, admin: Admin): Promise<Admin> {
+  async update(id: string, admin: CreateAdminsDto): Promise<Admin> {
     return await this.adminModel.findByIdAndUpdate(id, admin, { new: true });
   }
 
