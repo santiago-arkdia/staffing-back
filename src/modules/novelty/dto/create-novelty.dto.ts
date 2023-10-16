@@ -22,7 +22,7 @@ export class CreateNoveltyDto {
   area: string;
 
   @IsString()
-  performance: string;
+  noveltyGrouper: string;
 
   @IsArray()
   concept: Concept[];

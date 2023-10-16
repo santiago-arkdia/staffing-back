@@ -14,6 +14,26 @@ export class UpdateNoveltyDto {
   @IsString()
   performance?: string;
 
+  @IsOptional()
+  @IsString()
+  createBy?: string;
+
+  @IsOptional()
+  @IsString()
+  designatedAnalyst?: string;
+
+  @IsOptional()
+  @IsString()
+  client?: string;
+
+  @IsOptional()
+  @IsString()
+  area?: string;
+
+  @IsOptional()
+  @IsString()
+  noveltyGrouper?: string;
+
   // @IsOptional()
   // @IsString()
   // state?: string;
