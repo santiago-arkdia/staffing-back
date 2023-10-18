@@ -24,7 +24,15 @@ export class AdminService {
   }
 
   async findOne(id: string): Promise<Admin> {
-    return await this.adminModel.findById(id).exec();
+    return await this.adminModel
+      .findById(id)
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
   }
 
   async findBy(by: string, value: string, key: string): Promise<Admin[]> {

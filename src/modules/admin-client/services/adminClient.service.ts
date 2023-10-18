@@ -26,7 +26,15 @@ export class ClientService {
   }
 
   async findOne(id: string): Promise<AdminClient> {
-    return await this.clientModel.findById(id).exec();
+    return await this.clientModel
+      .findById(id)
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
   }
 
   async findBy(by: string, value: string): Promise<AdminClient[]> {
