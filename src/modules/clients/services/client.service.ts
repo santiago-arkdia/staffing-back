@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -24,7 +25,15 @@ export class ClientService {
   }
 
   async findOne(id: string): Promise<Client> {
-    return await this.clientModel.findById(id).exec();
+    return await this.clientModel
+      .findById(id)
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
   }
 
   async findBy(by: string, value: string): Promise<Client[]> {
