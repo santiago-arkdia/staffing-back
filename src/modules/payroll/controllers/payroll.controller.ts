@@ -22,9 +22,9 @@ export class PayrollController {
     return await this.payrollService.update(id, payroll);
   }
 
-  @Get()
-  async findAll(): Promise<Payroll[]> {
-    return await this.payrollService.findAll();
+  @Get(':page/:limit')
+  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<Payroll[]> {
+    return await this.payrollService.findAll(page, limit);
   }
 
   @Get(':id')

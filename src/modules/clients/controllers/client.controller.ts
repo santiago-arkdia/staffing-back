@@ -23,9 +23,9 @@ export class ClientController {
     return await this.clientService.update(id, client);
   }
 
-  @Get()
-  async findAll(): Promise<Client[]> {
-    return await this.clientService.findAll();
+  @Get(':page/:limit')
+  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<Client[]> {
+    return await this.clientService.findAll(page, limit);
   }
 
   @Get(':id')
