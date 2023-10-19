@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Payroll } from '../entities/payroll.entity';
-import { CreatePayrollsDto } from '../dto/create-payroll.dto';
+import { PayrollsDto } from '../dto/payroll.dto';
 
 @Injectable()
 export class PayrollService {
@@ -10,12 +10,12 @@ export class PayrollService {
     @InjectModel(Payroll.name) private readonly payrollModel: Model<Payroll>,
   ) {}
 
-  async create(payroll: CreatePayrollsDto): Promise<Payroll> {
+  async create(payroll: PayrollsDto): Promise<Payroll> {
     const createdPayroll = new this.payrollModel(payroll);
     return await createdPayroll.save();
   }
 
-  async update(id: string, payroll: Payroll): Promise<Payroll> {
+  async update(id: string, payroll: PayrollsDto): Promise<Payroll> {
     return await this.payrollModel.findByIdAndUpdate(id, payroll, {
       new: true,
     });

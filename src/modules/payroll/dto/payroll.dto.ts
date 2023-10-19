@@ -3,7 +3,7 @@ import { IsArray, IsBoolean, IsDate, IsNumber, IsString } from 'class-validator'
 import { ModuleParameterization } from 'src/modules/module-parameterization/entities/module-parameterization.entity';
 
 @Schema()
-export class CreatePayrollsDto{
+export class PayrollsDto{
   @IsString()
   name: string;
 
