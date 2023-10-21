@@ -3,13 +3,11 @@ import { Module } from '@nestjs/common';
 import { GetAllUsersController } from './get-all-users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminSchema } from '../admin/entities/admin.entity';
-import {
-  AdminClient,
-  AdminClientSchema,
-} from '../admin-client/entities/adminClient.entity';
+import {  AdminClient, AdminClientSchema } from '../admin-client/entities/adminClient.entity';
 import { Client, ClientSchema } from '../clients/entities/client.entity';
 import { Payroll, PayrollSchema } from '../payroll/entities/payroll.entity';
 import { GetAllUsersService } from './get-all-users.service';
+import { UserEntity, UserSchema } from '../users/entities/user.entity';
 
 @Module({
   imports: [
@@ -18,6 +16,7 @@ import { GetAllUsersService } from './get-all-users.service';
       { name: AdminClient.name, schema: AdminClientSchema },
       { name: Client.name, schema: ClientSchema },
       { name: Payroll.name, schema: PayrollSchema },
+      { name: UserEntity.name, schema: UserSchema },
     ]),
   ],
   providers: [GetAllUsersService],

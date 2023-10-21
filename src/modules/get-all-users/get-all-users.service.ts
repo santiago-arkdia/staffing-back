@@ -5,17 +5,16 @@ import { Admin } from '../admin/entities/admin.entity';
 import { AdminClient } from '../admin-client/entities/adminClient.entity';
 import { Client } from '../clients/entities/client.entity';
 import { Payroll } from '../payroll/entities/payroll.entity';
-import { UserEntity } from '../users/entities/user.entity';
+import { UserDocument, UserEntity } from '../users/entities/user.entity';
 
 @Injectable()
 export class GetAllUsersService {
   constructor(
     @InjectModel(Admin.name) private readonly adminModel: Model<Admin>,
-    @InjectModel(AdminClient.name)
-    private readonly adminClientModel: Model<AdminClient>,
+    @InjectModel(AdminClient.name) private readonly adminClientModel: Model<AdminClient>,
     @InjectModel(Client.name) private readonly clientModel: Model<Client>,
     @InjectModel(Payroll.name) private readonly payrollModel: Model<Payroll>,
-    @InjectModel(Payroll.name) private readonly userModel: Model<UserEntity>,
+    @InjectModel(UserEntity.name) private readonly userModel: Model<UserDocument>,
   ) {}
 
   async getAllUsers(): Promise<any[]> {
@@ -29,14 +28,21 @@ export class GetAllUsersService {
 
   async getUsersByPage(page: number, limit: number): Promise<any[]> {
 
-
-    const usersWithRelatedData = await this.userModel.aggregate([
+    let dataUsers = await this.userModel.aggregate([
       {
         $lookup: {
           from: 'admins',
           localField: '_id',
           foreignField: 'user',
           as: 'admins',
+        },
+      },
+      {
+        $lookup: {
+          from: 'adminclients', 
+          localField: '_id',
+          foreignField: 'user',
+          as: 'adminclients',
         },
       },
       {
@@ -55,70 +61,30 @@ export class GetAllUsersService {
           as: 'payrolls',
         },
       },
-    ]).allowDiskUse(true);
+      {
+        $skip: (page - 1) * limit, 
+      },
+      {
+        $limit: limit,
+      },
+    ])
+    .allowDiskUse(true);
 
-
-    return usersWithRelatedData;
-    
-
-
-    const admins = await this.adminModel
-      .find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate({
-        path: 'user',
-        populate: {
-          path: 'role',
-        },
-      })
-      .exec();
-
-    const clients = await this.clientModel
-      .find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate({
-        path: 'user',
-        populate: {
-          path: 'role',
-        },
-      })
-      .exec();
-
-    const payrolls = await this.payrollModel
-      .find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate({
-        path: 'user',
-        populate: {
-          path: 'role',
-        },
-      })
-      .exec();
-
-    const totalAdmins = await this.adminModel.countDocuments().exec();
-    const totalClients = await this.adminModel.countDocuments().exec();
-    const totalayrolls = await this.adminModel.countDocuments().exec();
-
-    const totalPages =
-      Math.ceil(totalAdmins / limit) +
-      Math.ceil(totalClients / limit) +
-      Math.ceil(totalayrolls / limit);
+    const totalUsers = await this.userModel.countDocuments().exec();
+    const totalPages = Math.ceil(totalUsers / limit)
 
     const createdAtComparator = (a, b) => {
       return a.createdAt - b.createdAt;
     };
 
     let users: any = {};
-    users.total = totalAdmins + totalClients + totalayrolls;
+    users.total = totalUsers;
     users.pages = totalPages;
-    users.data = [...admins, ...clients, ...payrolls];
+    users.data = dataUsers;
     users.data.sort(createdAtComparator);
 
-
     return users;
+    
   }
 
 
@@ -129,61 +95,63 @@ export class GetAllUsersService {
       ["name"]: name
     };
 
-    const admins = await this.adminModel
-    .find(query)
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .populate({
-      path: 'user',
-      populate: {
-        path: 'role',
+    let dataUsers = await this.userModel.aggregate([
+      {
+        $lookup: {
+          from: 'admins',
+          localField: '_id',
+          foreignField: 'user',
+          as: 'admins',
+        },
       },
-    })
-    .exec();
-
-    const clients = await this.clientModel
-      .find(query)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate({
-        path: 'user',
-        populate: {
-          path: 'role',
+      {
+        $lookup: {
+          from: 'adminclients', 
+          localField: '_id',
+          foreignField: 'user',
+          as: 'adminclients',
         },
-      })
-      .exec();
-
-    const payrolls = await this.payrollModel
-      .find(query)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate({
-        path: 'user',
-        populate: {
-          path: 'role',
+      },
+      {
+        $lookup: {
+          from: 'clients',
+          localField: '_id',
+          foreignField: 'user',
+          as: 'clients',
         },
-      })
-      .exec();
+      },
+      {
+        $lookup: {
+          from: 'payrolls', 
+          localField: '_id',
+          foreignField: 'user',
+          as: 'payrolls',
+        },
+      },
+      {
+        $match: query,
+      },
+      {
+        $skip: (page - 1) * limit, 
+      },
+      {
+        $limit: limit,
+      },
+    ])
+    .allowDiskUse(true);
 
-    const totalAdmins = await this.adminModel.countDocuments(query).exec();
-    const totalClients = await this.adminModel.countDocuments(query).exec();
-    const totalayrolls = await this.adminModel.countDocuments(query).exec();
-
-    const totalPages =
-      Math.ceil(totalAdmins / limit) +
-      Math.ceil(totalClients / limit) +
-      Math.ceil(totalayrolls / limit);
+    const totalUsers = await this.userModel.countDocuments().exec();
+    const totalPages = Math.ceil(totalUsers / limit)
 
     const createdAtComparator = (a, b) => {
       return a.createdAt - b.createdAt;
     };
 
     let users: any = {};
-    users.total = totalAdmins + totalClients + totalayrolls;
+    users.total = totalUsers;
     users.pages = totalPages;
-    users.data = [...admins, ...clients, ...payrolls];
+    users.data = dataUsers;
     users.data.sort(createdAtComparator);
-
 
     return users;
   }
