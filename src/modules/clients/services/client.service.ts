@@ -27,6 +27,7 @@ export class ClientService {
 
     const clients = await this.clientModel.find()
       .skip((page - 1) * limit)
+      .limit(limit)
       .populate({
         path: 'user',
         populate: {

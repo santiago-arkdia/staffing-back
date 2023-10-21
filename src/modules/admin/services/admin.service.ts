@@ -24,8 +24,10 @@ export class AdminService {
     const total = await this.adminModel.countDocuments().exec();
     const totalPages = Math.ceil(total / limit)
 
-    const admins = await this.adminModel.find()
+    const admins = await this.adminModel
+      .find()
       .skip((page - 1) * limit)
+      .limit(limit)
       .populate({
         path: 'user',
         populate: {

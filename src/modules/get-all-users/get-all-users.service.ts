@@ -30,7 +30,7 @@ export class GetAllUsersService {
   async getUsersByPage(page: number, limit: number): Promise<any[]> {
 
 
-    /*const usersWithRelatedData = await this.userModel.aggregate([
+    const usersWithRelatedData = await this.userModel.aggregate([
       {
         $lookup: {
           from: 'admins',
@@ -58,7 +58,7 @@ export class GetAllUsersService {
     ]).allowDiskUse(true);
 
 
-    return usersWithRelatedData;*/
+    return usersWithRelatedData;
     
 
 

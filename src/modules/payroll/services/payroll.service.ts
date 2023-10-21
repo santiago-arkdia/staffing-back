@@ -23,12 +23,13 @@ export class PayrollService {
 
   async findAll(page: number, limit: number): Promise<Payroll[]> {
 
- 
     const total = await this.payrollModel.countDocuments().exec();
     const totalPages = Math.ceil(total / limit)
+    
 
     const payrolls = await this.payrollModel.find()
       .skip((page - 1) * limit)
+      .limit(limit)
       .populate({
         path: 'user',
         populate: {
