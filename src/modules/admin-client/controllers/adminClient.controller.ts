@@ -23,9 +23,9 @@ export class ClientController {
     return await this.clientService.update(id, client);
   }
 
-  @Get()
-  async findAll(): Promise<AdminClient[]> {
-    return await this.clientService.findAll();
+  @Get(':page/:limit')
+  async findAll(@Param('page') page: number, @Param('limit') limit: number):Promise<AdminClient[]> {
+    return await this.clientService.findAll(page, limit);
   }
 
   @Get(':id')
@@ -33,7 +33,7 @@ export class ClientController {
     return await this.clientService.findOne(id);
   }
 
-  @Get(':by/:value')
+  @Get('by/:by/:value')
   async findBy(
     @Param('by') by: string,
     @Param('value') value: string,

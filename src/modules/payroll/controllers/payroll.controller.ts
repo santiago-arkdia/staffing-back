@@ -12,8 +12,6 @@ export class PayrollController {
 
   @Post()
   async create(@Body() payroll: PayrollsDto): Promise<Payroll> {
-
-
     return await this.payrollService.create(payroll);
   }
 
@@ -29,10 +27,11 @@ export class PayrollController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Payroll> {
+    console.log(id);
     return await this.payrollService.findOne(id);
   }
 
-  @Get(':by/:value')
+  @Get('by/:by/:value')
   async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Payroll[]> {
     return await this.payrollService.findBy(by, value);
   }

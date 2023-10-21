@@ -33,7 +33,7 @@ export class ClientController {
     return await this.clientService.findOne(id);
   }
 
-  @Get(':by/:value')
+  @Get('by/:by/:value')
   async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Client[]> {
     return await this.clientService.findBy(by, value);
   }

@@ -21,8 +21,27 @@ export class ClientService {
     return await this.clientModel.findByIdAndUpdate(id, client, { new: true });
   }
 
-  async findAll(): Promise<AdminClient[]> {
-    return await this.clientModel.find().exec();
+  async findAll(page: number, limit: number): Promise<AdminClient[]> {
+
+    const total = await this.clientModel.countDocuments().exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const adminClients = await this.clientModel.find()
+      .skip((page - 1) * limit)
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
+
+      let adminClient: any = {};
+      adminClient.total = total;
+      adminClient.pages = totalPages;
+      adminClient.data = adminClients;
+
+      return adminClient;
   }
 
   async findOne(id: string): Promise<AdminClient> {
@@ -39,6 +58,14 @@ export class ClientService {
 
   async findBy(by: string, value: string): Promise<AdminClient[]> {
     const query = { [by]: value };
-    return await this.clientModel.find(query).exec();
+    return await this.clientModel
+        .find(query)
+        .populate({
+          path: 'user',
+          populate: {
+            path: 'role',
+          },
+        })
+        .exec();
   }
 }

@@ -63,10 +63,26 @@ export class AdminService {
           },
         },
       };
-      return await this.adminModel.find(query).exec();
+      return await this.adminModel
+        .find(query)
+        .populate({
+          path: 'user',
+          populate: {
+            path: 'role',
+          },
+        })
+        .exec();
     } else {
       const query = { [by]: value };
-      return await this.adminModel.find(query).exec();
+      return await this.adminModel
+          .find(query)
+          .populate({
+            path: 'user',
+            populate: {
+              path: 'role',
+            },
+          })
+          .exec();
     }
   }
 

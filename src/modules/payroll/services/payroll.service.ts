@@ -60,6 +60,15 @@ export class PayrollService {
 
   async findBy(by: string, value: string): Promise<Payroll[]> {
     const query = { [by]: value };
-    return await this.payrollModel.find(query).exec();
+    return await this.payrollModel
+        .find(query)
+        .populate({
+          path: 'user',
+          populate: {
+            path: 'role',
+          },
+        })
+        .exec();
   }
+
 }
