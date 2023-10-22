@@ -11,6 +11,9 @@ export class CreateJobPositionsDto{
   utilityCenter: string;
 
   @IsString()
+  centersCosts: string;
+
+  @IsString()
   name: string;
 
   @IsString()
