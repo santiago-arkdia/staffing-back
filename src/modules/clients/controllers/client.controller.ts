@@ -39,8 +39,12 @@ export class ClientController {
   }
 
   @Post('filters/:page/:limit')
-  async findClientsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() body: FilterClientsDto): Promise<Client[]> {
-    return await this.clientService.getClientsByFilters(page, limit, body);
+  async findClientsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() client: FilterClientsDto): Promise<Client[]> {
+    if (client && Object.keys(client).length > 0) {
+      return await this.clientService.getClientsByFilters(page, limit, client);
+    }else{
+      return await this.clientService.findAll(page, limit);
+    }
   }
   /*@Get(':by/:value')
   async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Client[]> {

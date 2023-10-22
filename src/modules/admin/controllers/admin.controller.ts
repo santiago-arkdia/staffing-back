@@ -42,7 +42,11 @@ export class AdminController {
   }
 
   @Post('filters/:page/:limit')
-  async findAdminsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() body: FilterAdminsDto): Promise<Admin[]> {
-    return await this.adminService.getAdminsByFilters(page, limit, body);
+  async findAdminsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() admin: FilterAdminsDto): Promise<Admin[]> {
+    if (admin && Object.keys(admin).length > 0) {
+      return await this.adminService.getAdminsByFilters(page, limit, admin);
+    }else{
+      return await this.adminService.findAll(page, limit);
+    }
   }
 }

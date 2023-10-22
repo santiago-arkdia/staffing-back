@@ -38,7 +38,11 @@ export class PayrollController {
   }
 
   @Post('filters/:page/:limit')
-  async findPayrollByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() body: FilterPayrollDto): Promise<Payroll[]> {
-    return await this.payrollService.getPayrollByFilters(page, limit, body);
+  async findPayrollByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() payroll: FilterPayrollDto): Promise<Payroll[]> {
+    if (payroll && Object.keys(payroll).length > 0) {
+      return await this.payrollService.getPayrollByFilters(page, limit, payroll);
+    }else{
+      return await this.payrollService.findAll(page, limit);
+    }
   }
 }

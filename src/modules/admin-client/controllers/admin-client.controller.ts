@@ -43,7 +43,11 @@ export class ClientController {
   }
 
   @Post('filters/:page/:limit')
-  async findAdminsClientsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() body: FilterAdminClientsDto): Promise<AdminClient[]> {
-    return await this.clientService.getAdminsClientsByFilters(page, limit, body);
+  async findAdminsClientsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() adminClient: FilterAdminClientsDto): Promise<AdminClient[]> {
+    if (adminClient && Object.keys(adminClient).length > 0) {
+      return await this.clientService.getAdminsClientsByFilters(page, limit, adminClient);
+    }else{
+      return await this.clientService.findAll(page, limit);
+    }
   }
 }
