@@ -32,6 +32,14 @@ export class GetAllUsersService {
     let dataUsers = await this.userModel.aggregate([
       {
         $lookup: {
+            from: 'roles',
+            localField: 'role',
+            foreignField: '_id', 
+            as: 'role', 
+        },
+      },
+      {
+        $lookup: {
           from: 'admins',
           localField: '_id',
           foreignField: 'user',
@@ -107,6 +115,14 @@ export class GetAllUsersService {
             },
           ]
         }
+      },
+      {
+        $lookup: {
+            from: 'roles',
+            localField: 'role',
+            foreignField: '_id', 
+            as: 'role', 
+        },
       },
       {
         $lookup: {
@@ -193,6 +209,14 @@ export class GetAllUsersService {
             ...(user.state ? [{ state: user.state }] : []),
           ]
         }
+      },
+      {
+        $lookup: {
+            from: 'roles',
+            localField: 'role',
+            foreignField: '_id', 
+            as: 'role', 
+        },
       },
       {
         $lookup: {
