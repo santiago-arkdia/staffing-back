@@ -30,6 +30,7 @@ import { TypeNoveltyModule } from './modules/type-novelty/type-novelty.module';
 import { UserSchema } from './modules/users/entities/user.entity';
 import { RolesSchema } from './modules/roles/entities/roles.entity';
 import { JobPositionsModule } from './modules/business-configuration/job-positions/job-positions.module';
+import { ArlModule } from './modules/arl/arl.module';
 
 @Module({
   imports: [
@@ -61,7 +62,8 @@ import { JobPositionsModule } from './modules/business-configuration/job-positio
     GetAllUsersModule,
     StateNoveltyModule,
     TypeNoveltyModule,
-    JobPositionsModule
+    JobPositionsModule,
+    ArlModule
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],
