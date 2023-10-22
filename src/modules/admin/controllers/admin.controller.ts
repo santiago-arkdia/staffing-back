@@ -4,6 +4,7 @@ import { AdminService } from '../services/admin.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AdminsDto } from '../dto/admin.dto';
 import { UsersService } from 'src/modules/users/services/users.service';
+import { FilterAdminsDto } from '../dto/filter-admin.dto.';
 
 @ApiTags('Administrators')
 @Controller('api/admins')
@@ -40,9 +41,8 @@ export class AdminController {
     return await this.adminService.findBy(by, value, key);
   }
 
-  @Post('findbyquery')
-  async findByQuery(@Body() query: []): Promise<Admin[]> {
-    console.log(query);
-    return await this.adminService.findByQuery(query);
+  @Post('filters/:page/:limit')
+  async findAdminsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() body: FilterAdminsDto): Promise<Admin[]> {
+    return await this.adminService.getAdminsByFilters(page, limit, body);
   }
 }

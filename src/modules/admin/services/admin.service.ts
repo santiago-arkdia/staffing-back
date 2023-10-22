@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Admin } from '../entities/admin.entity';
 import { AdminsDto } from '../dto/admin.dto';
+import { FilterAdminsDto } from '../dto/filter-admin.dto.';
 
 @Injectable()
 export class AdminService {
@@ -88,7 +89,42 @@ export class AdminService {
     }
   }
 
-  async findByQuery(query: []): Promise<Admin[]> {
-    return await this.adminModel.find(query).exec();
+  async getAdminsByFilters(page: number, limit: number, filter: FilterAdminsDto): Promise<Admin[]> {
+
+    const query: any = {};
+
+    if (filter.name) {
+        query.name = { $regex: filter.name, $options: 'i' };
+    }
+
+    if (filter.lastName) {
+        query.lastName = { $regex: filter.lastName, $options: 'i' };
+    }
+
+    if (filter.state) {
+        query.state = filter.state;
+    }
+
+    const admins =  await this.adminModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
+
+    const total = await this.adminModel.countDocuments(query).exec();
+    const totalPages = Math.ceil(total / limit)
+
+    let admin: any = {};
+    admin.total = total;
+    admin.pages = totalPages;
+    admin.data = admins;
+
+    return admin;
   }
 }

@@ -28,6 +28,9 @@ export class UserEntity {
   @Prop({ type: String})
   createdBy: string;
 
+  @Prop({ type: Date, default: 1 })
+  state: number;
+
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;
   

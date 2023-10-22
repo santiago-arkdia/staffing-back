@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Payroll } from '../entities/payroll.entity';
 import { PayrollsDto } from '../dto/payroll.dto';
+import { FilterPayrollDto } from '../dto/filter-payroll.dto.';
 
 @Injectable()
 export class PayrollService {
@@ -70,6 +71,45 @@ export class PayrollService {
           },
         })
         .exec();
+  }
+
+  async getPayrollByFilters(page: number, limit: number, filter: FilterPayrollDto): Promise<Payroll[]> {
+
+    const query: any = {};
+
+    if (filter.name) {
+        query.name = { $regex: filter.name, $options: 'i' };
+    }
+
+    if (filter.lastName) {
+        query.lastName = { $regex: filter.lastName, $options: 'i' };
+    }
+
+    if (filter.state) {
+        query.state = filter.state;
+    }
+
+    const admins =  await this.payrollModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
+
+    const total = await this.payrollModel.countDocuments(query).exec();
+    const totalPages = Math.ceil(total / limit)
+
+    let admin: any = {};
+    admin.total = total;
+    admin.pages = totalPages;
+    admin.data = admins;
+
+    return admin;
   }
 
 }

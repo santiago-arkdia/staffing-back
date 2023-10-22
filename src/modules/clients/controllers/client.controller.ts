@@ -3,7 +3,7 @@ import { Client } from '../entities/client.entity';
 import { ClientService } from '../services/client.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateClientsDto } from '../dto/create-client.dto';
-import { UsersService } from 'src/modules/users/services/users.service';
+import { FilterClientsDto } from '../dto/filter-client.dto.';
 
 @ApiTags('Clients')
 @Controller('api/clients')
@@ -38,6 +38,10 @@ export class ClientController {
     return await this.clientService.findBy(by, value);
   }
 
+  @Post('filters/:page/:limit')
+  async findClientsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() body: FilterClientsDto): Promise<Client[]> {
+    return await this.clientService.getClientsByFilters(page, limit, body);
+  }
   /*@Get(':by/:value')
   async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Client[]> {
     var query = this.clientService.findBy(by, value);

@@ -4,6 +4,7 @@ import { PayrollService } from '../services/payroll.service';
 import { ApiTags } from '@nestjs/swagger';
 import { PayrollsDto } from '../dto/payroll.dto';
 import { UsersService } from 'src/modules/users/services/users.service';
+import { FilterPayrollDto } from '../dto/filter-payroll.dto.';
 
 @ApiTags('Payroll')
 @Controller('api/payrolls')
@@ -34,5 +35,10 @@ export class PayrollController {
   @Get('by/:by/:value')
   async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Payroll[]> {
     return await this.payrollService.findBy(by, value);
+  }
+
+  @Post('filters/:page/:limit')
+  async findPayrollByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() body: FilterPayrollDto): Promise<Payroll[]> {
+    return await this.payrollService.getPayrollByFilters(page, limit, body);
   }
 }

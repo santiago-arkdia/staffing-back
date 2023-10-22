@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Admin } from '../admin/entities/admin.entity';
-import { AdminClient } from '../admin-client/entities/adminClient.entity';
-import { Client } from '../clients/entities/client.entity';
-import { Payroll } from '../payroll/entities/payroll.entity';
-import { UserDocument, UserEntity } from '../users/entities/user.entity';
+import { Admin } from '../../admin/entities/admin.entity';
+import { AdminClient } from '../../admin-client/entities/adminClient.entity';
+import { Client } from '../../clients/entities/client.entity';
+import { Payroll } from '../../payroll/entities/payroll.entity';
+import { UserDocument, UserEntity } from '../../users/entities/user.entity';
+import { UserDto } from '../dto/filter-user.dto';
 
 @Injectable()
 export class GetAllUsersService {
@@ -88,14 +89,25 @@ export class GetAllUsersService {
   }
 
 
-  async getUsersByPageFilterDocumentName(page: number, limit: number, document: number, name: string): Promise<any[]> {
-
-    const query = { 
-      ["documentNumber"]: document,
-      ["name"]: name
-    };
+  async getUsersByPageFilterDocumentName(page: number, limit: number, filter: string): Promise<any[]> { 
 
     let dataUsers = await this.userModel.aggregate([
+      {
+        $match: {
+          $or: [
+            { documentNumber: { 
+                $regex: filter,
+                $options: 'i',
+              } 
+            },
+            { name: { 
+                $regex: filter,
+                $options: 'i',
+              } 
+            },
+          ]
+        }
+      },
       {
         $lookup: {
           from: 'admins',
@@ -129,7 +141,90 @@ export class GetAllUsersService {
         },
       },
       {
-        $match: query,
+        $skip: (page - 1) * limit, 
+      },
+      {
+        $limit: limit,
+      },
+    ])
+    .allowDiskUse(true);
+
+    const totalUsers = await this.userModel.countDocuments({
+      $or: [
+        { documentNumber: { 
+            $regex: filter,
+            $options: 'i',
+          } 
+        },
+        { name: { 
+            $regex: filter,
+            $options: 'i',
+          } 
+        },
+      ]
+    }).exec();
+    const totalPages = Math.ceil(totalUsers / limit)
+
+    const createdAtComparator = (a, b) => {
+      return a.createdAt - b.createdAt;
+    };
+
+    let users: any = {};
+    users.total = totalUsers;
+    users.pages = totalPages;
+    users.data = dataUsers;
+    users.data.sort(createdAtComparator);
+
+    return users;
+  }
+
+
+  async getUsersByFilters(page: number, limit: number, user: UserDto): Promise<any[]> { 
+
+    const emailRegex = user.email ? { $regex: user.email, $options: 'i' } : undefined;
+
+    let dataUsers = await this.userModel.aggregate([
+      {
+        $match: {
+          $and: [
+            ...(emailRegex ? [{ email: emailRegex }] : []),
+            ...(user.createdAt ? [{ createdAt: { $gte: new Date(user.createdAt+'T00:00:00.000Z'), $lte: new Date(user.createdAt+'T23:59:59.999Z') } }] : []),
+            ...(user.role ? [{ role: user.role }] : []),
+            ...(user.state ? [{ state: user.state }] : []),
+          ]
+        }
+      },
+      {
+        $lookup: {
+          from: 'admins',
+          localField: '_id',
+          foreignField: 'user',
+          as: 'admins',
+        },
+      },
+      {
+        $lookup: {
+          from: 'adminclients', 
+          localField: '_id',
+          foreignField: 'user',
+          as: 'adminclients',
+        },
+      },
+      {
+        $lookup: {
+          from: 'clients',
+          localField: '_id',
+          foreignField: 'user',
+          as: 'clients',
+        },
+      }, 
+      {
+        $lookup: {
+          from: 'payrolls', 
+          localField: '_id',
+          foreignField: 'user',
+          as: 'payrolls',
+        },
       },
       {
         $skip: (page - 1) * limit, 
@@ -140,8 +235,9 @@ export class GetAllUsersService {
     ])
     .allowDiskUse(true);
 
-    const totalUsers = await this.userModel.countDocuments().exec();
-    const totalPages = Math.ceil(totalUsers / limit)
+
+    const totalUsers = dataUsers.length;
+    const totalPages = Math.ceil(dataUsers.length / limit)
 
     const createdAtComparator = (a, b) => {
       return a.createdAt - b.createdAt;

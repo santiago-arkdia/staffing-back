@@ -4,6 +4,7 @@ import { AdminClient } from '../entities/adminClient.entity';
 import { ClientService } from '../services/adminClient.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateClientsDto } from '../dto/create-adminClient.dto';
+import { FilterAdminClientsDto } from '../dto/filter-admin.dto.';
 
 @ApiTags('Admin Clients')
 @Controller('api/admin-client')
@@ -39,5 +40,10 @@ export class ClientController {
     @Param('value') value: string,
   ): Promise<AdminClient[]> {
     return await this.clientService.findBy(by, value);
+  }
+
+  @Post('filters/:page/:limit')
+  async findAdminsClientsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() body: FilterAdminClientsDto): Promise<AdminClient[]> {
+    return await this.clientService.getAdminsClientsByFilters(page, limit, body);
   }
 }

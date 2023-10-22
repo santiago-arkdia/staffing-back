@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AdminClient } from '../entities/adminClient.entity';
 import { CreateClientsDto } from '../dto/create-adminClient.dto';
+import { FilterAdminClientsDto } from '../dto/filter-admin.dto.';
 
 @Injectable()
 export class ClientService {
@@ -69,4 +70,44 @@ export class ClientService {
         })
         .exec();
   }
+
+  async getAdminsClientsByFilters(page: number, limit: number, filter: FilterAdminClientsDto): Promise<AdminClient[]> {
+
+    const query: any = {};
+
+    if (filter.name) {
+        query.name = { $regex: filter.name, $options: 'i' };
+    }
+
+    if (filter.lastName) {
+        query.lastName = { $regex: filter.lastName, $options: 'i' };
+    }
+
+    if (filter.state) {
+        query.state = filter.state;
+    }
+
+    const admins =  await this.clientModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
+
+    const total = await this.clientModel.countDocuments(query).exec();
+    const totalPages = Math.ceil(total / limit)
+
+    let admin: any = {};
+    admin.total = total;
+    admin.pages = totalPages;
+    admin.data = admins;
+
+    return admin;
+  }
+
 }

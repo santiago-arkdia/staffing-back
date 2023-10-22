@@ -40,13 +40,6 @@ export class UsersService {
     return await this.userModel.find(query).exec();
   }
 
-
-
-
-  
-
-
-
   async createUser(
     currentUser: UserEntity,
     createUserDto: CreateUserDto,
