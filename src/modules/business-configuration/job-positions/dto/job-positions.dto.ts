@@ -1,5 +1,5 @@
 import { Schema, Prop } from '@nestjs/mongoose';
-import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @Schema()
 export class CreateJobPositionsDto{
@@ -8,9 +8,11 @@ export class CreateJobPositionsDto{
   region: string;
 
   @IsString()
+  @IsOptional()
   utilityCenter: string;
 
   @IsString()
+  @IsOptional()
   centersCosts: string;
 
   @IsString()
