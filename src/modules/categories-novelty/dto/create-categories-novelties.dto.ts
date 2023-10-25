@@ -7,4 +7,8 @@ export class CreateCategoriesNewsDto {
   @IsString()
   name: string;
 
+  registrationRole: string
+
+  approvalRole: string
+
 }

@@ -6,6 +6,11 @@ export class CategoriesNovelty {
   @Prop({ type: String, required: true })
   name: string;
 
+  @Prop({ type: String })
+  registrationRole: string
+
+  @Prop({ type: String })
+  approvalRole: string
   // @Prop()
   // state: number;
 

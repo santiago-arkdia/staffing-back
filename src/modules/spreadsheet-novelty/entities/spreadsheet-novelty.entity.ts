@@ -9,6 +9,9 @@ export class NoveltySpreadsheet {
   @Prop({ type: String, required: true })
   description: string;
 
+  @Prop({ type: String, required: true })
+  documentUrl: string;
+
 }
 
 export const NoveltySpreadsheetSchema = SchemaFactory.createForClass(NoveltySpreadsheet);

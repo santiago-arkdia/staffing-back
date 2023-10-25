@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 @Schema()
 export class CreateSpreadsheetsDto {
@@ -11,6 +11,5 @@ export class CreateSpreadsheetsDto {
   description: string;
 
   @IsString()
-  @IsOptional()
-  documentUrl?: string;
+  documentUrl: string;
 }
