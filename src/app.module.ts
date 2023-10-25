@@ -19,14 +19,13 @@ import { UtilityCentersModule } from './modules/business-configuration/utility-c
 import { ModuleParameterizationsModule } from './modules/module-parameterization/module-parameterization.module';
 import { RolessModule } from './modules/roles/roles.module';
 import { ConceptsModule } from './modules/concepts/concepts.module';
-import { CategoriesNewsModule } from './modules/categories-news/categories-news.module';
+import { CategoriesNoveltyModule } from './modules/categories-novelty/categories-novelty.module';
 import { NoveltyModule } from './modules/novelty/novelty.module';
 import { EpsModule } from './modules/eps/eps.module';
 import { DiagnosisModule } from './modules/diagnosis/diagnosis.module';
 import { AdminClientModule } from './modules/admin-client/admin-client.module';
 import { GetAllUsersModule } from './modules/get-all-users/get-all-users.module';
 import { StateNoveltyModule } from './modules/state-novelty/state-novelty.module';
-import { TypeNoveltyModule } from './modules/type-novelty/type-novelty.module';
 import { UserSchema } from './modules/users/entities/user.entity';
 import { RolesSchema } from './modules/roles/entities/roles.entity';
 import { JobPositionsModule } from './modules/business-configuration/job-positions/job-positions.module';
@@ -55,14 +54,13 @@ import { SpreadsheetNoveltyModule } from './modules/spreadsheet-novelty/spreadsh
     ModuleParameterizationsModule,
     RolessModule,
     ConceptsModule,
-    CategoriesNewsModule,
+    CategoriesNoveltyModule,
     NoveltyModule,
     EpsModule,
     DiagnosisModule,
     AdminClientModule,
     GetAllUsersModule,
     StateNoveltyModule,
-    TypeNoveltyModule,
     JobPositionsModule,
     ArlModule,
     SpreadsheetNoveltyModule

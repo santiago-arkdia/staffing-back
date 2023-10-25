@@ -5,7 +5,6 @@ import { Concept } from 'src/modules/concepts/entities/concepts.entity';
 import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
 import { Eps } from 'src/modules/eps/entities/eps.entity';
 import { NoveltyState } from 'src/modules/state-novelty/entities/novelty-state.entity';
-import { TypeNovelty } from 'src/modules/type-novelty/entities/type-novelty.entity';
 
 @Schema()
 export class Novelty {
@@ -27,15 +26,8 @@ export class Novelty {
   @Prop({ type: mongoose.Schema.Types.Array, ref: 'concepts' })
   concept: Concept[];
 
-  // @Prop()
-  // state: string;
   @Prop({ type: mongoose.Schema.Types.Array, ref: 'Novelty-State' })
   state: NoveltyState[];
-
-  // @Prop()
-  // type: string;
-  @Prop({ type: mongoose.Schema.Types.Array, ref: 'Novelty-Type' })
-  type: TypeNovelty[];
 
   @Prop()
   numberInability: string;
@@ -52,13 +44,9 @@ export class Novelty {
   @Prop()
   extension: boolean;
 
-  // @Prop()
-  // eps: string;
   @Prop({ type: mongoose.Schema.Types.Array, ref: 'eps' })
   eps: Eps[];
 
-  // @Prop()
-  // diagnosis: string;
   @Prop({ type: mongoose.Schema.Types.Array, ref: 'diagnoses' })
   diagnosis: Diagnosis[];
 

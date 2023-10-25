@@ -1,9 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsString } from 'class-validator';
+import { IsArray, IsString } from 'class-validator';
+import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
 
 @Schema()
 export class CreateConceptsDto {
+
+  @IsArray()
+  category: CategoriesNovelty[];
+
   @IsString()
   name: string;
 

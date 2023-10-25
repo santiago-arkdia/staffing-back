@@ -6,4 +6,5 @@ import { IsString } from 'class-validator';
 export class CreateCategoriesNewsDto {
   @IsString()
   name: string;
+
 }

@@ -1,42 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CategoriesNews } from '../entities/categories-news.entity';
+import { CategoriesNovelty } from '../entities/categories-novelties.entity';
 import { Model } from 'mongoose';
-import { CreateCategoriesNewsDto } from '../dto/create-categories-news.dto';
+import { CreateCategoriesNewsDto } from '../dto/create-categories-novelties.dto';
 
 @Injectable()
 export class CategoriesNewsService {
   constructor(
-    @InjectModel(CategoriesNews.name)
-    private readonly categoriesNewstModel: Model<CategoriesNews>,
+    @InjectModel(CategoriesNovelty.name)
+    private readonly categoriesNewstModel: Model<CategoriesNovelty>,
   ) {}
 
   async create(
     categoriesNews: CreateCategoriesNewsDto,
-  ): Promise<CategoriesNews> {
+  ): Promise<CategoriesNovelty> {
     const createdCategoriesNews = new this.categoriesNewstModel(categoriesNews);
     return await createdCategoriesNews.save();
   }
 
   async update(
     id: string,
-    categoriesNews: CategoriesNews,
-  ): Promise<CategoriesNews> {
+    categoriesNews: CategoriesNovelty,
+  ): Promise<CategoriesNovelty> {
     return await this.categoriesNewstModel.findByIdAndUpdate(
       id,
       categoriesNews,
     );
   }
 
-  async findAll(): Promise<CategoriesNews[]> {
+  async findAll(): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewstModel.find().exec();
   }
 
-  async findOne(id: string): Promise<CategoriesNews> {
+  async findOne(id: string): Promise<CategoriesNovelty> {
     return await this.categoriesNewstModel.findById(id).exec();
   }
 
-  async findBy(by: string, value: string): Promise<CategoriesNews[]> {
+  async findBy(by: string, value: string): Promise<CategoriesNovelty[]> {
     const query = { [by]: value };
     return await this.categoriesNewstModel.find(query).exec();
   }

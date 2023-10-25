@@ -5,7 +5,6 @@ import { Concept } from 'src/modules/concepts/entities/concepts.entity';
 import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
 import { Eps } from 'src/modules/eps/entities/eps.entity';
 import { NoveltyState } from 'src/modules/state-novelty/entities/novelty-state.entity';
-import { TypeNovelty } from 'src/modules/type-novelty/entities/type-novelty.entity';
 
 @Schema()
 export class CreateNoveltyDto {
@@ -27,14 +26,8 @@ export class CreateNoveltyDto {
   @IsArray()
   concept: Concept[];
 
-
-  // @IsString()
-  // state: string;
   @IsArray()
   state: NoveltyState[];
-
-  @IsString()
-  type: TypeNovelty[];
 
   @IsString()
   numberInability: string;
