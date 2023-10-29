@@ -20,6 +20,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
 import { UserEntity } from '../entities/user.entity';
+import { UpdateUserStateDto } from '../dto/update-user-state.dto';
 
 //@ApiBearerAuth()
 @ApiTags('Usuarios')
@@ -138,6 +139,22 @@ export class UsersController {
   @Put(':id')
   async update(@Param('id') id: string, @Body() user: UpdateUserDto): Promise<UserEntity> {
     return await this.usersService.update(id, user);
+  }
+
+  // @Put('state/:id')
+  // async updatestate(@Param('id') id: string, @Body() state: UpdateUserStateDto): Promise<UserEntity> {
+  //   return await this.usersService.update(id, state);
+  // }
+  @Put('state/:id')
+  async updatestate(@Param('id') id: string, @Body('state') state: number): Promise<UserEntity> {
+    const updatedUser = await this.usersService.findOneAndUpdate(id, { state });
+    return updatedUser;
+  }
+
+  @Put('resetpassword/:id')
+  async updatePassword(@Param('id') id: string, @Body('password') password: string): Promise<UserEntity> {
+    const updatedUser = await this.usersService.updatePassword(id, password );
+    return updatedUser;
   }
 
   @Get()

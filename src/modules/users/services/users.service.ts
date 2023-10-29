@@ -6,6 +6,7 @@ import { UserEntity, UserDocument } from '../entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { CreateUserClientDto } from '../dto/create-user-client.dto';
+import * as bcrypt from 'bcryptjs';
 
 export type User = any;
 
@@ -19,7 +20,10 @@ export class UsersService {
 
 
   async create(user: CreateUserDto): Promise<UserEntity> {
-    const createdUser= new this.userModel(user);
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(user.password, salt);
+    const createdUser = new this.userModel({ ...user, password: hashedPassword })
+    // const createdUser= new this.userModel(user);
     return await createdUser.save();
   }
 
@@ -179,5 +183,17 @@ export class UsersService {
       throw new Error(`El usuario con ID ${id} no se encontró`);
     }
     return `Usuario con ID ${id} eliminado correctamente`;
+  }
+
+  async findOneAndUpdate(id: string, update: Partial<UserEntity>): Promise<UserEntity> {
+    const updatedUser = await this.userModel.findByIdAndUpdate(id, update, { new: true });
+    return updatedUser;
+  }
+
+  async updatePassword(id: string, password: string): Promise<UserEntity> {
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+    const updatedUser = await this.userModel.findByIdAndUpdate(id, { password: hashedPassword }, { new: true });
+    return updatedUser;
   }
 }

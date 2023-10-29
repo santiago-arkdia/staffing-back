@@ -24,6 +24,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   role: string;
 
   @IsString()
+  @IsOptional()
   image: string;
 
   @IsNumber()

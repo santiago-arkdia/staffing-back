@@ -12,7 +12,7 @@ export class ConceptsService {
   ) {}
 
   async create(concept: CreateConceptsDto): Promise<Concept> {
-    console.log(concept);
+    // console.log(concept);
     const createdConcept = new this.conceptModel(concept);
     return await createdConcept.save();
   }

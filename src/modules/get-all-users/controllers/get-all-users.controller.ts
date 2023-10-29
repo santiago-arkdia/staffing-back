@@ -27,7 +27,6 @@ export class GetAllUsersController {
 
   @Post('filters/:page/:limit')
   getUsersByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() user: UserDto) {
-    console.log(user);
     if (user && Object.keys(user).length > 0) {
       return this.userService.getUsersByFilters(page, limit, user);
     }else{
