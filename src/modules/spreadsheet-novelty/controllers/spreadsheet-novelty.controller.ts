@@ -11,9 +11,8 @@ export class SpreadsheetNoveltyController {
 
   @Post()
   async create(
-    @Body() novletySpreadsheet: CreateSpreadsheetsDto,
-  ): Promise<NoveltySpreadsheet> {
-    return await this.spreadsheetNovelty.create(novletySpreadsheet);
+    @Body() spreadsheet: CreateSpreadsheetsDto): Promise<NoveltySpreadsheet> {
+    return await this.spreadsheetNovelty.create(spreadsheet);
   }
 
   @Get()

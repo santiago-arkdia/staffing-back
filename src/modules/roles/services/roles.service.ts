@@ -6,7 +6,9 @@ import { CreateRolesDto } from '../dto/create-roles.dto';
 
 @Injectable()
 export class RolesService {
-  constructor(@InjectModel(Roles.name) private readonly rolesModel: Model<Roles>) {}
+  constructor(
+    @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
+  ) {}
 
   async create(roles: CreateRolesDto): Promise<Roles> {
     const createdRoles = new this.rolesModel(roles);
