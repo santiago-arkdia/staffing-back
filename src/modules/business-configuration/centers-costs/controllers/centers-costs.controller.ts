@@ -20,9 +20,9 @@ export class CentersCostsController {
     return await this.centersCostsService.update(id, centersCosts);
   }
 
-  @Get()
-  async findAll(): Promise<CentersCosts[]> {
-    return await this.centersCostsService.findAll();
+  @Get(':page/:limit')
+  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<CentersCosts[]> {
+    return await this.centersCostsService.findAll(page, limit);
   }
 
   @Get(':id')
@@ -30,8 +30,8 @@ export class CentersCostsController {
     return await this.centersCostsService.findOne(id);
   }
 
-  @Get(':by/:value')
-  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<CentersCosts[]> {
-    return await this.centersCostsService.findBy(by, value);
+  @Get(':page/:limit/:by/:value')
+  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<CentersCosts[]> {
+    return await this.centersCostsService.findBy(page, limit, by, value);
   }
 }

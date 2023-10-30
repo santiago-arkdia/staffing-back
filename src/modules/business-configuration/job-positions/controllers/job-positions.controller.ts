@@ -20,9 +20,9 @@ export class JobPositionsController {
     return await this.jobPositionsService.update(id, jobPositions);
   }
 
-  @Get()
-  async findAll(): Promise<JobPositions[]> {
-    return await this.jobPositionsService.findAll();
+  @Get(':page/:limit')
+  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<JobPositions[]> {
+    return await this.jobPositionsService.findAll(page, limit);
   }
 
   @Get(':id')
@@ -30,8 +30,8 @@ export class JobPositionsController {
     return await this.jobPositionsService.findOne(id);
   }
 
-  @Get(':by/:value')
-  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<JobPositions[]> {
-    return await this.jobPositionsService.findBy(by, value);
+  @Get(':page/:limit/:by/:value')
+  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<JobPositions[]> {
+    return await this.jobPositionsService.findBy(page, limit, by, value);
   }
 }

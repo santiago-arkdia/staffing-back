@@ -20,9 +20,9 @@ export class CountryController {
     return await this.countryService.update(id, country);
   }
 
-  @Get()
-  async findAll(): Promise<Country[]> {
-    return await this.countryService.findAll();
+  @Get(':page/:limit')
+  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<Country[]> {
+    return await this.countryService.findAll(page, limit);
   }
 
   @Get(':id')
@@ -30,8 +30,8 @@ export class CountryController {
     return await this.countryService.findOne(id);
   }
 
-  @Get(':by/:value')
-  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Country[]> {
-    return await this.countryService.findBy(by, value);
+  @Get(':page/:limit/:by/:value')
+  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<Country[]> {
+    return await this.countryService.findBy(page, limit, by, value);
   }
 }

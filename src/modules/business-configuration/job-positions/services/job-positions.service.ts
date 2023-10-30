@@ -17,16 +17,60 @@ export class JobPositionsService {
     return await this.jobPositionsModel.findByIdAndUpdate(id, jobPositions, { new: true });
   }
 
-  async findAll(): Promise<JobPositions[]> {
-    return await this.jobPositionsModel.find().exec();
+  async findAll(page: number, limit: number): Promise<JobPositions[]> {
+    
+    const total = await this.jobPositionsModel.countDocuments().exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const jobPosition = await this.jobPositionsModel
+      .find()
+      .skip((page - 1) * limit)
+      .populate([
+        'utilityCenter',
+        'region',
+        'centersCosts',
+        'arl'
+      ])
+      .limit(limit)
+      .exec();
+
+
+      let jobPositions: any = {};
+      jobPositions.total = total;
+      jobPositions.pages = totalPages;
+      jobPositions.data = jobPosition;
+
+      return jobPositions;
   }
 
   async findOne(id: string): Promise<JobPositions> {
     return await this.jobPositionsModel.findById(id).exec();
   }
 
-  async findBy(by: string, value: string): Promise<JobPositions[]> {
+  async findBy(page: number, limit: number, by: string, value: string): Promise<JobPositions[]> {
     const query = { [by]: value };
-    return await this.jobPositionsModel.find(query).exec();
+
+    const total = await this.jobPositionsModel.countDocuments(query).exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const jobPosition = await this.jobPositionsModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .populate([
+        'utilityCenter',
+        'region',
+        'centersCosts',
+        'arl'
+      ])
+      .limit(limit)
+      .exec();
+
+
+      let jobPositions: any = {};
+      jobPositions.total = total;
+      jobPositions.pages = totalPages;
+      jobPositions.data = jobPosition;
+
+      return jobPositions;
   }
 }

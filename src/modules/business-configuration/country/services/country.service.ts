@@ -17,16 +17,46 @@ export class CountryService {
     return await this.countryModel.findByIdAndUpdate(id, country, { new: true });
   }
 
-  async findAll(): Promise<Country[]> {
-    return await this.countryModel.find().exec();
+  async findAll(page: number, limit: number): Promise<Country[]> {
+    
+    const total = await this.countryModel.countDocuments().exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const country = await this.countryModel
+      .find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+
+      let countries: any = {};
+      countries.total = total;
+      countries.pages = totalPages;
+      countries.data = country;
+
+      return countries;
   }
 
   async findOne(id: string): Promise<Country> {
     return await this.countryModel.findById(id).exec();
   }
 
-  async findBy(by: string, value: string): Promise<Country[]> {
+  async findBy(page: number, limit: number, by: string, value: string): Promise<Country[]> {
     const query = { [by]: value };
-    return await this.countryModel.find(query).exec();
+
+    const total = await this.countryModel.countDocuments(query).exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const country = await this.countryModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+
+      let countries: any = {};
+      countries.total = total;
+      countries.pages = totalPages;
+      countries.data = country;
+
+      return countries;
   }
 }

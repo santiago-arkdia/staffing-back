@@ -20,9 +20,9 @@ export class UtilityCenterController {
     return await this.utilityCenterService.update(id, utilityCenter);
   }
 
-  @Get()
-  async findAll(): Promise<UtilityCenter[]> {
-    return await this.utilityCenterService.findAll();
+  @Get(':page/:limit')
+  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<UtilityCenter[]> {
+    return await this.utilityCenterService.findAll(page, limit);
   }
 
   @Get(':id')
@@ -30,8 +30,8 @@ export class UtilityCenterController {
     return await this.utilityCenterService.findOne(id);
   }
 
-  @Get(':by/:value')
-  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<UtilityCenter[]> {
-    return await this.utilityCenterService.findBy(by, value);
+  @Get(':page/:limit/:by/:value')
+  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<UtilityCenter[]> {
+    return await this.utilityCenterService.findBy(page, limit, by, value);
   }
 }

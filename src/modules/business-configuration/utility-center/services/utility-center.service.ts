@@ -17,16 +17,57 @@ export class UtilityCenterService {
     return await this.utilityCenterModel.findByIdAndUpdate(id, utilityCenter, { new: true });
   }
 
-  async findAll(): Promise<UtilityCenter[]> {
-    return await this.utilityCenterModel.find().exec();
+  async findAll(page: number, limit: number): Promise<UtilityCenter[]> {
+    const total = await this.utilityCenterModel.countDocuments().exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const utilityCenter = await this.utilityCenterModel
+      .find()
+      .skip((page - 1) * limit)
+      .populate({
+        path: 'region',
+        populate: {
+          path: 'country',
+        },
+      })
+      .limit(limit)
+      .exec();
+
+      let utilityCenters: any = {};
+      utilityCenters.total = total;
+      utilityCenters.pages = totalPages;
+      utilityCenters.data = utilityCenter;
+
+      return utilityCenters;
   }
 
   async findOne(id: string): Promise<UtilityCenter> {
     return await this.utilityCenterModel.findById(id).exec();
   }
 
-  async findBy(by: string, value: string): Promise<UtilityCenter[]> {
+  async findBy(page: number, limit: number, by: string, value: string): Promise<UtilityCenter[]> {
     const query = { [by]: value };
-    return await this.utilityCenterModel.find(query).exec();
+
+    const total = await this.utilityCenterModel.countDocuments(query).exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const utilityCenter = await this.utilityCenterModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .populate({
+        path: 'region',
+        populate: {
+          path: 'country',
+        },
+      })
+      .limit(limit)
+      .exec();
+
+      let utilityCenters: any = {};
+      utilityCenters.total = total;
+      utilityCenters.pages = totalPages;
+      utilityCenters.data = utilityCenter;
+
+      return utilityCenters;
   }
 }
