@@ -31,6 +31,7 @@ import { RolesSchema } from './modules/roles/entities/roles.entity';
 import { JobPositionsModule } from './modules/business-configuration/job-positions/job-positions.module';
 import { ArlModule } from './modules/arl/arl.module';
 import { SpreadsheetNoveltyModule } from './modules/spreadsheet-novelty/spreadsheet-novelty.module';
+import { CollaboratorModule } from './modules/collaborators/collaborators.module';
 
 @Module({
   imports: [
@@ -63,7 +64,8 @@ import { SpreadsheetNoveltyModule } from './modules/spreadsheet-novelty/spreadsh
     StateNoveltyModule,
     JobPositionsModule,
     ArlModule,
-    SpreadsheetNoveltyModule
+    SpreadsheetNoveltyModule,
+    CollaboratorModule
   ],
   controllers: [AppController, ConnectionController],
   providers: [AppService, AuthService],

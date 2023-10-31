@@ -1,87 +1,39 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsBoolean, IsDate, IsOptional, IsString } from 'class-validator';
-// import { DiagnosisModule } from 'src/modules/diagnosis/diagnosis.module';
-// import { Eps } from 'src/modules/eps/entities/eps.entity';
+import { IsArray, IsBoolean, IsDate, IsString } from 'class-validator';
 
 @Schema()
 export class UpdateNoveltyDto {
-  // @IsOptional()
-  // @IsString()
-  // name?: string;
-
-  @IsOptional()
   @IsString()
-  performance?: string;
+  collaborator: string;
 
-  @IsOptional()
   @IsString()
-  createBy?: string;
+  categoryNovelty: string;
 
-  @IsOptional()
   @IsString()
-  designatedAnalyst?: string;
+  numberInability: string;
 
-  @IsOptional()
   @IsString()
-  client?: string;
+  initialDate: Date;
 
-  @IsOptional()
   @IsString()
-  area?: string;
-
-  @IsOptional()
-  @IsString()
-  noveltyGrouper?: string;
-
-  // @IsOptional()
-  // @IsString()
-  // state?: string;
-
-  // @IsOptional()
-  // @IsString()
-  // type?: string;
-
-  @IsOptional()
-  @IsString()
-  numberInability?: string;
-
-  @IsOptional()
+  finalDate: Date;
+  
   @IsDate()
-  initialDate?: Date;
-
-  @IsOptional()
-  @IsDate()
-  finalDate?: Date;
-
-  @IsOptional()
-  @IsString()
-  typeOfAttention?: string;
-
-  @IsOptional()
+  typeOfAttention: string;
+  
   @IsBoolean()
-  extension?: boolean;
-
-  // @IsOptional()
-  // @IsString()
-  // eps?: string;
-
-  // @IsOptional()
-  // @IsString()
-  // diagnosis?: string;
-  // @IsOptional()
-  // @IsArray()
-  // eps?: Eps[];
-
-  // @IsOptional()
-  // @IsArray()
-  // diagnosis?: DiagnosisModule[];
-
-  @IsOptional()
+  extension: boolean;
+  
   @IsString()
-  Description?: string;
-
-  @IsOptional()
+  eps: string;
+  
   @IsString()
-  documentUpload?: string;
+  diagnosis: string;
+  
+  @IsString()
+  description: string;
+  
+  @IsArray()
+  documents: string[];
 }

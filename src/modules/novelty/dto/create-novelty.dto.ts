@@ -1,33 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsArray, IsBoolean, IsString } from 'class-validator';
-import { Concept } from 'src/modules/concepts/entities/concepts.entity';
-import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
-import { Eps } from 'src/modules/eps/entities/eps.entity';
-import { NoveltyState } from 'src/modules/state-novelty/entities/novelty-state.entity';
+import { IsArray, IsBoolean, IsDate, IsString } from 'class-validator';
 
 @Schema()
 export class CreateNoveltyDto {
   @IsString()
-  createBy: string;
+  collaborator: string;
 
   @IsString()
-  designatedAnalyst: string;
-
-  @IsString()
-  client: string;
-
-  @IsString()
-  area: string;
-
-  @IsString()
-  noveltyGrouper: string;
-
-  @IsArray()
-  concept: Concept[];
-
-  @IsArray()
-  state: NoveltyState[];
+  categoryNovelty: string;
 
   @IsString()
   numberInability: string;
@@ -37,26 +18,22 @@ export class CreateNoveltyDto {
 
   @IsString()
   finalDate: Date;
-
-  @IsString()
+  
+  @IsDate()
   typeOfAttention: string;
-
+  
   @IsBoolean()
   extension: boolean;
-
-  // @IsString()
-  // eps: string;
-  @IsArray()
-  eps: Eps[];
-
-  // @IsString()
-  // diagnosis: string;
-  @IsArray()
-  diagnosis: Diagnosis[];
-
+  
   @IsString()
-  Description: string;
-
+  eps: string;
+  
   @IsString()
-  documentUpload: string;
+  diagnosis: string;
+  
+  @IsString()
+  description: string;
+  
+  @IsArray()
+  documents: string[];
 }

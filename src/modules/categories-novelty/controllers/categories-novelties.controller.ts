@@ -11,17 +11,12 @@ export class CategoriesNewsController {
   constructor(private readonly categoriesNewsService: CategoriesNewsService) {}
 
   @Post()
-  async create(
-    @Body() categoriesNews: CreateCategoriesNewsDto,
-  ): Promise<CategoriesNovelty> {
+  async create(@Body() categoriesNews: CreateCategoriesNewsDto): Promise<CategoriesNovelty> {
     return await this.categoriesNewsService.create(categoriesNews);
   }
 
   @Put(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() categoriesNews: CategoriesNovelty,
-  ): Promise<CategoriesNovelty> {
+  async update( @Param('id') id: string, @Body() categoriesNews: CategoriesNovelty): Promise<CategoriesNovelty> {
     return await this.categoriesNewsService.update(id, categoriesNews);
   }
 
@@ -36,10 +31,7 @@ export class CategoriesNewsController {
   }
 
   @Get(':by/:value')
-  async findBy(
-    @Param('by') by: string,
-    @Param('value') value: string,
-  ): Promise<CategoriesNovelty[]> {
+  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewsService.findBy(by, value);
   }
 }

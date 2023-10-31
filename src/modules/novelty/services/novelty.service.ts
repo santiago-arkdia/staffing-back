@@ -18,45 +18,38 @@ export class NoveltyService {
     return await createdNovelty.save();
   }
 
-  async update(
-    id: string,
-    updateNoveltyDto: UpdateNoveltyDto,
-  ): Promise<UpdateNoveltyDto> {
-    // Verifica si updateNoveltyDto.initialDate es una cadena válida antes de intentar convertirla
+  async update(id: string, updateNoveltyDto: UpdateNoveltyDto): Promise<UpdateNoveltyDto> {
     if (
       updateNoveltyDto.initialDate &&
       !isNaN(Date.parse(updateNoveltyDto.initialDate.toString()))
     ) {
       updateNoveltyDto.initialDate = new Date(updateNoveltyDto.initialDate);
     } else {
-      delete updateNoveltyDto.initialDate; // Elimina la propiedad si no es válida
+      delete updateNoveltyDto.initialDate; 
     }
 
-    // Verifica si updateNoveltyDto.finalDate es una cadena válida antes de intentar convertirla
     if (
       updateNoveltyDto.finalDate &&
       !isNaN(Date.parse(updateNoveltyDto.finalDate.toString()))
     ) {
       updateNoveltyDto.finalDate = new Date(updateNoveltyDto.finalDate);
     } else {
-      delete updateNoveltyDto.finalDate; // Elimina la propiedad si no es válida
+      delete updateNoveltyDto.finalDate; 
     }
 
-    // Realiza la actualización de la entidad Novelty
     const updatedNovelty = await this.noveltyModel.findByIdAndUpdate(
       id,
       updateNoveltyDto,
       {
-        new: true, // Esto devuelve la novedad actualizada en lugar de la anterior
+        new: true
       },
     );
 
     if (!updatedNovelty) {
-      // Maneja el caso en que no se encuentra la novedad
       throw new NotFoundException('Novedad no encontrada');
     }
 
-    return updatedNovelty;
+    return null;
   }
 
   async findAll(): Promise<Novelty[]> {

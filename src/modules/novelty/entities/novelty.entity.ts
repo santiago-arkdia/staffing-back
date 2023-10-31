@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+import { CategoriesNovelty } from 'src/modules/categories-novelty/entities/categories-novelties.entity';
+import { Collaborator } from 'src/modules/collaborators/entities/collaborators.entity';
 import { Concept } from 'src/modules/concepts/entities/concepts.entity';
 import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
 import { Eps } from 'src/modules/eps/entities/eps.entity';
@@ -8,26 +10,12 @@ import { NoveltyState } from 'src/modules/state-novelty/entities/novelty-state.e
 
 @Schema()
 export class Novelty {
-  @Prop({ type: String, required: true })
-  createBy: string;
 
-  @Prop({ type: String })
-  designatedAnalyst: string;
+  @Prop({ type: mongoose.Schema.Types.Array, ref: 'collaborator' })
+  collaborator: Collaborator;
 
-  @Prop({ type: String })
-  client: string;
-
-  @Prop({ type: String })
-  area: string;
-
-  @Prop()
-  performance: string;
-
-  @Prop({ type: mongoose.Schema.Types.Array, ref: 'concepts' })
-  concept: Concept[];
-
-  @Prop({ type: mongoose.Schema.Types.Array, ref: 'Novelty-State' })
-  state: NoveltyState[];
+  @Prop({ type: mongoose.Schema.Types.Array, ref: 'category-novelty' })
+  categoryNovelty: CategoriesNovelty;
 
   @Prop()
   numberInability: string;
@@ -45,19 +33,25 @@ export class Novelty {
   extension: boolean;
 
   @Prop({ type: mongoose.Schema.Types.Array, ref: 'eps' })
-  eps: Eps[];
+  eps: Eps;
 
   @Prop({ type: mongoose.Schema.Types.Array, ref: 'diagnoses' })
-  diagnosis: Diagnosis[];
+  diagnosis: Diagnosis;
 
   @Prop()
-  Description: string;
+  description: string;
 
   @Prop()
-  documentUpload: string;
+  documents: string[];
+
+  @Prop({ type: Number, default: 0 })
+  state: number;
 
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  updatedAt: Date;
 }
 
 export const NoveltySchema = SchemaFactory.createForClass(Novelty);

@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsString } from 'class-validator';
+import { IsBoolean, IsString } from 'class-validator';
 
 @Schema()
-export class CreateCategoriesNewsDto {
+export class CreateCollaboratorDto {
   @IsString()
   name: string;
 }
