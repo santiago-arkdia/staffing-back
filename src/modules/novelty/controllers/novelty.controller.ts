@@ -29,9 +29,9 @@ export class NoveltyController {
     return await this.noveltyService.update(id, updateNoveltyDto);
   }
 
-  @Get()
-  async findAll(): Promise<Novelty[]> {
-    return await this.noveltyService.findAll();
+  @Get(':page/:limit')
+  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<Novelty[]> {
+    return await this.noveltyService.findAll(page, limit);
   }
 
   @Get(':id')
@@ -39,11 +39,8 @@ export class NoveltyController {
     return await this.noveltyService.findOne(id);
   }
 
-  @Get(':by/:value')
-  async findBy(
-    @Param('by') by: string,
-    @Param('value') value: string,
-  ): Promise<Novelty[]> {
-    return await this.noveltyService.findBy(by, value);
+  @Get(':page/:limit/:by/:value')
+  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<Novelty[]> {
+    return await this.noveltyService.findBy(page, limit, by, value);
   }
 }

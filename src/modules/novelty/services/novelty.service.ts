@@ -52,17 +52,73 @@ export class NoveltyService {
     return null;
   }
 
-  async findAll(): Promise<Novelty[]> {
-    return await this.noveltyModel.find().exec();
+  async findAll(page: number, limit: number): Promise<Novelty[]> {
+
+    const total = await this.noveltyModel.countDocuments().exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const novelty = await this.noveltyModel
+      .find()
+      .skip((page - 1) * limit)
+      .populate("collaborator")
+      .populate("categoryNovelty")
+      // .populate({
+      //   path: 'concept',
+      //   populate: [
+      //     { path: 'categoryNovelty'},
+      //     { path: 'registers'},
+      //     { path: 'approves'}
+      //   ],
+      // })
+      .populate("state")
+      .populate("eps")
+      .populate("diagnosis")
+      .limit(limit)
+      .exec();
+
+      let noveltys: any = {};
+      noveltys.total = total;
+      noveltys.pages = totalPages;
+      noveltys.data = novelty;
+
+      return noveltys;
   }
 
   async findOne(id: string): Promise<Novelty> {
     return await this.noveltyModel.findById(id).exec();
   }
 
-  async findBy(by: string, value: string): Promise<Novelty[]> {
+  async findBy(page: number, limit: number, by: string, value: string): Promise<Novelty[]> {
     const query = { [by]: value };
-    return await this.noveltyModel.find(query).exec();
+
+    const total = await this.noveltyModel.countDocuments(query).exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const novelty = await this.noveltyModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .populate("collaborator")
+      .populate("categoryNovelty")
+      // .populate({
+      //   path: 'concept',
+      //   populate: [
+      //     { path: 'categoryNovelty'},
+      //     { path: 'registers'},
+      //     { path: 'approves'}
+      //   ],
+      // })
+      .populate("state")
+      .populate("eps")
+      .populate("diagnosis")
+      .limit(limit)
+      .exec();
+
+      let noveltys: any = {};
+      noveltys.total = total;
+      noveltys.pages = totalPages;
+      noveltys.data = novelty;
+
+      return noveltys;
   }
 
   async remove(id: string): Promise<void> {

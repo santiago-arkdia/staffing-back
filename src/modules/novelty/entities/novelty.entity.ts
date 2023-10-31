@@ -11,10 +11,10 @@ import { NoveltyState } from 'src/modules/state-novelty/entities/novelty-state.e
 @Schema()
 export class Novelty {
 
-  @Prop({ type: mongoose.Schema.Types.Array, ref: 'collaborator' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'collaborator' })
   collaborator: Collaborator;
 
-  @Prop({ type: mongoose.Schema.Types.Array, ref: 'category-novelty' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'category-novelty' })
   categoryNovelty: CategoriesNovelty;
 
   @Prop()
@@ -32,10 +32,10 @@ export class Novelty {
   @Prop()
   extension: boolean;
 
-  @Prop({ type: mongoose.Schema.Types.Array, ref: 'eps' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'eps' })
   eps: Eps;
 
-  @Prop({ type: mongoose.Schema.Types.Array, ref: 'diagnoses' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'diagnoses' })
   diagnosis: Diagnosis;
 
   @Prop()
