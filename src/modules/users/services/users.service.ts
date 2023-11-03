@@ -1,12 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
-import { UserEntity, UserDocument } from '../entities/user.entity';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
-import { CreateUserClientDto } from '../dto/create-user-client.dto';
+import {Injectable} from '@nestjs/common';
+import {CreateUserDto} from '../dto/create-user.dto';
+import {UpdateUserDto} from '../dto/update-user.dto';
+import {UserDocument, UserEntity} from '../entities/user.entity';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {CreateUserClientDto} from '../dto/create-user-client.dto';
 import * as bcrypt from 'bcryptjs';
+import {UpdateUserStateDto} from "../dto/update-user-state.dto";
 
 export type User = any;
 
@@ -29,6 +30,10 @@ export class UsersService {
 
   async update(id: string, user: UpdateUserDto): Promise<UserEntity> {
     return await this.userModel.findByIdAndUpdate(id, user, { new: true });
+  }
+
+  async updateState(id: string, user: UpdateUserStateDto): Promise<UserEntity> {
+    return this.userModel.findByIdAndUpdate(id, user, {new: true});
   }
 
   async findAll(): Promise<UserEntity[]> {
@@ -186,8 +191,7 @@ export class UsersService {
   }
 
   async findOneAndUpdate(id: string, update: Partial<UserEntity>): Promise<UserEntity> {
-    const updatedUser = await this.userModel.findByIdAndUpdate(id, update, { new: true });
-    return updatedUser;
+    return this.userModel.findByIdAndUpdate(id, update, {new: true});
   }
 
   async updatePassword(id: string, password: string): Promise<UserEntity> {

@@ -11,17 +11,25 @@ export class CentersCostsController {
   constructor(private readonly centersCostsService: CentersCostsService) {}
 
   @Post()
-  async create(@Body() centersCosts: CreateCentersCostsDto): Promise<CentersCosts> {
+  async create(
+    @Body() centersCosts: CreateCentersCostsDto,
+  ): Promise<CentersCosts> {
     return await this.centersCostsService.create(centersCosts);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() centersCosts: CentersCosts): Promise<CentersCosts> {
+  async update(
+    @Param('id') id: string,
+    @Body() centersCosts: CentersCosts,
+  ): Promise<CentersCosts> {
     return await this.centersCostsService.update(id, centersCosts);
   }
 
   @Get(':page/:limit')
-  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<CentersCosts[]> {
+  async findAll(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+  ): Promise<CentersCosts[]> {
     return await this.centersCostsService.findAll(page, limit);
   }
 
@@ -31,7 +39,12 @@ export class CentersCostsController {
   }
 
   @Get(':page/:limit/:by/:value')
-  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<CentersCosts[]> {
+  async findBy(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+    @Param('by') by: string,
+    @Param('value') value: string,
+  ): Promise<CentersCosts[]> {
     return await this.centersCostsService.findBy(page, limit, by, value);
   }
 }

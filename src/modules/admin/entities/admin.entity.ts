@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { ModuleParameterization } from 'src/modules/module-parameterization/entities/module-parameterization.entity';
 import { UserEntity } from 'src/modules/users/entities/user.entity';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Admin {
   @Prop({ type: String, required: true })
   name: string;
@@ -29,8 +29,8 @@ export class Admin {
   @Prop({ type: mongoose.Schema.Types.Array, ref: 'ModuleParameterization' })
   moduleParameterization: ModuleParameterization[];
 
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  /*@Prop({ type: Date, default: Date.now })
+  createdAt: Date;*/
 }
 
 export const AdminSchema = SchemaFactory.createForClass(Admin);

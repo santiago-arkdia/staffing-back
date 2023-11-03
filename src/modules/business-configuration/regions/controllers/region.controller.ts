@@ -16,12 +16,18 @@ export class RegionController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() region: Region): Promise<Region> {
+  async update(
+    @Param('id') id: string,
+    @Body() region: Region,
+  ): Promise<Region> {
     return await this.regionService.update(id, region);
   }
 
   @Get(':page/:limit')
-  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<Region[]> {
+  async findAll(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+  ): Promise<Region[]> {
     return await this.regionService.findAll(page, limit);
   }
 
@@ -31,7 +37,12 @@ export class RegionController {
   }
 
   @Get(':page/:limit/:by/:value')
-  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<Region[]> {
+  async findBy(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+    @Param('by') by: string,
+    @Param('value') value: string,
+  ): Promise<Region[]> {
     return await this.regionService.findBy(page, limit, by, value);
   }
 }

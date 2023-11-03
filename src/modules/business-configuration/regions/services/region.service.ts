@@ -6,7 +6,9 @@ import { CreateRegionDto } from '../dto/create-region.dto';
 
 @Injectable()
 export class RegionService {
-  constructor(@InjectModel(Region.name) private readonly regionModel: Model<Region>) {}
+  constructor(
+    @InjectModel(Region.name) private readonly regionModel: Model<Region>,
+  ) {}
 
   async create(region: CreateRegionDto): Promise<Region> {
     const createdRegion = new this.regionModel(region);
@@ -19,7 +21,7 @@ export class RegionService {
 
   async findAll(page: number, limit: number): Promise<Region[]> {
     const total = await this.regionModel.countDocuments().exec();
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
     const region = await this.regionModel
       .find()
@@ -28,23 +30,28 @@ export class RegionService {
       .limit(limit)
       .exec();
 
-      let regions: any = {};
-      regions.total = total;
-      regions.pages = totalPages;
-      regions.data = region;
+    const regions: any = {};
+    regions.total = total;
+    regions.pages = totalPages;
+    regions.data = region;
 
-      return regions;
+    return regions;
   }
 
   async findOne(id: string): Promise<Region> {
     return await this.regionModel.findById(id).exec();
   }
 
-  async findBy(page: number, limit: number, by: string, value: string): Promise<Region[]> {
-    const query = { [by]: value };
+  async findBy(
+    page: number,
+    limit: number,
+    by: string,
+    value: string,
+  ): Promise<Region[]> {
+    const query = { [by]: { $regex: new RegExp(value, 'i') } };
 
     const total = await this.regionModel.countDocuments(query).exec();
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
     const region = await this.regionModel
       .find(query)
@@ -53,11 +60,11 @@ export class RegionService {
       .limit(limit)
       .exec();
 
-      let regions: any = {};
-      regions.total = total;
-      regions.pages = totalPages;
-      regions.data = region;
+    const regions: any = {};
+    regions.total = total;
+    regions.pages = totalPages;
+    regions.data = region;
 
-      return regions;
+    return regions;
   }
 }

@@ -11,17 +11,25 @@ export class UtilityCenterController {
   constructor(private readonly utilityCenterService: UtilityCenterService) {}
 
   @Post()
-  async create(@Body() utilityCenter: CreateUtilityCenterDto): Promise<UtilityCenter> {
+  async create(
+    @Body() utilityCenter: CreateUtilityCenterDto,
+  ): Promise<UtilityCenter> {
     return await this.utilityCenterService.create(utilityCenter);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() utilityCenter: UtilityCenter): Promise<UtilityCenter> {
+  async update(
+    @Param('id') id: string,
+    @Body() utilityCenter: UtilityCenter,
+  ): Promise<UtilityCenter> {
     return await this.utilityCenterService.update(id, utilityCenter);
   }
 
   @Get(':page/:limit')
-  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<UtilityCenter[]> {
+  async findAll(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+  ): Promise<UtilityCenter[]> {
     return await this.utilityCenterService.findAll(page, limit);
   }
 
@@ -31,7 +39,12 @@ export class UtilityCenterController {
   }
 
   @Get(':page/:limit/:by/:value')
-  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<UtilityCenter[]> {
+  async findBy(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+    @Param('by') by: string,
+    @Param('value') value: string,
+  ): Promise<UtilityCenter[]> {
     return await this.utilityCenterService.findBy(page, limit, by, value);
   }
 }

@@ -5,7 +5,7 @@ import { Roles } from 'src/modules/roles/entities/roles.entity';
 
 export type UserDocument = HydratedDocument<UserEntity>;
 
-@Schema({ collection: 'users' })
+@Schema({ collection: 'users', timestamps: true })
 export class UserEntity {
   // @Prop()
   // _id: string;
@@ -31,8 +31,8 @@ export class UserEntity {
   @Prop({ type: Number, default: 1 })
   state: number;
 
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  /*@Prop({ type: Date, default: Date.now })
+  createdAt: Date;*/
   
 /*
   @Prop({ type: String, required: true })

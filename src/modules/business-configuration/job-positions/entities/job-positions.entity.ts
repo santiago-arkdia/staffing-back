@@ -4,9 +4,8 @@ import { Region } from '../../regions/entities/region.entity';
 import { UtilityCenter } from '../../utility-center/entities/utility-center.entity';
 import { CentersCosts } from '../../centers-costs/entities/centers-costs.entity';
 
-@Schema({ collection: 'utility-center' })
+@Schema({ collection: 'utility-center', timestamps: true })
 export class JobPositions {
-
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Region' })
   region: Region;
 
@@ -33,9 +32,9 @@ export class JobPositions {
 
   @Prop()
   state: number;
-  
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+
+  /*@Prop({ type: Date, default: Date.now })
+  createdAt: Date;*/
 }
 
 export const JobPositionsSchema = SchemaFactory.createForClass(JobPositions);

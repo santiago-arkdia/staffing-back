@@ -1,8 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
-import { Roles } from 'src/modules/roles/entities/roles.entity';
 
-@Schema({ collection: 'module-parameterization' })
+@Schema({ collection: 'module-parameterization', timestamps: true })
 export class ModuleParameterization {
   @Prop({ type: String, required: true })
   module: string;
@@ -21,8 +19,8 @@ export class ModuleParameterization {
   @Prop({ type: String })
   role: string;
 
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  /*@Prop({ type: Date, default: Date.now })
+  createdAt: Date;*/
 }
 
 export const ModuleParameterizationSchema = SchemaFactory.createForClass(

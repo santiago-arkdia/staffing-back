@@ -2,7 +2,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Country } from '../../country/entities/country.entity';
 import mongoose from 'mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Region {
   @Prop({ type: String, required: true })
   name: string;
@@ -19,8 +19,8 @@ export class Region {
   @Prop()
   state: number;
 
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  /*@Prop({ type: Date, default: Date.now })
+  createdAt: Date;*/
 }
 
 export const RegionSchema = SchemaFactory.createForClass(Region);
