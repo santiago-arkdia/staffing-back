@@ -56,7 +56,7 @@ export class CreateClientsDto {
   businessName: string;
 
   @IsArray()
-  businessData: any[]; // Replace 'any' with appropriate type if known
+  businessData: any[];
 
   @IsNumber()
   businessId: number;
@@ -74,7 +74,7 @@ export class CreateClientsDto {
   address: string;
 
   @IsArray()
-  costCenter: any[]; // Replace 'any' with appropriate type if known
+  costCenter: any[];
 
   @IsNumber()
   costCenterId: number;
