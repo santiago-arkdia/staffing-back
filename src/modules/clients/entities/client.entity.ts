@@ -8,6 +8,45 @@ export class Client {
   @Prop({ type: String, required: true })
   name: string;
 
+  @Prop({ type: Number, required: true })
+  nit: number;
+
+  @Prop({ type: Number, required: true })
+  verificationDigit: number;
+
+  @Prop({ type: String, required: true })
+  businessName: string;
+
+  @Prop({ type: Array, required: true })
+  businessData: [];
+
+  @Prop({ type: Number, required: true })
+  businessId: number;
+
+  @Prop({ type: Number, default: 0 })
+  externalId: number;
+
+  @Prop({ type: Number, default: 0 })
+  externalId2: number;
+
+  @Prop({ type: String, required: true })
+  billingEmail: string;
+
+  @Prop({ type: String, required: true })
+  address: string;
+
+  @Prop({ type: Array, required: true })
+  costCenter: [];
+
+  @Prop({ type: Number, required: true })
+  costCenterId: number;
+
+  @Prop({ type: String, required: true })
+  costCenterCode: string;
+
+  @Prop({ type: String, required: true })
+  costCenterDescription: string;
+
   @Prop({ type: String, required: true })
   phone: string;
 
