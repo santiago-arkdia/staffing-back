@@ -19,12 +19,18 @@ export class ClientController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() client: Client): Promise<Client> {
+  async update(
+    @Param('id') id: string,
+    @Body() client: Client,
+  ): Promise<Client> {
     return await this.clientService.update(id, client);
   }
 
   @Get(':page/:limit')
-  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<Client[]> {
+  async findAll(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+  ): Promise<Client[]> {
     return await this.clientService.findAll(page, limit);
   }
 
@@ -34,15 +40,22 @@ export class ClientController {
   }
 
   @Get('by/:by/:value')
-  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Client[]> {
+  async findBy(
+    @Param('by') by: string,
+    @Param('value') value: string,
+  ): Promise<Client[]> {
     return await this.clientService.findBy(by, value);
   }
 
   @Post('filters/:page/:limit')
-  async findClientsByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() client: FilterClientsDto): Promise<Client[]> {
+  async findClientsByFilters(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+    @Body() client: FilterClientsDto,
+  ): Promise<Client[]> {
     if (client && Object.keys(client).length > 0) {
       return await this.clientService.getClientsByFilters(page, limit, client);
-    }else{
+    } else {
       return await this.clientService.findAll(page, limit);
     }
   }
