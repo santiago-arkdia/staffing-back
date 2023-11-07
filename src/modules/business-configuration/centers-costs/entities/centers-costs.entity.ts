@@ -2,7 +2,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Region } from '../../regions/entities/region.entity';
 
-@Schema({ collection: 'centers-costs' })
+@Schema({ collection: 'centers-costs', timestamps: true })
 export class CentersCosts {
   @Prop({ type: String, required: true })
   name: string;
@@ -19,8 +19,8 @@ export class CentersCosts {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Region' })
   region: Region;
 
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  /*@Prop({ type: Date, default: Date.now })
+  createdAt: Date;*/
 }
 
 export const CentersCostsSchema = SchemaFactory.createForClass(CentersCosts);

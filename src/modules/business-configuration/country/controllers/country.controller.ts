@@ -16,12 +16,18 @@ export class CountryController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() country: Country): Promise<Country> {
+  async update(
+    @Param('id') id: string,
+    @Body() country: Country,
+  ): Promise<Country> {
     return await this.countryService.update(id, country);
   }
 
   @Get(':page/:limit')
-  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<Country[]> {
+  async findAll(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+  ): Promise<Country[]> {
     return await this.countryService.findAll(page, limit);
   }
 
@@ -31,7 +37,12 @@ export class CountryController {
   }
 
   @Get(':page/:limit/:by/:value')
-  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<Country[]> {
+  async findBy(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+    @Param('by') by: string,
+    @Param('value') value: string,
+  ): Promise<Country[]> {
     return await this.countryService.findBy(page, limit, by, value);
   }
 }

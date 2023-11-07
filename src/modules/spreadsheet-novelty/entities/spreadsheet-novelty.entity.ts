@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema({ collection: 'spreadsheet' })
+@Schema({ collection: 'spreadsheet', timestamps: true })
 export class NoveltySpreadsheet {
 
   @Prop({ type: String, required: true })
@@ -13,8 +13,8 @@ export class NoveltySpreadsheet {
   @Prop({ type: String, required: true })
   documentUrl: string;
 
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  /*@Prop({ type: Date, default: Date.now })
+  createdAt: Date;*/
 }
 
 export const NoveltySpreadsheetSchema =

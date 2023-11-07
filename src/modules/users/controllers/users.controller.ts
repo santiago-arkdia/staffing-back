@@ -1,26 +1,11 @@
 /* eslint-disable prettier/prettier */
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
-  InternalServerErrorException,
-  UseGuards,
-  Req,
-  Put,
-} from '@nestjs/common';
-import { UsersService } from '../services/users.service';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { CreateUserClientDto } from '../dto/create-user-client.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/modules/auth/auth.guard';
-import { UserEntity } from '../entities/user.entity';
-import { UpdateUserStateDto } from '../dto/update-user-state.dto';
+import {Body, Controller, Get, Param, Post, Put,} from '@nestjs/common';
+import {UsersService} from '../services/users.service';
+import {CreateUserDto} from '../dto/create-user.dto';
+import {UpdateUserDto} from '../dto/update-user.dto';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import {UserEntity} from '../entities/user.entity';
+import {UpdateUserStateDto} from "../dto/update-user-state.dto";
 
 //@ApiBearerAuth()
 @ApiTags('Usuarios')
@@ -146,9 +131,8 @@ export class UsersController {
   //   return await this.usersService.update(id, state);
   // }
   @Put('state/:id')
-  async updatestate(@Param('id') id: string, @Body('state') state: number): Promise<UserEntity> {
-    const updatedUser = await this.usersService.findOneAndUpdate(id, { state });
-    return updatedUser;
+  async updateState(@Param('id') id: string, @Body() user: UpdateUserStateDto): Promise<UserEntity> {
+    return await this.usersService.updateState(id, user);
   }
 
   @Put('resetpassword/:id')

@@ -1,6 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Country {
   @Prop({ type: String, required: true })
   name: string;
@@ -14,8 +14,8 @@ export class Country {
   @Prop()
   state: number;
 
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  /*@Prop({ type: Date, default: Date.now })
+  createdAt: Date;*/
 }
 
 export const CountrySchema = SchemaFactory.createForClass(Country);

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsArray, IsString } from 'class-validator';
+import {IsBoolean, IsString} from 'class-validator';
 import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
 import { Roles } from 'src/modules/roles/entities/roles.entity';
 
@@ -13,7 +13,13 @@ export class CreateConceptsDto {
   @IsString()
   name: string;
 
-  @IsArray()
+  @IsBoolean()
+  benefit: string;
+
+  @IsString()
+  reportType: string;
+
+  @IsString()
   category: CategoriesNovelty;
 
   @IsString()

@@ -6,7 +6,10 @@ import { CentersCosts } from '../entities/centers-costs.entity';
 
 @Injectable()
 export class CentersCostsService {
-  constructor(@InjectModel(CentersCosts.name) private readonly centersCostsModel: Model<CentersCosts>) {}
+  constructor(
+    @InjectModel(CentersCosts.name)
+    private readonly centersCostsModel: Model<CentersCosts>,
+  ) {}
 
   async create(centersCosts: CreateCentersCostsDto): Promise<CentersCosts> {
     const createdCentersCosts = new this.centersCostsModel(centersCosts);
@@ -14,13 +17,14 @@ export class CentersCostsService {
   }
 
   async update(id: string, centersCosts: CentersCosts): Promise<CentersCosts> {
-    return await this.centersCostsModel.findByIdAndUpdate(id, centersCosts, { new: true });
+    return await this.centersCostsModel.findByIdAndUpdate(id, centersCosts, {
+      new: true,
+    });
   }
 
   async findAll(page: number, limit: number): Promise<CentersCosts[]> {
-
     const total = await this.centersCostsModel.countDocuments().exec();
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
     const centersCost = await this.centersCostsModel
       .find()
@@ -29,23 +33,28 @@ export class CentersCostsService {
       .limit(limit)
       .exec();
 
-      let centersCosts: any = {};
-      centersCosts.total = total;
-      centersCosts.pages = totalPages;
-      centersCosts.data = centersCost;
+    const centersCosts: any = {};
+    centersCosts.total = total;
+    centersCosts.pages = totalPages;
+    centersCosts.data = centersCost;
 
-      return centersCosts;
+    return centersCosts;
   }
 
   async findOne(id: string): Promise<CentersCosts> {
     return await this.centersCostsModel.findById(id).exec();
   }
 
-  async findBy(page: number, limit: number, by: string, value: string): Promise<CentersCosts[]> {
-    const query = { [by]: value };
+  async findBy(
+    page: number,
+    limit: number,
+    by: string,
+    value: string,
+  ): Promise<CentersCosts[]> {
+    const query = { [by]: { $regex: new RegExp(value, 'i') } };
 
     const total = await this.centersCostsModel.countDocuments(query).exec();
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
     const centersCost = await this.centersCostsModel
       .find(query)
@@ -54,11 +63,11 @@ export class CentersCostsService {
       .limit(limit)
       .exec();
 
-      let centersCosts: any = {};
-      centersCosts.total = total;
-      centersCosts.pages = totalPages;
-      centersCosts.data = centersCost;
+    const centersCosts: any = {};
+    centersCosts.total = total;
+    centersCosts.pages = totalPages;
+    centersCosts.data = centersCost;
 
-      return centersCosts;
+    return centersCosts;
   }
 }

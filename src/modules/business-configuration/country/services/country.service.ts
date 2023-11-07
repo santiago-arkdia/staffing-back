@@ -6,7 +6,9 @@ import { CreateCountrysDto } from '../dto/create-country.dto';
 
 @Injectable()
 export class CountryService {
-  constructor(@InjectModel(Country.name) private readonly countryModel: Model<Country>) {}
+  constructor(
+    @InjectModel(Country.name) private readonly countryModel: Model<Country>,
+  ) {}
 
   async create(country: CreateCountrysDto): Promise<Country> {
     const createdCountry = new this.countryModel(country);
@@ -14,13 +16,14 @@ export class CountryService {
   }
 
   async update(id: string, country: Country): Promise<Country> {
-    return await this.countryModel.findByIdAndUpdate(id, country, { new: true });
+    return this.countryModel.findByIdAndUpdate(id, country, {
+      new: true,
+    });
   }
 
   async findAll(page: number, limit: number): Promise<Country[]> {
-    
     const total = await this.countryModel.countDocuments().exec();
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
     const country = await this.countryModel
       .find()
@@ -28,23 +31,28 @@ export class CountryService {
       .limit(limit)
       .exec();
 
-      let countries: any = {};
-      countries.total = total;
-      countries.pages = totalPages;
-      countries.data = country;
+    const countries: any = {};
+    countries.total = total;
+    countries.pages = totalPages;
+    countries.data = country;
 
-      return countries;
+    return countries;
   }
 
   async findOne(id: string): Promise<Country> {
     return await this.countryModel.findById(id).exec();
   }
 
-  async findBy(page: number, limit: number, by: string, value: string): Promise<Country[]> {
-    const query = { [by]: value };
+  async findBy(
+    page: number,
+    limit: number,
+    by: string,
+    value: string,
+  ): Promise<Country[]> {
+    const query = { [by]: { $regex: new RegExp(value, 'i') } };
 
     const total = await this.countryModel.countDocuments(query).exec();
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
     const country = await this.countryModel
       .find(query)
@@ -52,11 +60,11 @@ export class CountryService {
       .limit(limit)
       .exec();
 
-      let countries: any = {};
-      countries.total = total;
-      countries.pages = totalPages;
-      countries.data = country;
+    const countries: any = {};
+    countries.total = total;
+    countries.pages = totalPages;
+    countries.data = country;
 
-      return countries;
+    return countries;
   }
 }

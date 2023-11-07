@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema({ collection: 'novelty-state' })
+@Schema({ collection: 'novelty-state', timestamps: true })
 export class NoveltyState {
   @Prop({ type: String, required: true })
   name: string;

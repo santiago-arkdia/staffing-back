@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema({ collection: 'collaborator' })
+@Schema({ collection: 'collaborator', timestamps: true })
 export class Collaborator {
   @Prop({ type: String, required: true })
   name: string;
@@ -9,8 +9,8 @@ export class Collaborator {
   @Prop({ type: Number, default: 1 })
   status: number;
 
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  /*@Prop({ type: Date, default: Date.now })
+  createdAt: Date;*/
 }
 
 export const CollaboratorSchema = SchemaFactory.createForClass(Collaborator);

@@ -11,17 +11,25 @@ export class JobPositionsController {
   constructor(private readonly jobPositionsService: JobPositionsService) {}
 
   @Post()
-  async create(@Body() jobPositions: CreateJobPositionsDto): Promise<JobPositions> {
+  async create(
+    @Body() jobPositions: CreateJobPositionsDto,
+  ): Promise<JobPositions> {
     return await this.jobPositionsService.create(jobPositions);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() jobPositions: JobPositions): Promise<JobPositions> {
+  async update(
+    @Param('id') id: string,
+    @Body() jobPositions: JobPositions,
+  ): Promise<JobPositions> {
     return await this.jobPositionsService.update(id, jobPositions);
   }
 
   @Get(':page/:limit')
-  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<JobPositions[]> {
+  async findAll(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+  ): Promise<JobPositions[]> {
     return await this.jobPositionsService.findAll(page, limit);
   }
 
@@ -31,7 +39,12 @@ export class JobPositionsController {
   }
 
   @Get(':page/:limit/:by/:value')
-  async findBy(@Param('page') page: number, @Param('limit') limit: number, @Param('by') by: string, @Param('value') value: string): Promise<JobPositions[]> {
+  async findBy(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+    @Param('by') by: string,
+    @Param('value') value: string,
+  ): Promise<JobPositions[]> {
     return await this.jobPositionsService.findBy(page, limit, by, value);
   }
 }
