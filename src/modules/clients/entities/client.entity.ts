@@ -18,34 +18,23 @@ export class Client {
   businessName: string;
 
   @Prop({ type: Array, required: true })
-  businessData: [];
-
-  @Prop({ type: Number, required: true })
-  businessId: number;
-
-  @Prop({ type: Number, default: 0 })
-  externalId: number;
-
-  @Prop({ type: Number, default: 0 })
-  externalId2: number;
-
-  @Prop({ type: String, required: true })
-  billingEmail: string;
-
-  @Prop({ type: String, required: true })
-  address: string;
-
-  @Prop({ type: Array, required: true })
-  costCenter: [];
-
-  @Prop({ type: Number, required: true })
-  costCenterId: number;
-
-  @Prop({ type: String, required: true })
-  costCenterCode: string;
-
-  @Prop({ type: String, required: true })
-  costCenterDescription: string;
+  businessData: {
+    businessId: number;
+    externalId: { type: number; default: 0 };
+    externalId2: { type: number; default: 0 };
+    commercialName: string;
+    billingEmail: string;
+    address: string;
+    phone: string;
+    email: string;
+    contact: string;
+    costCenters: {
+      costCenterId: number;
+      costCenterCode: string;
+      costCenterDescription: string;
+      externalId: number;
+    }[];
+  }[];
 
   @Prop({ type: String, required: true })
   phone: string;

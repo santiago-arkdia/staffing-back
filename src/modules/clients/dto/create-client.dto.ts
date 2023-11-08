@@ -2,6 +2,7 @@ import { Schema } from '@nestjs/mongoose';
 import {
   IsArray,
   IsBoolean,
+  IsDate,
   IsNumber,
   IsOptional,
   IsString,
@@ -13,39 +14,6 @@ export class CreateClientsDto {
   @IsString()
   name: string;
 
-  @IsString()
-  phone: string;
-
-  @IsString()
-  closeBillingDate: Date;
-
-  @IsString()
-  payrollFrequency: string;
-
-  @IsNumber()
-  payDay: number;
-
-  @IsString()
-  premiumPaymentDate: Date;
-
-  @IsBoolean()
-  projected: boolean;
-
-  @IsBoolean()
-  chat: boolean;
-
-  @IsNumber()
-  @IsOptional()
-  state: number;
-
-  @IsString()
-  user: string;
-
-  @IsArray()
-  moduleParameterization: ModuleParameterization[];
-
-  //New Fields
-
   @IsNumber()
   nit: number;
 
@@ -56,25 +24,61 @@ export class CreateClientsDto {
   businessName: string;
 
   @IsArray()
-  businessData: any[];
+  businessData: {
+    businessId: number;
+    externalId: number;
+    externalId2: number;
+    commercialName: string;
+    billingEmail: string;
+    address: string;
+    phone: string;
+    email: string;
+    contact: string;
+    costCenters: {
+      costCenterId: number;
+      costCenterCode: string;
+      costCenterDescription: string;
+      externalId: number;
+    }[];
+  }[];
+
+  @IsString()
+  phone: string;
+
+  @IsDate()
+  closeBillingDate: Date;
+
+  @IsString()
+  payrollFrequency: string;
 
   @IsNumber()
-  businessId: number;
+  payDay: number;
 
+  @IsDate()
+  premiumPaymentDate: Date;
+
+  @IsBoolean()
+  projected: boolean;
+
+  @IsBoolean()
+  chat: boolean;
+
+  @IsOptional()
   @IsNumber()
-  externalId: number;
+  state: number;
 
-  @IsNumber()
-  externalId2: number;
+  @IsString()
+  user: string;
 
+  @IsArray()
+  moduleParameterization: ModuleParameterization[];
+
+  // New Fields
   @IsString()
   billingEmail: string;
 
   @IsString()
   address: string;
-
-  @IsArray()
-  costCenter: any[];
 
   @IsNumber()
   costCenterId: number;
