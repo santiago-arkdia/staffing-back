@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Client } from '../entities/client.entity';
 import { CreateClientsDto } from '../dto/create-client.dto';
-import { FilterClientsDto } from '../dto/filter-client.dto.';
+import axios, { AxiosResponse } from 'axios';
 
 @Injectable()
 export class ClientService {
@@ -18,7 +18,7 @@ export class ClientService {
   }
 
   async update(id: string, client: Client): Promise<Client> {
-    return await this.clientModel.findByIdAndUpdate(id, client, { new: true });
+    return this.clientModel.findByIdAndUpdate(id, client, {new: true});
   }
 
   async findAll(page: number, limit: number): Promise<Client[]> {
@@ -37,7 +37,7 @@ export class ClientService {
       })
       .exec();
 
-      let client: any = {};
+      const client: any = {};
       client.total = total;
       client.pages = totalPages;
       client.data = clients;
@@ -57,48 +57,42 @@ export class ClientService {
       .exec();
   }
 
-  async findBy(by: string, value: string): Promise<Client[]> {
-    const query = { [by]: value };
-    return await this.clientModel.find(query).exec();
-  }
-
-  async getClientsByFilters(page: number, limit: number, filter: FilterClientsDto): Promise<Client[]> {
-
-    const query: any = {};
-
-    if (filter.name) {
-        query.name = { $regex: filter.name, $options: 'i' };
-    }
-
-    if (filter.lastName) {
-        query.lastName = { $regex: filter.lastName, $options: 'i' };
-    }
-
-    if (filter.state) {
-        query.state = filter.state;
-    }
-
-    const admins =  await this.clientModel
-      .find(query)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate({
-        path: 'user',
-        populate: {
-          path: 'role',
-        },
-      })
-      .exec();
+  async findBy(
+      page: number,
+      limit: number,
+      by: string,
+      value: string,
+  ): Promise<Client[]> {
+    const query = { [by]: { $regex: new RegExp(value, 'i') } };
 
     const total = await this.clientModel.countDocuments(query).exec();
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
-    let admin: any = {};
-    admin.total = total;
-    admin.pages = totalPages;
-    admin.data = admins;
+    const country = await this.clientModel
+        .find(query)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec();
 
-    return admin;
+    const clients: any = {};
+    clients.total = total;
+    clients.pages = totalPages;
+    clients.data = country;
+
+    return clients;
   }
 
+  async getClientByIdentification(identification: number, initialDate: string, finalDate: string, token: string): Promise<AxiosResponse<any>> {
+    const url = 'http://34.214.124.124:9896/ws/clientes/consultar_cliente_documento';
+    const data = { documento: identification, fechaInicial:initialDate, fechaFinal:finalDate };
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const response = await axios.post(url, data, config);
+    return response.data.mensaje;
+  }
 }

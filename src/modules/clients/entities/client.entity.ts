@@ -8,44 +8,77 @@ export class Client {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: Number, required: true })
-  nit: number;
+  @Prop({ type: String })
+  type: string;
 
-  @Prop({ type: Number, required: true })
-  verificationDigit: number;
+  @Prop({ type: String })
+  branch: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
+  industrialSector: string;
+
+  @Prop({ type: String })
+  arl: string;
+
+  @Prop({ type: String })
+  ciiu: string;
+
+  @Prop({ type: String })
+  regimeType: string;
+
+  @Prop({ type: String })
+  profitCenter: string;
+
+  @Prop({ type: String })
+  commercialName: string;
+
+  @Prop({ type: String })
+  legalRepDocumentType: string;
+
+  @Prop({ type: String })
   businessName: string;
 
-  @Prop({ type: Array, required: true })
-  businessData: [];
+  @Prop({ type: String })
+  city: string;
 
-  @Prop({ type: Number, required: true })
-  businessId: number;
+  @Prop({ type: String })
+  nit: string;
 
-  @Prop({ type: Number, default: 0 })
-  externalId: number;
+  @Prop({ type: String })
+  verificationDigit: string;
 
-  @Prop({ type: Number, default: 0 })
-  externalId2: number;
+  @Prop({ type: String })
+  legalRepresentative: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
+  identificationLegalRep: string;
+
+  @Prop({ type: String })
+  email: string;
+
+  @Prop({ type: Number })
+  severanceProvisionPercentage: number;
+
+  @Prop({ type: Number })
+  severanceInterestProvisionPercentage: number;
+
+  @Prop({ type: Number })
+  totalSalary: number;
+
+  @Prop({ type: String })
+  country: string;
+
+  @Prop({ type: String })
+  municipality: string;
+
+  @Prop({ type: String })
   billingEmail: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   address: string;
 
-  @Prop({ type: Array, required: true })
-  costCenter: [];
-
-  @Prop({ type: Number, required: true })
-  costCenterId: number;
-
-  @Prop({ type: String, required: true })
-  costCenterCode: string;
-
-  @Prop({ type: String, required: true })
-  costCenterDescription: string;
+  @Prop({ type: String })
+  addressDescription: string;
 
   @Prop({ type: String, required: true })
   phone: string;

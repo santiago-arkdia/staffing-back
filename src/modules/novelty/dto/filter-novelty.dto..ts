@@ -2,14 +2,18 @@ import { Schema } from '@nestjs/mongoose';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 @Schema()
-export class FilterClientsDto {
+export class FilterNoveltyDto {
   @IsString()
   @IsOptional()
-  name: string;
+  numberInability: string;
 
   @IsString()
   @IsOptional()
-  lastName: string;
+  typeOfAttention: string;
+
+  @IsString()
+  @IsOptional()
+  description: string;
 
   @IsNumber()
   @IsOptional()

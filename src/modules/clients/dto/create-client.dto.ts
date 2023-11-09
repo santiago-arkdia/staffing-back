@@ -2,6 +2,7 @@ import { Schema } from '@nestjs/mongoose';
 import {
   IsArray,
   IsBoolean,
+  IsDate,
   IsNumber,
   IsOptional,
   IsString,
@@ -14,9 +15,81 @@ export class CreateClientsDto {
   name: string;
 
   @IsString()
-  phone: string;
+  type: string;
 
   @IsString()
+  branch: string;
+
+  @IsString()
+  industrialSector: string;
+
+  @IsString()
+  arl: string;
+
+  @IsString()
+  ciiu: string;
+
+  @IsString()
+  regimeType: string;
+
+  @IsString()
+  profitCenter: string;
+
+  @IsString()
+  commercialName: string;
+
+  @IsString()
+  legalRepDocumentType: string;
+
+  @IsString()
+  businessName: string;
+
+  @IsString()
+  city: string;
+
+  @IsString()
+  nit: string;
+
+  @IsString()
+  verificationDigit: string;
+
+  @IsString()
+  legalRepresentative: string;
+
+  @IsString()
+  identificationLegalRep: string;
+
+  @IsString()
+  email: string;
+
+  @IsNumber()
+  severanceProvisionPercentage: number;
+
+  @IsNumber()
+  severanceInterestProvisionPercentage: number;
+
+  @IsNumber()
+  totalSalary: number;
+
+  @IsString()
+  country: string;
+
+  @IsString()
+  municipality: string;
+
+  @IsString()
+  billingEmail: string;
+
+  @IsString()
+  address: string;
+
+  @IsString()
+  addressDescription: string;
+
+  @IsString()
+  phone: string;
+
+  @IsDate()
   closeBillingDate: Date;
 
   @IsString()
@@ -25,7 +98,7 @@ export class CreateClientsDto {
   @IsNumber()
   payDay: number;
 
-  @IsString()
+  @IsDate()
   premiumPaymentDate: Date;
 
   @IsBoolean()
@@ -34,8 +107,8 @@ export class CreateClientsDto {
   @IsBoolean()
   chat: boolean;
 
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   state: number;
 
   @IsString()
@@ -43,45 +116,4 @@ export class CreateClientsDto {
 
   @IsArray()
   moduleParameterization: ModuleParameterization[];
-
-  //New Fields
-
-  @IsNumber()
-  nit: number;
-
-  @IsNumber()
-  verificationDigit: number;
-
-  @IsString()
-  businessName: string;
-
-  @IsArray()
-  businessData: any[];
-
-  @IsNumber()
-  businessId: number;
-
-  @IsNumber()
-  externalId: number;
-
-  @IsNumber()
-  externalId2: number;
-
-  @IsString()
-  billingEmail: string;
-
-  @IsString()
-  address: string;
-
-  @IsArray()
-  costCenter: any[];
-
-  @IsNumber()
-  costCenterId: number;
-
-  @IsString()
-  costCenterCode: string;
-
-  @IsString()
-  costCenterDescription: string;
 }

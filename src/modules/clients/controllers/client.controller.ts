@@ -1,9 +1,8 @@
 import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
 import { Client } from '../entities/client.entity';
 import { ClientService } from '../services/client.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CreateClientsDto } from '../dto/create-client.dto';
-import { FilterClientsDto } from '../dto/filter-client.dto.';
 
 @ApiTags('Clients')
 @Controller('api/clients')
@@ -39,25 +38,40 @@ export class ClientController {
     return await this.clientService.findOne(id);
   }
 
-  @Get('by/:by/:value')
+  @Get(':page/:limit/:by/:value')
   async findBy(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
     @Param('by') by: string,
     @Param('value') value: string,
   ): Promise<Client[]> {
-    return await this.clientService.findBy(by, value);
+    return await this.clientService.findBy(page, limit, by, value);
   }
 
-  @Post('filters/:page/:limit')
-  async findClientsByFilters(
-    @Param('page') page: number,
-    @Param('limit') limit: number,
-    @Body() client: FilterClientsDto,
-  ): Promise<Client[]> {
-    if (client && Object.keys(client).length > 0) {
-      return await this.clientService.getClientsByFilters(page, limit, client);
-    } else {
-      return await this.clientService.findAll(page, limit);
-    }
+  @Post('ws/find')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        identification: { type: 'number' },
+        initialDate: { type: 'string' },
+        finalDate: { type: 'string' },
+        token: { type: 'string' },
+      },
+    },
+  })
+  async getClientByIdentification(
+    @Body('identification') identification: number,
+    @Body('initialDate') initialDate: string,
+    @Body('finalDate') finalDate: string,
+    @Body('token') token: string,
+  ): Promise<any> {
+    return this.clientService.getClientByIdentification(
+      identification,
+      initialDate,
+      finalDate,
+      token,
+    );
   }
   /*@Get(':by/:value')
   async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Client[]> {
