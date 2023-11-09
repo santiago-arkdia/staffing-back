@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Novelty } from '../entities/novelty.entity';
 import { CreateNoveltyDto } from '../dto/create-novelty.dto';
 import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
+import axios, {AxiosResponse} from "axios";
 
 @Injectable()
 export class NoveltyService {
@@ -41,7 +42,8 @@ export class NoveltyService {
       id,
       updateNoveltyDto,
       {
-        new: true
+        new: true,
+        useFindAndModify: false
       },
     );
 
@@ -88,37 +90,29 @@ export class NoveltyService {
     return await this.noveltyModel.findById(id).exec();
   }
 
-  async findBy(page: number, limit: number, by: string, value: string): Promise<Novelty[]> {
-    const query = { [by]: value };
+  async findBy(
+      page: number,
+      limit: number,
+      by: string,
+      value: string,
+  ): Promise<Novelty[]> {
+    const query = { [by]: { $regex: new RegExp(value, 'i') } };
 
     const total = await this.noveltyModel.countDocuments(query).exec();
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
-    const novelty = await this.noveltyModel
-      .find(query)
-      .skip((page - 1) * limit)
-      .populate("collaborator")
-      .populate("categoryNovelty")
-      // .populate({
-      //   path: 'concept',
-      //   populate: [
-      //     { path: 'categoryNovelty'},
-      //     { path: 'registers'},
-      //     { path: 'approves'}
-      //   ],
-      // })
-      .populate("state")
-      .populate("eps")
-      .populate("diagnosis")
-      .limit(limit)
-      .exec();
+    const country = await this.noveltyModel
+        .find(query)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec();
 
-      let noveltys: any = {};
-      noveltys.total = total;
-      noveltys.pages = totalPages;
-      noveltys.data = novelty;
+    const novelties: any = {};
+    novelties.total = total;
+    novelties.pages = totalPages;
+    novelties.data = country;
 
-      return noveltys;
+    return novelties;
   }
 
   async remove(id: string): Promise<void> {
@@ -127,5 +121,55 @@ export class NoveltyService {
     if (!deletedNovelty) {
       throw new NotFoundException('Novedad no encontrada');
     }
+  }
+
+  // Integrations
+  async getNoveltyByDocument(identification: string, initialDate: string, finalDate: string, type: string, token: string): Promise<AxiosResponse<any>> {
+    const url = 'http://34.214.124.124:9896/ws/novedades/consultar';
+    const data = { documento: identification, fechaDesde: initialDate, fechaHasta: finalDate, tipoInforme: type };
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const response = await axios.post(url, data, config);
+    return response.data.mensaje;
+  }
+
+  async createNovelty(
+      identifier: string,
+      documentType: string,
+      document: string,
+      hiringId: string,
+      businessName: string,
+      nit: string,
+      clientCode: string,
+      date: string,
+      advanceValue: string,
+      token: string
+  ): Promise<AxiosResponse<any>> {
+    const url = 'http://34.214.124.124:9896/ws/novedades/consultar';
+    const data = {
+      identificador: identifier,
+      tipoDocumento: documentType,
+      documento: document,
+      hiringId: hiringId,
+      razonSocial: businessName,
+      nit: nit,
+      codigoCliente: clientCode,
+      fecha: date,
+      tipoAdelanto: advanceValue,
+    };
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const response = await axios.post(url, data, config);
+    return response.data.mensaje;
   }
 }

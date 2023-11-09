@@ -14,33 +14,77 @@ export class CreateClientsDto {
   @IsString()
   name: string;
 
-  @IsNumber()
-  nit: number;
+  @IsString()
+  type: string;
 
-  @IsNumber()
-  verificationDigit: number;
+  @IsString()
+  branch: string;
+
+  @IsString()
+  industrialSector: string;
+
+  @IsString()
+  arl: string;
+
+  @IsString()
+  ciiu: string;
+
+  @IsString()
+  regimeType: string;
+
+  @IsString()
+  profitCenter: string;
+
+  @IsString()
+  commercialName: string;
+
+  @IsString()
+  legalRepDocumentType: string;
 
   @IsString()
   businessName: string;
 
-  @IsArray()
-  businessData: {
-    businessId: number;
-    externalId: number;
-    externalId2: number;
-    commercialName: string;
-    billingEmail: string;
-    address: string;
-    phone: string;
-    email: string;
-    contact: string;
-    costCenters: {
-      costCenterId: number;
-      costCenterCode: string;
-      costCenterDescription: string;
-      externalId: number;
-    }[];
-  }[];
+  @IsString()
+  city: string;
+
+  @IsString()
+  nit: string;
+
+  @IsString()
+  verificationDigit: string;
+
+  @IsString()
+  legalRepresentative: string;
+
+  @IsString()
+  identificationLegalRep: string;
+
+  @IsString()
+  email: string;
+
+  @IsNumber()
+  severanceProvisionPercentage: number;
+
+  @IsNumber()
+  severanceInterestProvisionPercentage: number;
+
+  @IsNumber()
+  totalSalary: number;
+
+  @IsString()
+  country: string;
+
+  @IsString()
+  municipality: string;
+
+  @IsString()
+  billingEmail: string;
+
+  @IsString()
+  address: string;
+
+  @IsString()
+  addressDescription: string;
 
   @IsString()
   phone: string;
@@ -72,20 +116,4 @@ export class CreateClientsDto {
 
   @IsArray()
   moduleParameterization: ModuleParameterization[];
-
-  // New Fields
-  @IsString()
-  billingEmail: string;
-
-  @IsString()
-  address: string;
-
-  @IsNumber()
-  costCenterId: number;
-
-  @IsString()
-  costCenterCode: string;
-
-  @IsString()
-  costCenterDescription: string;
 }

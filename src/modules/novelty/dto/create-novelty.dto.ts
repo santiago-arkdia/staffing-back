@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsArray, IsBoolean, IsDate, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsString } from 'class-validator';
 
 @Schema()
 export class CreateNoveltyDto {
@@ -19,7 +19,7 @@ export class CreateNoveltyDto {
   @IsString()
   finalDate: Date;
   
-  @IsDate()
+  @IsString()
   typeOfAttention: string;
   
   @IsBoolean()
