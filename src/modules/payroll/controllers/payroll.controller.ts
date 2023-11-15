@@ -3,7 +3,6 @@ import { Payroll } from '../entities/payroll.entity';
 import { PayrollService } from '../services/payroll.service';
 import { ApiTags } from '@nestjs/swagger';
 import { PayrollsDto } from '../dto/payroll.dto';
-import { UsersService } from 'src/modules/users/services/users.service';
 import { FilterPayrollDto } from '../dto/filter-payroll.dto.';
 
 @ApiTags('Payroll')
@@ -17,12 +16,18 @@ export class PayrollController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() payroll: PayrollsDto): Promise<Payroll> {
+  async update(
+    @Param('id') id: string,
+    @Body() payroll: PayrollsDto,
+  ): Promise<Payroll> {
     return await this.payrollService.update(id, payroll);
   }
 
   @Get(':page/:limit')
-  async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<Payroll[]> {
+  async findAll(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+  ): Promise<Payroll[]> {
     return await this.payrollService.findAll(page, limit);
   }
 
@@ -33,15 +38,26 @@ export class PayrollController {
   }
 
   @Get('by/:by/:value')
-  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Payroll[]> {
+  async findBy(
+    @Param('by') by: string,
+    @Param('value') value: string,
+  ): Promise<Payroll[]> {
     return await this.payrollService.findBy(by, value);
   }
 
   @Post('filters/:page/:limit')
-  async findPayrollByFilters(@Param('page') page: number, @Param('limit') limit: number, @Body() payroll: FilterPayrollDto): Promise<Payroll[]> {
+  async findPayrollByFilters(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+    @Body() payroll: FilterPayrollDto,
+  ): Promise<Payroll[]> {
     if (payroll && Object.keys(payroll).length > 0) {
-      return await this.payrollService.getPayrollByFilters(page, limit, payroll);
-    }else{
+      return await this.payrollService.getPayrollByFilters(
+        page,
+        limit,
+        payroll,
+      );
+    } else {
       return await this.payrollService.findAll(page, limit);
     }
   }

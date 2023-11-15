@@ -11,12 +11,17 @@ export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
   @Post()
-  async create(@Body() collaborator: CreateCollaboratorDto): Promise<Collaborator> {
+  async create(
+    @Body() collaborator: CreateCollaboratorDto,
+  ): Promise<Collaborator> {
     return await this.collaboratorService.create(collaborator);
   }
 
   @Put(':id')
-  async update( @Param('id') id: string,  @Body() updateCollaboratorDto: UpdateCollaboratorDto, ): Promise<UpdateCollaboratorDto> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateCollaboratorDto: UpdateCollaboratorDto,
+  ): Promise<UpdateCollaboratorDto> {
     return await this.collaboratorService.update(id, updateCollaboratorDto);
   }
 
