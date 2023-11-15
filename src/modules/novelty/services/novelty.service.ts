@@ -78,12 +78,12 @@ export class NoveltyService {
       .limit(limit)
       .exec();
 
-      let noveltys: any = {};
-      noveltys.total = total;
-      noveltys.pages = totalPages;
-      noveltys.data = novelty;
+      const novelties: any = {};
+      novelties.total = total;
+      novelties.pages = totalPages;
+      novelties.data = novelty;
 
-      return noveltys;
+      return novelties;
   }
 
   async findOne(id: string): Promise<Novelty> {

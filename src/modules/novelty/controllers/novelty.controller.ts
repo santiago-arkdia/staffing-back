@@ -1,4 +1,5 @@
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+/* eslint-disable prettier/prettier */
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NoveltyService } from '../services/novelty.service';
 import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
 import { CreateNoveltyDto } from '../dto/create-novelty.dto';
@@ -11,6 +12,7 @@ export class NoveltyController {
   constructor(private readonly noveltyService: NoveltyService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Reportar novedad' })
   async create(@Body() novelty: CreateNoveltyDto): Promise<Novelty> {
     novelty.initialDate = new Date(novelty.initialDate);
     novelty.finalDate = new Date(novelty.finalDate);
@@ -18,6 +20,7 @@ export class NoveltyController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Actualizar novedad' })
   async update(
     @Param('id') id: string,
     @Body() updateNoveltyDto: UpdateNoveltyDto,
@@ -28,6 +31,7 @@ export class NoveltyController {
   }
 
   @Get(':page/:limit')
+  @ApiOperation({ summary: 'Filtrar novedades por paginación' })
   async findAll(
     @Param('page') page: number,
     @Param('limit') limit: number,
@@ -36,11 +40,13 @@ export class NoveltyController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Filtrar novedad por ID' })
   async findOne(@Param('id') id: string): Promise<Novelty> {
     return await this.noveltyService.findOne(id);
   }
 
   @Get(':page/:limit/:by/:value')
+  @ApiOperation({ summary: 'Filtrar novedades por valor y paginación' })
   async findBy(
     @Param('page') page: number,
     @Param('limit') limit: number,
@@ -51,6 +57,7 @@ export class NoveltyController {
   }
 
   @Post('ws/find')
+  @ApiOperation({ summary: 'Filtrar novedades por documento (Temporapp Endpoint)' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -80,6 +87,7 @@ export class NoveltyController {
   }
 
   @Post('ws/create')
+  @ApiOperation({ summary: 'Crear novedad (Temporapp Endpoint)' })
   @ApiBody({
     schema: {
       type: 'object',
