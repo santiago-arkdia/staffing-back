@@ -126,18 +126,12 @@ export class NoveltyService {
       search = this.noveltyModel
           .find()
           .skip((page - 1) * limit)
-          .populate({
-            path: 'collaborator',
-          })
           .limit(limit)
           .exec();
     } else {
       search = this.noveltyModel
           .find(query)
           .skip((page - 1) * limit)
-          .populate({
-            path: 'collaborator',
-          })
           .limit(limit)
           .exec();
     }
