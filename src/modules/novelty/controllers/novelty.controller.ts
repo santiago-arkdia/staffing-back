@@ -12,7 +12,7 @@ export class NoveltyController {
   constructor(private readonly noveltyService: NoveltyService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Reportar novedad' })
+  @ApiOperation({ summary: 'Crear reporte de novedad' })
   async create(@Body() novelty: CreateNoveltyDto): Promise<Novelty> {
     novelty.initialDate = new Date(novelty.initialDate);
     novelty.finalDate = new Date(novelty.finalDate);
