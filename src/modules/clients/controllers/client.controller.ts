@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
 import { Client } from '../entities/client.entity';
 import { ClientService } from '../services/client.service';
@@ -25,13 +26,13 @@ export class ClientController {
     return await this.clientService.update(id, client);
   }
 
-  @Get(':page/:limit')
+  /*@Get(':page/:limit')
   async findAll(
     @Param('page') page: number,
     @Param('limit') limit: number,
   ): Promise<Client[]> {
     return await this.clientService.findAll(page, limit);
-  }
+  }*/
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Client> {

@@ -20,18 +20,23 @@ export class CategoriesNewsController {
     return await this.categoriesNewsService.update(id, categoriesNews);
   }
 
-  @Get()
+  /*@Get()
   async findAll(): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewsService.findAll();
-  }
+  }*/
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<CategoriesNovelty> {
     return await this.categoriesNewsService.findOne(id);
   }
 
-  @Get(':by/:value')
-  async findBy(@Param('by') by: string, @Param('value') value: string): Promise<CategoriesNovelty[]> {
-    return await this.categoriesNewsService.findBy(by, value);
+  @Get(':page/:limit/:by/:value')
+  async findBy(
+      @Param('page') page: number,
+      @Param('limit') limit: number,
+      @Param('by') by: string,
+      @Param('value') value: string,
+  ): Promise<CategoriesNovelty[]> {
+    return await this.categoriesNewsService.findBy(page, limit, by, value);
   }
 }

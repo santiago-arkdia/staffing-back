@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import {Model, Types} from 'mongoose';
 import { Novelty } from '../entities/novelty.entity';
 import { CreateNoveltyDto } from '../dto/create-novelty.dto';
 import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
@@ -94,23 +94,54 @@ export class NoveltyService {
       page: number,
       limit: number,
       by: string,
-      value: string,
+      value: string | number,
   ): Promise<Novelty[]> {
-    const query = { [by]: { $regex: new RegExp(value, 'i') } };
+    let query = {};
 
-    const total = await this.noveltyModel.countDocuments(query).exec();
+    if (by !== 'find' && value !== 'all') {
+      if (typeof value === 'string' && !isNaN(Number(value))) {
+        // Si es un string que representa un número, convierte a número y busca directamente
+        query = { [by]: Number(value) };
+      } else if (typeof value === 'string') {
+        // Verifica si es un ObjectId válido antes de usarlo en la consulta
+        if (Types.ObjectId.isValid(value)) {
+          query = { [by]: value };
+        } else {
+          // Si no es un ObjectId válido, busca como string normal (insensible a mayúsculas)
+          query = { [by]: { $regex: new RegExp(value, 'i') } };
+        }
+      } else if (typeof value === 'number') {
+        query = { [by]: value };
+      }
+    }
+
+    const total = by === 'find' && value === 'all'
+        ? await this.noveltyModel.countDocuments().exec()
+        : await this.noveltyModel.countDocuments(query).exec();
     const totalPages = Math.ceil(total / limit);
 
-    const country = await this.noveltyModel
-        .find(query)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .exec();
+    let search;
+
+    if (by === 'find' && value === 'all') {
+      search = this.noveltyModel
+          .find()
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .exec();
+    } else {
+      search = this.noveltyModel
+          .find(query)
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .exec();
+    }
+
+    const data = await search;
 
     const novelties: any = {};
     novelties.total = total;
     novelties.pages = totalPages;
-    novelties.data = country;
+    novelties.data = data;
 
     return novelties;
   }

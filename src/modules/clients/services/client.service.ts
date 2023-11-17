@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Client } from '../entities/client.entity';
-import { CreateClientsDto } from '../dto/create-client.dto';
-import axios, { AxiosResponse } from 'axios';
+import {Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model, Types} from 'mongoose';
+import {Client} from '../entities/client.entity';
+import {CreateClientsDto} from '../dto/create-client.dto';
+import axios, {AxiosResponse} from 'axios';
 
 @Injectable()
 export class ClientService {
@@ -21,7 +21,7 @@ export class ClientService {
     return this.clientModel.findByIdAndUpdate(id, client, {new: true});
   }
 
-  async findAll(page: number, limit: number): Promise<Client[]> {
+  /*async findAll(page: number, limit: number): Promise<Client[]> {
     
     const total = await this.clientModel.countDocuments().exec();
     const totalPages = Math.ceil(total / limit)
@@ -43,7 +43,7 @@ export class ClientService {
       client.data = clients;
 
       return client;
-  }
+  }*/
 
   async findOne(id: string): Promise<Client> {
     return await this.clientModel
@@ -61,23 +61,54 @@ export class ClientService {
       page: number,
       limit: number,
       by: string,
-      value: string,
+      value: string | number,
   ): Promise<Client[]> {
-    const query = { [by]: { $regex: new RegExp(value, 'i') } };
+    let query = {};
 
-    const total = await this.clientModel.countDocuments(query).exec();
+    if (by !== 'find' && value !== 'all') {
+      if (typeof value === 'string' && !isNaN(Number(value))) {
+        // Si es un string que representa un número, convierte a número y busca directamente
+        query = { [by]: Number(value) };
+      } else if (typeof value === 'string') {
+        // Verifica si es un ObjectId válido antes de usarlo en la consulta
+        if (Types.ObjectId.isValid(value)) {
+          query = { [by]: value };
+        } else {
+          // Si no es un ObjectId válido, busca como string normal (insensible a mayúsculas)
+          query = { [by]: { $regex: new RegExp(value, 'i') } };
+        }
+      } else if (typeof value === 'number') {
+        query = { [by]: value };
+      }
+    }
+
+    const total = by === 'find' && value === 'all'
+        ? await this.clientModel.countDocuments().exec()
+        : await this.clientModel.countDocuments(query).exec();
     const totalPages = Math.ceil(total / limit);
 
-    const country = await this.clientModel
-        .find(query)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .exec();
+    let search;
+
+    if (by === 'find' && value === 'all') {
+      search = this.clientModel
+          .find()
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .exec();
+    } else {
+      search = this.clientModel
+          .find(query)
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .exec();
+    }
+
+    const data = await search;
 
     const clients: any = {};
     clients.total = total;
     clients.pages = totalPages;
-    clients.data = country;
+    clients.data = data;
 
     return clients;
   }
