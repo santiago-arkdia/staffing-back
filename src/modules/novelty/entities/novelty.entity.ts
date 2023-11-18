@@ -42,7 +42,7 @@ export class Novelty {
   @Prop()
   documents: string[];
 
-  @Prop({ type: Number, default: 0 })
+  @Prop({ type: Number, default: 2 })
   state: number;
 
   /*@Prop({ type: Date, default: Date.now })

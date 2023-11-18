@@ -30,15 +30,6 @@ export class NoveltyController {
     return await this.noveltyService.update(id, updateNoveltyDto);
   }
 
-  /*@Get(':page/:limit')
-  @ApiOperation({ summary: 'Filtrar novedades por paginación' })
-  async findAll(
-    @Param('page') page: number,
-    @Param('limit') limit: number,
-  ): Promise<Novelty[]> {
-    return await this.noveltyService.findAll(page, limit);
-  }*/
-
   @Get(':id')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   async findOne(@Param('id') id: string): Promise<Novelty> {

@@ -100,14 +100,11 @@ export class NoveltyService {
 
     if (by !== 'find' && value !== 'all') {
       if (typeof value === 'string' && !isNaN(Number(value))) {
-        // Si es un string que representa un número, convierte a número y busca directamente
         query = { [by]: Number(value) };
       } else if (typeof value === 'string') {
-        // Verifica si es un ObjectId válido antes de usarlo en la consulta
         if (Types.ObjectId.isValid(value)) {
           query = { [by]: value };
         } else {
-          // Si no es un ObjectId válido, busca como string normal (insensible a mayúsculas)
           query = { [by]: { $regex: new RegExp(value, 'i') } };
         }
       } else if (typeof value === 'number') {
@@ -126,12 +123,20 @@ export class NoveltyService {
       search = this.noveltyModel
           .find()
           .skip((page - 1) * limit)
+          .populate("Collaborator")
+          .populate("categoryNovelty")
+          .populate("eps")
+          .populate("diagnosis")
           .limit(limit)
           .exec();
     } else {
       search = this.noveltyModel
           .find(query)
           .skip((page - 1) * limit)
+          .populate("Collaborator")
+          .populate("categoryNovelty")
+          .populate("eps")
+          .populate("diagnosis")
           .limit(limit)
           .exec();
     }
