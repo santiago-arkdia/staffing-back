@@ -2,15 +2,14 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { CategoriesNovelty } from 'src/modules/categories-novelty/entities/categories-novelties.entity';
-import { Collaborator } from 'src/modules/collaborators/entities/collaborators.entity';
 import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
 import { Eps } from 'src/modules/eps/entities/eps.entity';
 
 @Schema({timestamps: true})
 export class Novelty {
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'collaborator' })
-  collaborator: Collaborator;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Collaborator' })
+  collaborator: mongoose.Types.ObjectId;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'category-novelty' })
   categoryNovelty: CategoriesNovelty;

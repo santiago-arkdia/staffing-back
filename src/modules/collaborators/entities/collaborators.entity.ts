@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema({ collection: 'collaborator', timestamps: true })
+@Schema({ collection: 'Collaborator', timestamps: true })
 export class Collaborator {
   @Prop({ type: String, required: true })
   name: string;
