@@ -49,6 +49,10 @@ export class UpdateNoveltyDto {
   documents: string[];
 
   @IsOptional()
+  @IsArray()
+  comments: string[];
+
+  @IsOptional()
   @IsNumber()
   state: number;
 }

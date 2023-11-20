@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { DiagnosisService } from './services/diagnosis.service';
 import { MongooseModule } from '@nestjs/mongoose';

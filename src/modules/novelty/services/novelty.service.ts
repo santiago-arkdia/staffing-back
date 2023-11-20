@@ -51,6 +51,7 @@ export class NoveltyService {
         if (!updatedNovelty) {
             throw new NotFoundException('Novedad no encontrada');
         }
+
         return null;
     }
 
@@ -88,17 +89,15 @@ export class NoveltyService {
         let search;
 
         if (by === 'find' && value === 'all') {
-            search = this.noveltyModel
+            search = await this.noveltyModel
                 .find()
                 .skip((page - 1) * limit)
-                .populate("collaborator")
                 .limit(limit)
                 .exec();
         } else {
-            search = this.noveltyModel
+            search = await this.noveltyModel
                 .find(query)
                 .skip((page - 1) * limit)
-                .populate("collaborator")
                 .limit(limit)
                 .exec();
         }
