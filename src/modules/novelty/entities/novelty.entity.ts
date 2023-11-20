@@ -9,7 +9,7 @@ import { Eps } from 'src/modules/eps/entities/eps.entity';
 @Schema({timestamps: true})
 export class Novelty {
 
-  @Prop({ type: Number, default: 1, unique: true })
+  @Prop({ type: Number, default: 1, unique: true, immutable: true })
   uid: number;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'collaborator' })
