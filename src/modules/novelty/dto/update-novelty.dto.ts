@@ -7,10 +7,19 @@ import {
   IsString,
   IsOptional,
   IsDateString,
-  ValidateNested,
-  IsObject
+  ValidateNested
 } from 'class-validator';
+import {Type} from "class-transformer";
+class CommentObject {
+  @IsString()
+  comment: string;
 
+  @IsString()
+  user: string;
+
+  @IsDateString()
+  date: string;
+}
 @Schema()
 export class UpdateNoveltyDto {
   @IsOptional()
@@ -57,23 +66,12 @@ export class UpdateNoveltyDto {
   @IsArray()
   documents: string[];
 
-  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @IsObject({ each: true })
+  @Type(() => CommentObject)
   comments: CommentObject[];
 
   @IsOptional()
   @IsNumber()
   state: number;
-}
-class CommentObject {
-  @IsString()
-  comment: string;
-
-  @IsString()
-  user: string;
-
-  @IsDateString()
-  date: string;
 }

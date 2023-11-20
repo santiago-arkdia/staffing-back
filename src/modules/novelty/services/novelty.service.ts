@@ -6,17 +6,29 @@ import {Novelty} from '../entities/novelty.entity';
 import {CreateNoveltyDto} from '../dto/create-novelty.dto';
 import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
 import axios, {AxiosResponse} from "axios";
+import {Counter} from "../entities/counter.entity";
 
 @Injectable()
 export class NoveltyService {
     constructor(
         @InjectModel(Novelty.name)
         private readonly noveltyModel: Model<Novelty>,
+        @InjectModel(Counter.name) private counterModel: Model<Counter>,
     ) {
     }
 
     async create(novelty: CreateNoveltyDto): Promise<Novelty> {
-        const createdNovelty = new this.noveltyModel(novelty);
+        const counter = await this.counterModel.findOneAndUpdate(
+            { model: 'Novelty', field: 'uid' },
+            { $inc: { count: 1 } },
+            { upsert: true, new: true },
+        );
+
+        const createdNovelty = new this.noveltyModel({
+            uid: counter.count,
+            ...novelty,
+        });
+
         return await createdNovelty.save();
     }
 
@@ -46,13 +58,12 @@ export class NoveltyService {
         }
 
         if (updateNoveltyDto.comments && updateNoveltyDto.comments.length > 0) {
-            // Agregar nuevos comentarios a la lista existente
             noveltyToUpdate.comments.push(...updateNoveltyDto.comments);
         }
 
         const updatedNovelty = await noveltyToUpdate.save();
 
-        return updatedNovelty.toObject(); // Retorna la novedad actualizada
+        return updatedNovelty.toObject();
     }
 
     async findOne(id: string): Promise<Novelty> {
