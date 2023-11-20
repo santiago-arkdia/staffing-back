@@ -52,18 +52,23 @@ export class NoveltyService {
         }
 
         const noveltyToUpdate = await this.noveltyModel.findById(id);
-
         if (!noveltyToUpdate) {
             throw new NotFoundException('Novedad no encontrada');
         }
-
         if (updateNoveltyDto.comments && updateNoveltyDto.comments.length > 0) {
             noveltyToUpdate.comments.push(...updateNoveltyDto.comments);
         }
+        updateNoveltyDto.comments = noveltyToUpdate.comments;
+        const updateNovelty = await this.noveltyModel.findByIdAndUpdate(
+            id,
+            updateNoveltyDto,
+            {
+                new: true,
+                useFindAndModify: false
+            },
+        );
 
-        const updatedNovelty = await noveltyToUpdate.save();
-
-        return updatedNovelty.toObject();
+        return updateNovelty.toObject();
     }
 
     async findOne(id: string): Promise<Novelty> {

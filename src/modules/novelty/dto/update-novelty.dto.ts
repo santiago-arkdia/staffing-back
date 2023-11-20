@@ -67,6 +67,7 @@ export class UpdateNoveltyDto {
   documents: string[];
 
   @IsArray()
+  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => CommentObject)
   comments: CommentObject[];
