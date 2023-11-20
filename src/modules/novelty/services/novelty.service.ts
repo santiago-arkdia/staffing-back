@@ -39,20 +39,20 @@ export class NoveltyService {
             delete updateNoveltyDto.finalDate;
         }
 
-        const updatedNovelty = await this.noveltyModel.findByIdAndUpdate(
-            id,
-            updateNoveltyDto,
-            {
-                new: true,
-                useFindAndModify: false
-            },
-        );
+        const noveltyToUpdate = await this.noveltyModel.findById(id);
 
-        if (!updatedNovelty) {
+        if (!noveltyToUpdate) {
             throw new NotFoundException('Novedad no encontrada');
         }
 
-        return null;
+        if (updateNoveltyDto.comments && updateNoveltyDto.comments.length > 0) {
+            // Agregar nuevos comentarios a la lista existente
+            noveltyToUpdate.comments.push(...updateNoveltyDto.comments);
+        }
+
+        const updatedNovelty = await noveltyToUpdate.save();
+
+        return updatedNovelty.toObject(); // Retorna la novedad actualizada
     }
 
     async findOne(id: string): Promise<Novelty> {

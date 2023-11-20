@@ -1,6 +1,15 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import {IsArray, IsBoolean, IsNumber, IsString, IsOptional} from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsString,
+  IsOptional,
+  IsDateString,
+  ValidateNested,
+  IsObject
+} from 'class-validator';
 
 @Schema()
 export class UpdateNoveltyDto {
@@ -50,9 +59,21 @@ export class UpdateNoveltyDto {
 
   @IsOptional()
   @IsArray()
-  comments: string[];
+  @ValidateNested({ each: true })
+  @IsObject({ each: true })
+  comments: CommentObject[];
 
   @IsOptional()
   @IsNumber()
   state: number;
+}
+class CommentObject {
+  @IsString()
+  comment: string;
+
+  @IsString()
+  user: string;
+
+  @IsDateString()
+  date: string;
 }

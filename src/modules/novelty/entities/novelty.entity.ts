@@ -6,6 +6,11 @@ import { Collaborator } from 'src/modules/collaborators/entities/collaborators.e
 import { Diagnosis } from 'src/modules/diagnosis/entities/diagnosis.entity';
 import { Eps } from 'src/modules/eps/entities/eps.entity';
 
+export class CommentObject {
+  comment: string;
+  user: string;
+  date: string;
+}
 @Schema({timestamps: true})
 export class Novelty {
 
@@ -45,8 +50,8 @@ export class Novelty {
   @Prop()
   documents: string[];
 
-  @Prop()
-  comments: string[];
+  @Prop([CommentObject])
+  comments: CommentObject[];
 
   @Prop({ type: Number, default: 2 })
   state: number;
