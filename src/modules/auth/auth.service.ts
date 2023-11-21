@@ -4,7 +4,6 @@ import { UsersService } from '../users/services/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from 'src/modules/users/dto/loginUser.dto';
 import { Roles } from '../roles/entities/roles.entity';
-import mongoose from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import {RolesService} from "../roles/services/roles.service";
 
@@ -16,30 +15,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // async signIn(loginDto: LoginDto) {
-  //   const { email, password } = loginDto;
-  //   const user = await this.usersService.findByEmail(email);
-  //   // const user = await this.userModel.findOne({ email });
-  //   if (user && bcrypt.compareSync(password, user.password)) {
-  //     return user;
-  //   }
-  //   if (user?.password !== password) {
-  //     throw new UnauthorizedException();
-  //   }
-    
-  //   const payload = { id: user._id, email: user.email, role: user.role };
-  //   return {
-  //     access_token: await this.jwtService.signAsync(payload),
-  //   };
-  // }
-
   async signIn(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const user = await this.usersService.findByEmail(email);
 
     if (user && bcrypt.compareSync(password, user.password)) {
       const role = await this.rolesService.findOne(user.role._id);
-
       const payload = { id: user._id, email: user.email, role: user.role, roleKey: role.role_key};
       return {
         access_token: await this.jwtService.signAsync(payload),
