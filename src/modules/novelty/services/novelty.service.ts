@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
-import {Model, Types} from 'mongoose';
+import mongoose, {Model, Types} from 'mongoose';
 import {Novelty} from '../entities/novelty.entity';
 import {CreateNoveltyDto} from '../dto/create-novelty.dto';
 import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
@@ -80,6 +80,7 @@ export class NoveltyService {
         limit: number,
         by: string,
         value: string | number,
+        requestBodyFilters: Record<string, any> = {}
     ): Promise<Novelty[]> {
         let query = {};
 
@@ -97,26 +98,30 @@ export class NoveltyService {
             }
         }
 
-        const total = by === 'find' && value === 'all'
-            ? await this.noveltyModel.countDocuments().exec()
-            : await this.noveltyModel.countDocuments(query).exec();
+        if (Object.keys(requestBodyFilters).length > 0) {
+            Object.entries(requestBodyFilters).forEach(([key, val]) => {
+                if (typeof val === 'string' && !isNaN(Number(val))) {
+                    query[key] = Number(val);
+                } else if (typeof val === 'string') {
+                    if (mongoose.Types.ObjectId.isValid(val)) {
+                        query[key] = val;
+                    } else {
+                        query[key] = { $regex: new RegExp(val, 'i') };
+                    }
+                } else if (typeof val === 'number') {
+                    query[key] = val;
+                }
+            });
+        }
+
+        const total = await this.noveltyModel.countDocuments(query).exec();
         const totalPages = Math.ceil(total / limit);
 
-        let search;
-
-        if (by === 'find' && value === 'all') {
-            search = await this.noveltyModel
-                .find()
-                .skip((page - 1) * limit)
-                .limit(limit)
-                .exec();
-        } else {
-            search = await this.noveltyModel
-                .find(query)
-                .skip((page - 1) * limit)
-                .limit(limit)
-                .exec();
-        }
+        const search = await this.noveltyModel
+            .find(query)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .exec();
 
         const data = await search;
 

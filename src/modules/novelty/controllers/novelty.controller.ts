@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { NoveltyService } from '../services/novelty.service';
-import {Controller, Post, Put, Get, Param, Body, UseGuards} from '@nestjs/common';
-import { CreateNoveltyDto } from '../dto/create-novelty.dto';
-import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
-import { Novelty } from '../entities/novelty.entity';
+import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {NoveltyService} from '../services/novelty.service';
+import {Body, Controller, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
+import {CreateNoveltyDto} from '../dto/create-novelty.dto';
+import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
+import {Novelty} from '../entities/novelty.entity';
 import {AuthGuard} from "../../auth/auth.guard";
 
 @ApiTags('Novelty')
@@ -40,7 +40,7 @@ export class NoveltyController {
     return await this.noveltyService.findOne(id);
   }
 
-  @Get(':page/:limit/:by/:value')
+  @Post(':page/:limit/:by/:value')
   @ApiOperation({ summary: 'Filtrar novedades por valor y paginación' })
   @UseGuards(AuthGuard)
   async findBy(
@@ -48,8 +48,9 @@ export class NoveltyController {
     @Param('limit') limit: number,
     @Param('by') by: string,
     @Param('value') value: string,
+    @Body() requestBody: Record<string, any>
   ): Promise<Novelty[]> {
-    return await this.noveltyService.findBy(page, limit, by, value);
+    return await this.noveltyService.findBy(page, limit, by, value, requestBody);
   }
 
   @Post('ws/find')

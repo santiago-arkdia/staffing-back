@@ -5,10 +5,13 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 export class CategoriesNovelty {
   @Prop({ type: String, required: true })
   name: string;
+
   @Prop({ type: Number, required: true })
   code: number;
+
   @Prop({ type: String, required: true })
   approves: string;
+
   @Prop({ type: String, required: true })
   manages: string;
 
