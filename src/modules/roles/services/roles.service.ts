@@ -23,7 +23,7 @@ export class RolesService {
     return await this.rolesModel.find().exec();
   }
 
-  async findOne(id: string): Promise<Roles> {
+  async findOne(id: any): Promise<Roles> {
     return await this.rolesModel.findById(id).exec();
   }
 

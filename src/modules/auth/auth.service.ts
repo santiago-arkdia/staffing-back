@@ -6,11 +6,13 @@ import { LoginDto } from 'src/modules/users/dto/loginUser.dto';
 import { Roles } from '../roles/entities/roles.entity';
 import mongoose from 'mongoose';
 import * as bcrypt from 'bcryptjs';
+import {RolesService} from "../roles/services/roles.service";
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
+    private rolesService: RolesService,
     private jwtService: JwtService,
   ) {}
 
@@ -34,9 +36,11 @@ export class AuthService {
   async signIn(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const user = await this.usersService.findByEmail(email);
-    
+
     if (user && bcrypt.compareSync(password, user.password)) {
-      const payload = { id: user._id, email: user.email, role: user.role };
+      const role = await this.rolesService.findOne(user.role._id);
+
+      const payload = { id: user._id, email: user.email, role: user.role, roleKey: role.role_key};
       return {
         access_token: await this.jwtService.signAsync(payload),
       };
