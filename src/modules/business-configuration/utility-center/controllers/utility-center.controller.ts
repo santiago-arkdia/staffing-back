@@ -3,7 +3,6 @@ import { UtilityCenter } from '../entities/utility-center.entity';
 import { UtilityCenterService } from '../services/utility-center.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUtilityCenterDto } from '../dto/utility-center-costs.dto';
-import { UsersService } from 'src/modules/users/services/users.service';
 
 @ApiTags('Utility Center')
 @Controller('api/utility-center')
@@ -25,12 +24,9 @@ export class UtilityCenterController {
     return await this.utilityCenterService.update(id, utilityCenter);
   }
 
-  @Get(':page/:limit')
-  async findAll(
-    @Param('page') page: number,
-    @Param('limit') limit: number,
-  ): Promise<UtilityCenter[]> {
-    return await this.utilityCenterService.findAll(page, limit);
+  @Get()
+  async findAll(): Promise<UtilityCenter[]> {
+    return await this.utilityCenterService.findAll();
   }
 
   @Get(':id')

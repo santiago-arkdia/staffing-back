@@ -23,12 +23,9 @@ export class RegionController {
     return await this.regionService.update(id, region);
   }
 
-  @Get(':page/:limit')
-  async findAll(
-    @Param('page') page: number,
-    @Param('limit') limit: number,
-  ): Promise<Region[]> {
-    return await this.regionService.findAll(page, limit);
+  @Get()
+  async findAll(): Promise<Region[]> {
+    return await this.regionService.findAll();
   }
 
   @Get(':id')

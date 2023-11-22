@@ -25,12 +25,9 @@ export class CentersCostsController {
     return await this.centersCostsService.update(id, centersCosts);
   }
 
-  @Get(':page/:limit')
-  async findAll(
-    @Param('page') page: number,
-    @Param('limit') limit: number,
-  ): Promise<CentersCosts[]> {
-    return await this.centersCostsService.findAll(page, limit);
+  @Get()
+  async findAll(): Promise<CentersCosts[]> {
+    return await this.centersCostsService.findAll();
   }
 
   @Get(':id')

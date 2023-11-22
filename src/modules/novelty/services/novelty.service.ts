@@ -83,7 +83,7 @@ export class NoveltyService {
         requestBodyFilters: Record<string, any> = {}
     ): Promise<Novelty[]> {
         let query = {};
-        let queryBody = {}
+        let queryBody = {};
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {

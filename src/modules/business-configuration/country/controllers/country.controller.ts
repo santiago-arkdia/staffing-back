@@ -3,7 +3,6 @@ import { Country } from '../entities/country.entity';
 import { CountryService } from '../services/country.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateCountrysDto } from '../dto/create-country.dto';
-import { UsersService } from 'src/modules/users/services/users.service';
 
 @ApiTags('Countries')
 @Controller('api/country')
@@ -23,12 +22,9 @@ export class CountryController {
     return await this.countryService.update(id, country);
   }
 
-  @Get(':page/:limit')
-  async findAll(
-    @Param('page') page: number,
-    @Param('limit') limit: number,
-  ): Promise<Country[]> {
-    return await this.countryService.findAll(page, limit);
+  @Get()
+  async findAll(): Promise<Country[]> {
+    return await this.countryService.findAll();
   }
 
   @Get(':id')

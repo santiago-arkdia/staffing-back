@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Country } from '../entities/country.entity';
 import { CreateCountrysDto } from '../dto/create-country.dto';
 
@@ -21,19 +21,12 @@ export class CountryService {
     });
   }
 
-  async findAll(page: number, limit: number): Promise<Country[]> {
+  async findAll(): Promise<Country[]> {
     const total = await this.countryModel.countDocuments().exec();
-    const totalPages = Math.ceil(total / limit);
-
-    const country = await this.countryModel
-      .find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
+    const country = await this.countryModel.find().exec();
 
     const countries: any = {};
     countries.total = total;
-    countries.pages = totalPages;
     countries.data = country;
 
     return countries;
@@ -47,23 +40,50 @@ export class CountryService {
     page: number,
     limit: number,
     by: string,
-    value: string,
+    value: string | number,
   ): Promise<Country[]> {
-    const query = { [by]: { $regex: new RegExp(value, 'i') } };
+    let query = {};
 
-    const total = await this.countryModel.countDocuments(query).exec();
+    if (by !== 'find' && value !== 'all') {
+      if (typeof value === 'string' && !isNaN(Number(value))) {
+        query = { [by]: Number(value) };
+      } else if (typeof value === 'string') {
+        if (Types.ObjectId.isValid(value)) {
+          query = { [by]: value };
+        } else {
+          query = { [by]: { $regex: new RegExp(value, 'i') } };
+        }
+      } else if (typeof value === 'number') {
+        query = { [by]: value };
+      }
+    }
+
+    const total =
+      by === 'find' && value === 'all'
+        ? await this.countryModel.countDocuments().exec()
+        : await this.countryModel.countDocuments(query).exec();
     const totalPages = Math.ceil(total / limit);
 
-    const country = await this.countryModel
-      .find(query)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
+    let search;
+    if (by === 'find' && value === 'all') {
+      search = await this.countryModel
+        .find()
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec();
+    } else {
+      search = await this.countryModel
+        .find(query)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec();
+    }
 
+    const data = search;
     const countries: any = {};
     countries.total = total;
     countries.pages = totalPages;
-    countries.data = country;
+    countries.data = data;
 
     return countries;
   }
