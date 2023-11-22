@@ -1,9 +1,8 @@
 import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
-import { CentersCosts } from '../entities/centers-costs.entity';
+import { CostCenters } from '../entities/centers-costs.entity';
 import { CentersCostsService } from '../services/centers-costs.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateCentersCostsDto } from '../dto/create-centers-costs.dto';
-import { UsersService } from 'src/modules/users/services/users.service';
 
 @ApiTags('Centers of costs')
 @Controller('api/centers-costs')
@@ -13,25 +12,25 @@ export class CentersCostsController {
   @Post()
   async create(
     @Body() centersCosts: CreateCentersCostsDto,
-  ): Promise<CentersCosts> {
+  ): Promise<CostCenters> {
     return await this.centersCostsService.create(centersCosts);
   }
 
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() centersCosts: CentersCosts,
-  ): Promise<CentersCosts> {
+    @Body() centersCosts: CostCenters,
+  ): Promise<CostCenters> {
     return await this.centersCostsService.update(id, centersCosts);
   }
 
   @Get()
-  async findAll(): Promise<CentersCosts[]> {
+  async findAll(): Promise<CostCenters[]> {
     return await this.centersCostsService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<CentersCosts> {
+  async findOne(@Param('id') id: string): Promise<CostCenters> {
     return await this.centersCostsService.findOne(id);
   }
 
@@ -41,7 +40,7 @@ export class CentersCostsController {
     @Param('limit') limit: number,
     @Param('by') by: string,
     @Param('value') value: string,
-  ): Promise<CentersCosts[]> {
+  ): Promise<CostCenters[]> {
     return await this.centersCostsService.findBy(page, limit, by, value);
   }
 }

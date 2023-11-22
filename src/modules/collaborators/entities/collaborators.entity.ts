@@ -1,16 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 
-@Schema({ collection: 'collaborator', timestamps: true })
+@Schema({timestamps: true})
 export class Collaborator {
-  @Prop({ type: String, required: true })
-  name: string;
+    @Prop({type: String, required: true})
+    name: string;
 
-  @Prop({ type: Number, default: 1 })
-  status: number;
+    @Prop({type: Number, default: 1})
+    status: number;
 
-  /*@Prop({ type: Date, default: Date.now })
-  createdAt: Date;*/
+    @Prop({ type: Object })
+    more: Record<string, any>;
 }
 
 export const CollaboratorSchema = SchemaFactory.createForClass(Collaborator);

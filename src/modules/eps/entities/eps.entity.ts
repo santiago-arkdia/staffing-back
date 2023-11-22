@@ -1,10 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 
-@Schema({ collection: 'eps', timestamps: true })
+@Schema({timestamps: true})
 export class Eps {
-  @Prop({ type: String, required: true })
-  name: string;
+    @Prop({type: String, required: true})
+    name: string;
+
+    @Prop({ type: Object })
+    more: Record<string, any>;
 }
 
 export const EpsSchema = SchemaFactory.createForClass(Eps);

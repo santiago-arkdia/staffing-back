@@ -14,9 +14,9 @@ import { AdminsModule } from './modules/admin/admin.module';
 import { PayrollsModule } from './modules/payroll/payroll.module';
 import { CountrysModule } from './modules/business-configuration/country/country.module';
 import { RegionsModule } from './modules/business-configuration/regions/region.module';
-import { CentersCostssModule } from './modules/business-configuration/centers-costs/centers-costs.module';
+import { CostCentersModule } from './modules/business-configuration/centers-costs/centers-costs.module';
 import { UtilityCentersModule } from './modules/business-configuration/utility-center/utility-center.module';
-import { ModuleParameterizationsModule } from './modules/module-parameterization/module-parameterization.module';
+import { ModuleParameterizationModule } from './modules/module-parameterization/module-parameterization.module';
 import { RolessModule } from './modules/roles/roles.module';
 import { ConceptsModule } from './modules/concepts/concepts.module';
 import { CategoriesNoveltyModule } from './modules/categories-novelty/categories-novelty.module';
@@ -50,9 +50,9 @@ import { CollaboratorModule } from './modules/collaborators/collaborators.module
     PayrollsModule,
     CountrysModule,
     RegionsModule,
-    CentersCostssModule,
+    CostCentersModule,
     UtilityCentersModule,
-    ModuleParameterizationsModule,
+    ModuleParameterizationModule,
     RolessModule,
     ConceptsModule,
     CategoriesNoveltyModule,

@@ -1,40 +1,41 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+/* eslint-disable prettier/prettier */
+import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Region } from '../../regions/entities/region.entity';
-import { UtilityCenter } from '../../utility-center/entities/utility-center.entity';
-import { CentersCosts } from '../../centers-costs/entities/centers-costs.entity';
+import {Region} from '../../regions/entities/region.entity';
+import {UtilityCenters} from '../../utility-center/entities/utility-center.entity';
+import {CostCenters} from '../../centers-costs/entities/centers-costs.entity';
 
-@Schema({ collection: 'utility-center', timestamps: true })
+@Schema({collection: 'job-positions', timestamps: true})
 export class JobPositions {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Region' })
-  region: Region;
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Region'})
+    region: Region;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'UtilityCenter' })
-  utilityCenter: UtilityCenter;
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'UtilityCenter'})
+    utilityCenter: UtilityCenters;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'CentersCosts' })
-  centersCosts: CentersCosts;
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CostCenters'})
+    centersCosts: CostCenters;
 
-  @Prop({ type: String, required: true })
-  name: string;
+    @Prop({type: String, required: true})
+    name: string;
 
-  @Prop({ type: String, required: true })
-  description: string;
+    @Prop({type: String, required: true})
+    description: string;
 
-  @Prop()
-  responsability: string;
+    @Prop()
+    responsibility: string;
 
-  @Prop()
-  objetive: string;
+    @Prop()
+    objective: string;
 
-  @Prop()
-  arl: string;
+    @Prop()
+    arl: string;
 
-  @Prop()
-  state: number;
+    @Prop()
+    state: number;
 
-  /*@Prop({ type: Date, default: Date.now })
-  createdAt: Date;*/
+    @Prop({ type: Object })
+    more: Record<string, any>;
 }
 
 export const JobPositionsSchema = SchemaFactory.createForClass(JobPositions);

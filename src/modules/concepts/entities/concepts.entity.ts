@@ -1,38 +1,37 @@
 /* eslint-disable prettier/prettier */
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { CategoriesNovelty } from 'src/modules/categories-novelty/entities/categories-novelties.entity';
-import { Roles } from 'src/modules/roles/entities/roles.entity';
+import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
 
-@Schema({ collection: 'concepts', timestamps: true })
+@Schema({timestamps: true})
 export class Concept {
 
-  @Prop({ type: String, required: true })
-  code: string;
+    @Prop({type: String, required: true})
+    code: string;
 
-  @Prop({ type: String, required: true })
-  name: string;
+    @Prop({type: String, required: true})
+    name: string;
 
-  @Prop({ type: Boolean, required: true })
-  benefit: boolean;
+    @Prop({type: Boolean, required: true})
+    benefit: boolean;
 
-  @Prop({ type: String, required: true })
-  reportType: string;
+    @Prop({type: String, required: true})
+    reportType: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'category-novelty' }] })
-  categoryNovelty: CategoriesNovelty;
+    @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'CategoriesNovelty'}]})
+    categoryNovelty: CategoriesNovelty;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'roles' })
-  registers: Roles;
+    @Prop({type: String, required: true})
+    registers: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'roles' })
-  approves: Roles;
-  
-  @Prop({ type: Number, default: 1 })
-  state: number;
+    @Prop({type: String, required: true})
+    approves: string;
 
-  /*@Prop({ type: Date, default: Date.now })
-  createdAt: Date;*/
+    @Prop({type: Number, default: 1})
+    state: number;
+
+    @Prop({ type: Object })
+    more: Record<string, any>;
 }
 
 export const ConceptSchema = SchemaFactory.createForClass(Concept);

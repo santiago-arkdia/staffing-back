@@ -20,8 +20,11 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
 
     if (user && bcrypt.compareSync(password, user.password)) {
-      const role = await this.rolesService.findOne(user.role._id);
-      const payload = { id: user._id, email: user.email, role: user.role, roleKey: role.role_key};
+      let role;
+      if (user.role) {
+        role = await this.rolesService.findOne(user.role);
+      }
+      const payload = { id: user._id, email: user.email, role: user.role ? user.role : '', roleKey: role ? role.role_key : ''};
       return {
         access_token: await this.jwtService.signAsync(payload),
       };

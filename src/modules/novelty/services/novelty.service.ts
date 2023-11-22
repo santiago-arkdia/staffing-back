@@ -128,12 +128,20 @@ export class NoveltyService {
             search = await this.noveltyModel
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
+                .populate('collaborator')
+                .populate('categoryNovelty')
+                .populate('eps')
+                .populate('diagnosis')
                 .limit(limit)
                 .exec();
         } else {
             search = await this.noveltyModel
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
+                .populate('collaborator')
+                .populate('categoryNovelty')
+                .populate('eps')
+                .populate('diagnosis')
                 .limit(limit)
                 .exec();
         }

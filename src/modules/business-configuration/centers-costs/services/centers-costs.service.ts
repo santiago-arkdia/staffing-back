@@ -2,27 +2,27 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateCentersCostsDto } from '../dto/create-centers-costs.dto';
-import { CentersCosts } from '../entities/centers-costs.entity';
+import { CostCenters } from '../entities/centers-costs.entity';
 
 @Injectable()
 export class CentersCostsService {
   constructor(
-    @InjectModel(CentersCosts.name)
-    private readonly centersCostsModel: Model<CentersCosts>,
+    @InjectModel(CostCenters.name)
+    private readonly centersCostsModel: Model<CostCenters>,
   ) {}
 
-  async create(centersCosts: CreateCentersCostsDto): Promise<CentersCosts> {
+  async create(centersCosts: CreateCentersCostsDto): Promise<CostCenters> {
     const createdCentersCosts = new this.centersCostsModel(centersCosts);
     return await createdCentersCosts.save();
   }
 
-  async update(id: string, centersCosts: CentersCosts): Promise<CentersCosts> {
+  async update(id: string, centersCosts: CostCenters): Promise<CostCenters> {
     return this.centersCostsModel.findByIdAndUpdate(id, centersCosts, {
       new: true,
     });
   }
 
-  async findAll(): Promise<CentersCosts[]> {
+  async findAll(): Promise<CostCenters[]> {
     const total = await this.centersCostsModel.countDocuments().exec();
     const centersCost = await this.centersCostsModel
       .find()
@@ -36,7 +36,7 @@ export class CentersCostsService {
     return centersCosts;
   }
 
-  async findOne(id: string): Promise<CentersCosts> {
+  async findOne(id: string): Promise<CostCenters> {
     return await this.centersCostsModel.findById(id).exec();
   }
 
@@ -45,7 +45,7 @@ export class CentersCostsService {
     limit: number,
     by: string,
     value: string | number,
-  ): Promise<CentersCosts[]> {
+  ): Promise<CostCenters[]> {
     let query = {};
 
     if (by !== 'find' && value !== 'all') {

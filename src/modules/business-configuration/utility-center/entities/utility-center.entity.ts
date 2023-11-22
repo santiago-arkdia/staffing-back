@@ -1,26 +1,27 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+/* eslint-disable prettier/prettier */
+import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Region } from '../../regions/entities/region.entity';
+import {Region} from '../../regions/entities/region.entity';
 
-@Schema({ collection: 'utility-center', timestamps: true })
-export class UtilityCenter {
-  @Prop({ type: String, required: true })
-  name: string;
+@Schema({collection: 'utility-centers', timestamps: true})
+export class UtilityCenters {
+    @Prop({type: String, required: true})
+    name: string;
 
-  @Prop({ type: String, required: true })
-  description: string;
+    @Prop({type: String, required: true})
+    description: string;
 
-  @Prop()
-  code: string;
+    @Prop()
+    code: string;
 
-  @Prop()
-  state: number;
+    @Prop()
+    state: number;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Region' })
-  region: Region;
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Region'})
+    region: Region;
 
-  /*@Prop({ type: Date, default: Date.now })
-  createdAt: Date;*/
+    @Prop({ type: Object })
+    more: Record<string, any>;
 }
 
-export const UtilityCenterSchema = SchemaFactory.createForClass(UtilityCenter);
+export const UtilityCenterSchema = SchemaFactory.createForClass(UtilityCenters);

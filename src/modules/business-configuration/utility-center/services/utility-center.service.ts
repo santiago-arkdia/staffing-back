@@ -2,30 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateUtilityCenterDto } from '../dto/utility-center-costs.dto';
-import { UtilityCenter } from '../entities/utility-center.entity';
+import { UtilityCenters } from '../entities/utility-center.entity';
 
 @Injectable()
 export class UtilityCenterService {
   constructor(
-    @InjectModel(UtilityCenter.name)
-    private readonly utilityCenterModel: Model<UtilityCenter>,
+    @InjectModel(UtilityCenters.name)
+    private readonly utilityCenterModel: Model<UtilityCenters>,
   ) {}
 
-  async create(utilityCenter: CreateUtilityCenterDto): Promise<UtilityCenter> {
+  async create(utilityCenter: CreateUtilityCenterDto): Promise<UtilityCenters> {
     const createdUtilityCenter = new this.utilityCenterModel(utilityCenter);
     return await createdUtilityCenter.save();
   }
 
   async update(
     id: string,
-    utilityCenter: UtilityCenter,
-  ): Promise<UtilityCenter> {
+    utilityCenter: UtilityCenters,
+  ): Promise<UtilityCenters> {
     return this.utilityCenterModel.findByIdAndUpdate(id, utilityCenter, {
       new: true,
     });
   }
 
-  async findAll(): Promise<UtilityCenter[]> {
+  async findAll(): Promise<UtilityCenters[]> {
     const total = await this.utilityCenterModel.countDocuments().exec();
     const utilityCenter = await this.utilityCenterModel
       .find()
@@ -44,7 +44,7 @@ export class UtilityCenterService {
     return utilityCenters;
   }
 
-  async findOne(id: string): Promise<UtilityCenter> {
+  async findOne(id: string): Promise<UtilityCenters> {
     return await this.utilityCenterModel.findById(id).exec();
   }
 
@@ -53,7 +53,7 @@ export class UtilityCenterService {
     limit: number,
     by: string,
     value: string | number,
-  ): Promise<UtilityCenter[]> {
+  ): Promise<UtilityCenters[]> {
     let query = {};
 
     if (by !== 'find' && value !== 'all') {

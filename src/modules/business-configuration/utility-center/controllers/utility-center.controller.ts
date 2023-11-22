@@ -1,5 +1,5 @@
 import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
-import { UtilityCenter } from '../entities/utility-center.entity';
+import { UtilityCenters } from '../entities/utility-center.entity';
 import { UtilityCenterService } from '../services/utility-center.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUtilityCenterDto } from '../dto/utility-center-costs.dto';
@@ -12,25 +12,25 @@ export class UtilityCenterController {
   @Post()
   async create(
     @Body() utilityCenter: CreateUtilityCenterDto,
-  ): Promise<UtilityCenter> {
+  ): Promise<UtilityCenters> {
     return await this.utilityCenterService.create(utilityCenter);
   }
 
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() utilityCenter: UtilityCenter,
-  ): Promise<UtilityCenter> {
+    @Body() utilityCenter: UtilityCenters,
+  ): Promise<UtilityCenters> {
     return await this.utilityCenterService.update(id, utilityCenter);
   }
 
   @Get()
-  async findAll(): Promise<UtilityCenter[]> {
+  async findAll(): Promise<UtilityCenters[]> {
     return await this.utilityCenterService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<UtilityCenter> {
+  async findOne(@Param('id') id: string): Promise<UtilityCenters> {
     return await this.utilityCenterService.findOne(id);
   }
 
@@ -40,7 +40,7 @@ export class UtilityCenterController {
     @Param('limit') limit: number,
     @Param('by') by: string,
     @Param('value') value: string,
-  ): Promise<UtilityCenter[]> {
+  ): Promise<UtilityCenters[]> {
     return await this.utilityCenterService.findBy(page, limit, by, value);
   }
 }
