@@ -83,6 +83,7 @@ export class NoveltyService {
         requestBodyFilters: Record<string, any> = {}
     ): Promise<Novelty[]> {
         let query = {};
+        let queryBody = {}
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
@@ -101,29 +102,43 @@ export class NoveltyService {
         if (Object.keys(requestBodyFilters).length > 0) {
             Object.entries(requestBodyFilters).forEach(([key, val]) => {
                 if (typeof val === 'string' && !isNaN(Number(val))) {
-                    query[key] = Number(val);
+                    queryBody[key] = Number(val);
                 } else if (typeof val === 'string') {
                     if (mongoose.Types.ObjectId.isValid(val)) {
-                        query[key] = val;
+                        queryBody[key] = val;
                     } else {
-                        query[key] = { $regex: new RegExp(val, 'i') };
+                        queryBody[key] = { $regex: new RegExp(val, 'i') };
                     }
                 } else if (typeof val === 'number') {
-                    query[key] = val;
+                    queryBody[key] = val;
                 }
             });
         }
 
-        const total = await this.noveltyModel.countDocuments(query).exec();
+        const combinedQuery = { ...query, ...queryBody };
+        const total = by === 'find' && value === 'all'
+            ? await this.noveltyModel.countDocuments(combinedQuery).exec()
+            : await this.noveltyModel.countDocuments(combinedQuery).exec();
         const totalPages = Math.ceil(total / limit);
 
-        const search = await this.noveltyModel
-            .find(query)
-            .skip((page - 1) * limit)
-            .limit(limit)
-            .exec();
+        console.log(combinedQuery);
+        let search;
 
-        const data = await search;
+        if (by === 'find' && value === 'all') {
+            search = await this.noveltyModel
+                .find(combinedQuery)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .exec();
+        } else {
+            search = await this.noveltyModel
+                .find(combinedQuery)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .exec();
+        }
+
+        const data = search;
 
         const novelties: any = {};
         novelties.total = total;
