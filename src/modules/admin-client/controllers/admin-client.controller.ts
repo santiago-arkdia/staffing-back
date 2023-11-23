@@ -5,6 +5,7 @@ import { ClientService } from '../services/adminClient.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateClientsDto } from '../dto/create-adminClient.dto';
 import { FilterAdminClientsDto } from '../dto/filter-admin.dto.';
+import {UpdateAdminClientsDto} from "../dto/update-admin-client.dto";
 
 @ApiTags('Admin Clients')
 @Controller('api/admin-client')
@@ -19,8 +20,8 @@ export class ClientController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() client: AdminClient,
-  ): Promise<AdminClient> {
+    @Body() client: UpdateAdminClientsDto,
+  ): Promise<UpdateAdminClientsDto> {
     return await this.clientService.update(id, client);
   }
 
