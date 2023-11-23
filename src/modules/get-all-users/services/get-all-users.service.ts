@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
-import {Model} from 'mongoose';
+import {Model, Types} from 'mongoose';
 import {Admin} from '../../admin/entities/admin.entity';
 import {AdminClient} from '../../admin-client/entities/adminClient.entity';
 import {Client} from '../../clients/entities/client.entity';
@@ -287,4 +287,97 @@ export class GetAllUsersService {
         return users;
     }
 
+    async findBy(
+        page: number,
+        limit: number,
+        by: string,
+        value: string | number,
+    ): Promise<UserDto[]> {
+        let matchStage: any = {};
+
+        if (by !== 'find' && value !== 'all') {
+            let query: any = {};
+
+            if (typeof value === 'string' && !isNaN(Number(value))) {
+                query = { [by]: Number(value) };
+            } else if (typeof value === 'string') {
+                if (Types.ObjectId.isValid(value)) {
+                    query = { [by]: value };
+                } else {
+                    query = { [by]: { $regex: new RegExp(value, 'i') } };
+                }
+            } else if (typeof value === 'number') {
+                query = { [by]: value };
+            }
+
+            matchStage = query;
+        }
+
+        const total = by === 'find' && value === 'all'
+            ? await this.userModel.countDocuments().exec()
+            : await this.userModel.countDocuments(matchStage).exec();
+        const totalPages = Math.ceil(total / limit);
+
+        const aggregatePipeline: any[] = [];
+
+        if (Object.keys(matchStage).length > 0) {
+            aggregatePipeline.push({ $match: matchStage });
+        }
+        aggregatePipeline.push(
+            {
+                $lookup: {
+                    from: 'roles',
+                    localField: 'role',
+                    foreignField: '_id',
+                    as: 'role',
+                },
+            },{
+                $lookup: {
+                    from: 'admins',
+                    localField: '_id',
+                    foreignField: 'user',
+                    as: 'admins',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'admin-clients',
+                    localField: '_id',
+                    foreignField: 'user',
+                    as: 'admin_clients',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'clients',
+                    localField: '_id',
+                    foreignField: 'user',
+                    as: 'clients',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'payrolls',
+                    localField: '_id',
+                    foreignField: 'user',
+                    as: 'payrolls',
+                },
+            },
+            {
+                $skip: (page - 1) * limit,
+            },
+            {
+                $limit: limit,
+            },
+        );
+
+        const data = await this.userModel.aggregate(aggregatePipeline).allowDiskUse(true);
+
+        const users: any = {};
+        users.total = total;
+        users.pages = totalPages;
+        users.data = data;
+
+        return users;
+    }
 }

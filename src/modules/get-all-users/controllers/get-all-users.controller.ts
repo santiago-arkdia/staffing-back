@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {Controller, Get, Param} from '@nestjs/common';
 import {GetAllUsersService} from '../services/get-all-users.service';
 import {ApiTags} from '@nestjs/swagger';
 import {UserDto} from '../dto/filter-user.dto';
@@ -15,7 +15,7 @@ export class GetAllUsersController {
         return this.userService.getAllUsers();
     }
 
-    @Get(':page/:limit')
+    /*@Get(':page/:limit')
     getUsersByPage(@Param('page') page: number, @Param('limit') limit: number) {
         return this.userService.getUsersByPage(page, limit);
     }
@@ -34,6 +34,15 @@ export class GetAllUsersController {
         } else {
             return this.userService.getUsersByPage(page, limit);
         }
+    }*/
 
+    @Get(':page/:limit/:by/:value')
+    async findBy(
+        @Param('page') page: number,
+        @Param('limit') limit: number,
+        @Param('by') by: string,
+        @Param('value') value: string,
+    ): Promise<UserDto[]> {
+        return await this.userService.findBy(page, limit, by, value);
     }
 }
