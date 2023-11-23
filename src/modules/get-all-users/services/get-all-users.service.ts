@@ -53,7 +53,7 @@ export class GetAllUsersService {
                     from: 'admin-clients',
                     localField: '_id',
                     foreignField: 'user',
-                    as: 'admin-clients',
+                    as: 'adminClients',
                 },
             },
             {
@@ -141,7 +141,7 @@ export class GetAllUsersService {
                     from: 'admin-clients',
                     localField: '_id',
                     foreignField: 'user',
-                    as: 'admin-clients',
+                    as: 'adminClients',
                 },
             },
             {
@@ -242,7 +242,7 @@ export class GetAllUsersService {
                     from: 'admin-clients',
                     localField: '_id',
                     foreignField: 'user',
-                    as: 'admin-clients',
+                    as: 'adminClients',
                 },
             },
             {
