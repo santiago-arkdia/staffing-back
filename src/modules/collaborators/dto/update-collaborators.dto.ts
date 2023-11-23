@@ -10,9 +10,17 @@ export class UpdateCollaboratorDto {
 
   @IsOptional()
   @IsString()
+  description: string;
+
+  @IsOptional()
+  @IsString()
   utilityCenter: string;
 
   @IsOptional()
   @IsString()
   centersCosts: string;
+
+  @IsOptional()
+  @IsString()
+  jobPositions: string;
 }

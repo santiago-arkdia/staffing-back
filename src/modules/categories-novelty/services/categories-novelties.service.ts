@@ -33,7 +33,7 @@ export class CategoriesNewsService {
     return await this.categoriesNewsModel.find().exec();
   }
 
-  async findOne(id: string): Promise<CategoriesNovelty> {
+  async findOne(id: any): Promise<CategoriesNovelty> {
     return await this.categoriesNewsModel.findById(id).exec();
   }
 
@@ -47,14 +47,11 @@ export class CategoriesNewsService {
 
     if (by !== 'find' && value !== 'all') {
       if (typeof value === 'string' && !isNaN(Number(value))) {
-        // Si es un string que representa un número, convierte a número y busca directamente
         query = { [by]: Number(value) };
       } else if (typeof value === 'string') {
-        // Verifica si es un ObjectId válido antes de usarlo en la consulta
         if (Types.ObjectId.isValid(value)) {
           query = { [by]: value };
         } else {
-          // Si no es un ObjectId válido, busca como string normal (insensible a mayúsculas)
           query = { [by]: { $regex: new RegExp(value, 'i') } };
         }
       } else if (typeof value === 'number') {

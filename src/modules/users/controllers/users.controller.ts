@@ -135,10 +135,12 @@ export class UsersController {
     return await this.usersService.updateState(id, user);
   }
 
-  @Put('resetpassword/:id')
-  async updatePassword(@Param('id') id: string, @Body('password') password: string): Promise<UserEntity> {
-    const updatedUser = await this.usersService.updatePassword(id, password );
-    return updatedUser;
+  @Put('reset-password/:id')
+  async updatePassword(
+      @Param('id') id: string,
+      @Body('password') password: string
+  ): Promise<UserEntity> {
+    return await this.usersService.updatePassword(id, password);
   }
 
   @Get()

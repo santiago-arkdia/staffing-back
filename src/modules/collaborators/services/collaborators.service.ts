@@ -61,6 +61,7 @@ export class CollaboratorService {
                     path: 'region',
                 },
             })
+            .populate({path: 'jobPosition'})
             .exec();
     }
 

@@ -20,13 +20,13 @@ export class CategoriesNewsController {
     return await this.categoriesNewsService.update(id, categoriesNews);
   }
 
-  /*@Get()
+  @Get()
   async findAll(): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewsService.findAll();
-  }*/
+  }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<CategoriesNovelty> {
+  async findOne(@Param('id') id: any): Promise<CategoriesNovelty> {
     return await this.categoriesNewsService.findOne(id);
   }
 

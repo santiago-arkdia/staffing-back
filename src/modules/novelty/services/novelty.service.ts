@@ -121,7 +121,6 @@ export class NoveltyService {
             : await this.noveltyModel.countDocuments(combinedQuery).exec();
         const totalPages = Math.ceil(total / limit);
 
-        console.log(combinedQuery);
         let search;
 
         if (by === 'find' && value === 'all') {
