@@ -10,6 +10,14 @@ export class UpdateCollaboratorDto {
 
   @IsOptional()
   @IsString()
+  document: string;
+
+  @IsOptional()
+  @IsString()
+  documentType: string;
+
+  @IsOptional()
+  @IsString()
   description: string;
 
   @IsOptional()

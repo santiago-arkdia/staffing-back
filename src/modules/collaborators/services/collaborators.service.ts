@@ -98,12 +98,16 @@ export class CollaboratorService {
             search = await this.collaboratorModel
                 .find()
                 .skip((page - 1) * limit)
+                .populate('utilityCenter')
+                .populate('centersCosts')
                 .limit(limit)
                 .exec();
         } else {
             search = await this.collaboratorModel
                 .find(query)
                 .skip((page - 1) * limit)
+                .populate('utilityCenter')
+                .populate('centersCosts')
                 .limit(limit)
                 .exec();
         }

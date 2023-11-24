@@ -7,6 +7,12 @@ export class CreateCollaboratorDto {
   @IsString()
   name: string;
 
+  @IsString()
+  document: string;
+
+  @IsString()
+  documentType: string;
+
   @IsOptional()
   @IsString()
   utilityCenter: string;

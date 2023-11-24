@@ -13,10 +13,16 @@ export class Collaborator {
     @Prop({type: String})
     description: string;
 
+    @Prop({type: String})
+    documentType: string;
+
+    @Prop({type: String})
+    document: string;
+
     @Prop({type: Number, default: 1})
     status: number;
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'UtilityCenter'})
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'UtilityCenters'})
     utilityCenter: UtilityCenters;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CostCenters'})
