@@ -1,73 +1,98 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateJobPositionsDto } from '../dto/job-positions.dto';
-import { JobPositions } from '../entities/job-positions.entity';
+/* eslint-disable prettier/prettier */
+import {Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model, Types} from 'mongoose';
+import {CreateJobPositionsDto} from '../dto/job-positions.dto';
+import {JobPositions} from '../entities/job-positions.entity';
 
 @Injectable()
 export class JobPositionsService {
-  constructor(
-    @InjectModel(JobPositions.name)
-    private readonly jobPositionsModel: Model<JobPositions>,
-  ) {}
+    constructor(
+        @InjectModel(JobPositions.name)
+        private readonly jobPositionsModel: Model<JobPositions>,
+    ) {
+    }
 
-  async create(jobPositions: CreateJobPositionsDto): Promise<JobPositions> {
-    const createdJobPositions = new this.jobPositionsModel(jobPositions);
-    return await createdJobPositions.save();
-  }
+    async create(jobPositions: CreateJobPositionsDto): Promise<JobPositions> {
+        const createdJobPositions = new this.jobPositionsModel(jobPositions);
+        return await createdJobPositions.save();
+    }
 
-  async update(id: string, jobPositions: JobPositions): Promise<JobPositions> {
-    return await this.jobPositionsModel.findByIdAndUpdate(id, jobPositions, {
-      new: true,
-    });
-  }
+    async update(id: string, jobPositions: JobPositions): Promise<JobPositions> {
+        return this.jobPositionsModel.findByIdAndUpdate(id, jobPositions, {
+            new: true,
+        });
+    }
 
-  async findAll(page: number, limit: number): Promise<JobPositions[]> {
-    const total = await this.jobPositionsModel.countDocuments().exec();
-    const totalPages = Math.ceil(total / limit);
+    async findAll(): Promise<JobPositions[]> {
+        const total = await this.jobPositionsModel.countDocuments().exec();
 
-    const jobPosition = await this.jobPositionsModel
-      .find()
-      .skip((page - 1) * limit)
-      .populate(['utilityCenter', 'region', 'centersCosts', 'arl'])
-      .limit(limit)
-      .exec();
+        const jobPosition = await this.jobPositionsModel
+            .find()
+            .populate(['utilityCenter', 'region', 'centersCosts'])
+            .exec();
 
-    const jobPositions: any = {};
-    jobPositions.total = total;
-    jobPositions.pages = totalPages;
-    jobPositions.data = jobPosition;
+        const jobPositions: any = {};
+        jobPositions.total = total;
+        jobPositions.data = jobPosition;
+        return jobPositions;
+    }
 
-    return jobPositions;
-  }
+    async findOne(id: string): Promise<JobPositions> {
+        return await this.jobPositionsModel.findById(id).exec();
+    }
 
-  async findOne(id: string): Promise<JobPositions> {
-    return await this.jobPositionsModel.findById(id).exec();
-  }
+    async findBy(
+        page: number,
+        limit: number,
+        by: string,
+        value: string | number,
+    ): Promise<JobPositions[]> {
+        let query = {};
 
-  async findBy(
-    page: number,
-    limit: number,
-    by: string,
-    value: string,
-  ): Promise<JobPositions[]> {
-    const query = { [by]: { $regex: new RegExp(value, 'i') } };
+        if (by !== 'find' && value !== 'all') {
+            if (typeof value === 'string' && !isNaN(Number(value))) {
+                query = { [by]: Number(value) };
+            } else if (typeof value === 'string') {
+                if (Types.ObjectId.isValid(value)) {
+                    query = { [by]: value };
+                } else {
+                    query = { [by]: { $regex: new RegExp(value, 'i') } };
+                }
+            } else if (typeof value === 'number') {
+                query = { [by]: value };
+            }
+        }
 
-    const total = await this.jobPositionsModel.countDocuments(query).exec();
-    const totalPages = Math.ceil(total / limit);
+        const total = by === 'find' && value === 'all'
+            ? await this.jobPositionsModel.countDocuments().exec()
+            : await this.jobPositionsModel.countDocuments(query).exec();
+        const totalPages = Math.ceil(total / limit);
 
-    const jobPosition = await this.jobPositionsModel
-      .find(query)
-      .skip((page - 1) * limit)
-      .populate(['utilityCenter', 'region', 'centersCosts', 'arl'])
-      .limit(limit)
-      .exec();
+        let search;
 
-    const jobPositions: any = {};
-    jobPositions.total = total;
-    jobPositions.pages = totalPages;
-    jobPositions.data = jobPosition;
+        if (by === 'find' && value === 'all') {
+            search = await this.jobPositionsModel
+                .find()
+                .skip((page - 1) * limit)
+                .populate(['utilityCenter', 'region', 'centersCosts', 'arl'])
+                .limit(limit)
+                .exec();
+        } else {
+            search = await this.jobPositionsModel
+                .find(query)
+                .skip((page - 1) * limit)
+                .populate(['utilityCenter', 'region', 'centersCosts'])
+                .limit(limit)
+                .exec();
+        }
 
-    return jobPositions;
-  }
+        const data = search;
+        const jobPositions: any = {};
+        jobPositions.total = total;
+        jobPositions.pages = totalPages;
+        jobPositions.data = data;
+
+        return jobPositions;
+    }
 }

@@ -21,30 +21,6 @@ export class ClientService {
     return this.clientModel.findByIdAndUpdate(id, client, {new: true});
   }
 
-  /*async findAll(page: number, limit: number): Promise<Client[]> {
-    
-    const total = await this.clientModel.countDocuments().exec();
-    const totalPages = Math.ceil(total / limit)
-
-    const clients = await this.clientModel.find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate({
-        path: 'user',
-        populate: {
-          path: 'role',
-        },
-      })
-      .exec();
-
-      const client: any = {};
-      client.total = total;
-      client.pages = totalPages;
-      client.data = clients;
-
-      return client;
-  }*/
-
   async findOne(id: string): Promise<Client> {
     return await this.clientModel
       .findById(id)
