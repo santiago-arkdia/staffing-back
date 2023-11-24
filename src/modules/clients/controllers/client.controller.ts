@@ -26,14 +26,6 @@ export class ClientController {
     return await this.clientService.update(id, client);
   }
 
-  /*@Get(':page/:limit')
-  async findAll(
-    @Param('page') page: number,
-    @Param('limit') limit: number,
-  ): Promise<Client[]> {
-    return await this.clientService.findAll(page, limit);
-  }*/
-
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Client> {
     return await this.clientService.findOne(id);
