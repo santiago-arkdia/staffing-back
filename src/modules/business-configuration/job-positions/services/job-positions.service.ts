@@ -29,7 +29,9 @@ export class JobPositionsService {
 
         const jobPosition = await this.jobPositionsModel
             .find()
-            .populate(['utilityCenter', 'region', 'centersCosts'])
+            .populate('region')
+            .populate('utilityCenter')
+            .populate('centersCosts')
             .exec();
 
         const jobPositions: any = {};
@@ -75,14 +77,18 @@ export class JobPositionsService {
             search = await this.jobPositionsModel
                 .find()
                 .skip((page - 1) * limit)
-                .populate(['utilityCenter', 'region', 'centersCosts', 'arl'])
+                .populate('region')
+                .populate('utilityCenter')
+                .populate('centersCosts')
                 .limit(limit)
                 .exec();
         } else {
             search = await this.jobPositionsModel
                 .find(query)
                 .skip((page - 1) * limit)
-                .populate(['utilityCenter', 'region', 'centersCosts'])
+                .populate('region')
+                .populate('utilityCenter')
+                .populate('centersCosts')
                 .limit(limit)
                 .exec();
         }

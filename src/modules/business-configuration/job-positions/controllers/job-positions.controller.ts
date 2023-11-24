@@ -25,7 +25,7 @@ export class JobPositionsController {
         return await this.jobPositionsService.update(id, jobPositions);
     }
 
-    @Get(':page/:limit')
+    @Get()
     async findAll(): Promise<JobPositions[]> {
         return await this.jobPositionsService.findAll();
     }

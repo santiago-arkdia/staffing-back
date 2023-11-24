@@ -10,7 +10,7 @@ export class JobPositions {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Region'})
     region: Region;
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'UtilityCenter'})
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'UtilityCenters'})
     utilityCenter: UtilityCenters;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CostCenters'})
