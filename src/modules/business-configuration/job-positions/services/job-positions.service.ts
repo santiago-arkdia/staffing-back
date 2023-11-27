@@ -18,7 +18,7 @@ export class JobPositionsService {
         return await createdJobPositions.save();
     }
 
-    async update(id: string, jobPositions: JobPositions): Promise<JobPositions> {
+    async update(id: string, jobPositions: CreateJobPositionsDto): Promise<JobPositions> {
         return this.jobPositionsModel.findByIdAndUpdate(id, jobPositions, {
             new: true,
         });
@@ -54,15 +54,15 @@ export class JobPositionsService {
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
-                query = { [by]: Number(value) };
+                query = {[by]: Number(value)};
             } else if (typeof value === 'string') {
                 if (Types.ObjectId.isValid(value)) {
-                    query = { [by]: value };
+                    query = {[by]: value};
                 } else {
-                    query = { [by]: { $regex: new RegExp(value, 'i') } };
+                    query = {[by]: {$regex: new RegExp(value, 'i')}};
                 }
             } else if (typeof value === 'number') {
-                query = { [by]: value };
+                query = {[by]: value};
             }
         }
 
@@ -100,5 +100,9 @@ export class JobPositionsService {
         jobPositions.data = data;
 
         return jobPositions;
+    }
+
+    async delete(id: string): Promise<JobPositions> {
+        return await this.jobPositionsModel.findByIdAndDelete(id).exec();
     }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {Controller, Post, Put, Get, Param, Body} from '@nestjs/common';
+import {Controller, Post, Put, Get, Param, Body, Delete} from '@nestjs/common';
 import {JobPositions} from '../entities/job-positions.entity';
 import {JobPositionsService} from '../services/job-positions.service';
 import {ApiTags} from '@nestjs/swagger';
@@ -20,7 +20,7 @@ export class JobPositionsController {
     @Put(':id')
     async update(
         @Param('id') id: string,
-        @Body() jobPositions: JobPositions,
+        @Body() jobPositions: CreateJobPositionsDto,
     ): Promise<JobPositions> {
         return await this.jobPositionsService.update(id, jobPositions);
     }
@@ -43,5 +43,9 @@ export class JobPositionsController {
         @Param('value') value: string,
     ): Promise<JobPositions[]> {
         return await this.jobPositionsService.findBy(page, limit, by, value);
+    }
+    @Delete(':id')
+    async delete(@Param('id') id: string): Promise<JobPositions> {
+        return await this.jobPositionsService.delete(id);
     }
 }

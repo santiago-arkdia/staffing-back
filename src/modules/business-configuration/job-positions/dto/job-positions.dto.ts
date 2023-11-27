@@ -1,34 +1,41 @@
-import { Schema, Prop } from '@nestjs/mongoose';
-import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
+/* eslint-disable prettier/prettier */
+import {Schema} from '@nestjs/mongoose';
+import {IsOptional, IsString} from 'class-validator';
 
 @Schema()
-export class CreateJobPositionsDto{
+export class CreateJobPositionsDto {
 
-  @IsString()
-  region: string;
+    @IsString()
+    @IsOptional()
+    region: string;
 
-  @IsString()
-  @IsOptional()
-  utilityCenter: string;
+    @IsString()
+    @IsOptional()
+    utilityCenter: string;
 
-  @IsString()
-  @IsOptional()
-  centersCosts: string;
+    @IsString()
+    @IsOptional()
+    centersCosts: string;
 
-  @IsString()
-  name: string;
+    @IsString()
+    @IsOptional()
+    name: string;
 
-  @IsString()
-  description: string;
+    @IsString()
+    @IsOptional()
+    description: string;
 
-  @IsString()
-  responsability: string;
+    @IsString()
+    @IsOptional()
+    responsibility: string;
 
-  @IsString()
-  objetive: string;
+    @IsString()
+    @IsOptional()
+    objective: string;
 
 
-  @IsString()
-  arl: string;
-  
+    @IsString()
+    @IsOptional()
+    arl: string;
+
 }
