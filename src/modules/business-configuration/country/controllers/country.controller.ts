@@ -19,7 +19,7 @@ export class CountryController {
     @Put(':id')
     async update(
         @Param('id') id: string,
-        @Body() country: Country,
+        @Body() country: CreateCountriesDto,
     ): Promise<Country> {
         return await this.countryService.update(id, country);
     }
