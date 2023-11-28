@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {Schema} from '@nestjs/mongoose';
-import {IsOptional, IsString} from 'class-validator';
+import {IsNumber, IsOptional, IsString} from 'class-validator';
 
 @Schema()
 export class CreateCountriesDto {
@@ -15,4 +15,8 @@ export class CreateCountriesDto {
     @IsString()
     @IsOptional()
     image: string;
+
+    @IsNumber()
+    @IsOptional()
+    state: number;
 }
