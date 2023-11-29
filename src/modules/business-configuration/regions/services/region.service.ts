@@ -17,7 +17,7 @@ export class RegionService {
         return await createdRegion.save();
     }
 
-    async update(id: string, region: Region): Promise<Region> {
+    async update(id: string, region: CreateRegionDto): Promise<Region> {
         return this.regionModel.findByIdAndUpdate(id, region, {new: true});
     }
 

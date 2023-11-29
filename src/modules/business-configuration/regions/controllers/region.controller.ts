@@ -18,7 +18,7 @@ export class RegionController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() region: Region,
+    @Body() region: CreateRegionDto,
   ): Promise<Region> {
     return await this.regionService.update(id, region);
   }
