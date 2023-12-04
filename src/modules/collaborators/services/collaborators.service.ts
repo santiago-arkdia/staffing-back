@@ -5,18 +5,33 @@ import {Collaborator} from '../entities/collaborators.entity';
 import {Model, Types} from 'mongoose';
 import {CreateCollaboratorDto} from '../dto/create-collaborators.dto';
 import {UpdateCollaboratorDto} from '../dto/update-collaborators.dto';
+import {CollaboratorCore} from "../../collaborator-core/entities/collaborator-core";
 
 @Injectable()
 export class CollaboratorService {
     constructor(
         @InjectModel(Collaborator.name)
         private readonly collaboratorModel: Model<Collaborator>,
+        @InjectModel(CollaboratorCore.name)
+        private readonly coreModel: Model<CollaboratorCore>
     ) {
     }
 
     async create(collaborator: CreateCollaboratorDto): Promise<Collaborator> {
-        const createdCollaborator = new this.collaboratorModel(collaborator);
-        return await createdCollaborator.save();
+        const create = new this.collaboratorModel(collaborator);
+        if (create) {
+            await this.createCore({
+                collaborator: create._id.toString(),
+                costCenter: create.centersCosts.toString(),
+                utilityCenter: create.utilityCenter.toString()
+            })
+        }
+        return await create.save();
+    }
+
+    async createCore({ collaborator, costCenter, utilityCenter }: { collaborator: string; costCenter: string; utilityCenter: string }): Promise<CollaboratorCore> {
+        const createCore = new this.coreModel({ collaborator, costCenter, utilityCenter });
+        return await createCore.save();
     }
 
     async update(
