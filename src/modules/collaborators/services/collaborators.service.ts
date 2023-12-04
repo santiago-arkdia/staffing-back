@@ -5,7 +5,6 @@ import {Collaborator} from '../entities/collaborators.entity';
 import {Model, Types} from 'mongoose';
 import {CreateCollaboratorDto} from '../dto/create-collaborators.dto';
 import {UpdateCollaboratorDto} from '../dto/update-collaborators.dto';
-import {CollaboratorCore} from "../../collaborator-core/entities/collaborator-core";
 
 @Injectable()
 export class CollaboratorService {
