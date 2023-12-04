@@ -2,7 +2,6 @@
 import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from "mongoose";
 import {UtilityCenters} from "../../business-configuration/utility-center/entities/utility-center.entity";
-import {CostCenters} from "../../business-configuration/centers-costs/entities/centers-costs.entity";
 import {JobPositions} from "../../business-configuration/job-positions/entities/job-positions.entity";
 
 @Schema({timestamps: true})
@@ -25,8 +24,8 @@ export class Collaborator {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'UtilityCenters'})
     utilityCenter: UtilityCenters;
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CostCenters'})
-    centersCosts: CostCenters;
+    /*@Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CostCenters'})
+    centersCosts: CostCenters;*/
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'JobPositions'})
     jobPosition: JobPositions;
