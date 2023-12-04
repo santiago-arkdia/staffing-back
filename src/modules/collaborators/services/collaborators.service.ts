@@ -12,27 +12,27 @@ export class CollaboratorService {
     constructor(
         @InjectModel(Collaborator.name)
         private readonly collaboratorModel: Model<Collaborator>,
-        @InjectModel(CollaboratorCore.name)
-        private readonly coreModel: Model<CollaboratorCore>
+        /*@InjectModel(CollaboratorCore.name)
+        private readonly coreModel: Model<CollaboratorCore>*/
     ) {
     }
 
     async create(collaborator: CreateCollaboratorDto): Promise<Collaborator> {
         const create = new this.collaboratorModel(collaborator);
-        if (create) {
+        /*if (create) {
             await this.createCore({
                 collaborator: create._id.toString(),
                 costCenter: create.centersCosts.toString(),
                 utilityCenter: create.utilityCenter.toString()
             })
-        }
+        }*/
         return await create.save();
     }
 
-    async createCore({ collaborator, costCenter, utilityCenter }: { collaborator: string; costCenter: string; utilityCenter: string }): Promise<CollaboratorCore> {
+   /* async createCore({ collaborator, costCenter, utilityCenter }: { collaborator: string; costCenter: string; utilityCenter: string }): Promise<CollaboratorCore> {
         const createCore = new this.coreModel({ collaborator, costCenter, utilityCenter });
         return await createCore.save();
-    }
+    }*/
 
     async update(
         id: string,

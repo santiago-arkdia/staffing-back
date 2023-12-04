@@ -2,7 +2,6 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/mongoose";
 import {Model, Types} from "mongoose";
-import {UpdateCollaboratorDto} from "../../collaborators/dto/update-collaborators.dto";
 import {CollaboratorCore} from "../entities/collaborator-core";
 import {CreateCoreDto} from "../dto/create-core.dto";
 
@@ -21,8 +20,8 @@ export class CollaboratorCoreService {
 
     async update(
         id: string,
-        collaborator: UpdateCollaboratorDto,
-    ): Promise<UpdateCollaboratorDto> {
+        collaborator: CreateCoreDto,
+    ): Promise<CreateCoreDto> {
         return this.coreModel.findByIdAndUpdate(id, collaborator, {
             new: true,
         });

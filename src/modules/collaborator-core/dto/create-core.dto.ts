@@ -5,9 +5,11 @@ import {IsOptional, IsString} from 'class-validator';
 @Schema()
 export class CreateCoreDto {
   @IsString()
+  @IsOptional()
   collaborator: string;
 
   @IsString()
+  @IsOptional()
   costCenter: string;
 
   @IsString()
