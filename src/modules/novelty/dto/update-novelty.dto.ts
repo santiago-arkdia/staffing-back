@@ -32,19 +32,7 @@ export class UpdateNoveltyDto {
 
   @IsOptional()
   @IsString()
-  contract: string;
-
-  @IsOptional()
-  @IsString()
   concept: string;
-
-  @IsOptional()
-  @IsString()
-  initialDate: Date;
-
-  @IsOptional()
-  @IsString()
-  finalDate: Date;
 
   @IsOptional()
   @IsString()
@@ -67,8 +55,4 @@ export class UpdateNoveltyDto {
   @IsNumber()
   @IsOptional()
   value: number;
-
-  @IsString()
-  @IsOptional()
-  typeValue: string;
 }

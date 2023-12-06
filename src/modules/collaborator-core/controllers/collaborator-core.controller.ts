@@ -3,8 +3,10 @@ import {Body, Controller, Get, Param, Post, Put} from '@nestjs/common';
 import {CollaboratorCoreService} from "../services/collaborator-core.service";
 import {CreateCoreDto} from "../dto/create-core.dto";
 import {CollaboratorCore} from "../entities/collaborator-core";
+import {ApiTags} from "@nestjs/swagger";
 
-@Controller('collaborator-core')
+@ApiTags('Collaborators Core')
+@Controller('api/collaborator-core')
 export class CollaboratorCoreController {
     constructor(private readonly coreService: CollaboratorCoreService) {
     }
@@ -24,9 +26,12 @@ export class CollaboratorCoreController {
         return await this.coreService.update(id, update);
     }
 
-    @Get()
-    async findAll(): Promise<CollaboratorCore[]> {
-        return await this.coreService.findAll();
+    @Get(':by/:value')
+    async findAll(
+        @Param('by') by: string,
+        @Param('value') value: string,
+    ): Promise<CollaboratorCore[]> {
+        return await this.coreService.findAll(by, value);
     }
 
     @Get(':id')

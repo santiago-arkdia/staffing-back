@@ -33,24 +33,6 @@ export class NoveltyService {
     }
 
     async update(id: string, updateNoveltyDto: UpdateNoveltyDto): Promise<UpdateNoveltyDto> {
-        if (
-            updateNoveltyDto.initialDate &&
-            !isNaN(Date.parse(updateNoveltyDto.initialDate.toString()))
-        ) {
-            updateNoveltyDto.initialDate = new Date(updateNoveltyDto.initialDate);
-        } else {
-            delete updateNoveltyDto.initialDate;
-        }
-
-        if (
-            updateNoveltyDto.finalDate &&
-            !isNaN(Date.parse(updateNoveltyDto.finalDate.toString()))
-        ) {
-            updateNoveltyDto.finalDate = new Date(updateNoveltyDto.finalDate);
-        } else {
-            delete updateNoveltyDto.finalDate;
-        }
-
         const noveltyToUpdate = await this.noveltyModel.findById(id);
         if (!noveltyToUpdate) {
             throw new NotFoundException('Novedad no encontrada');

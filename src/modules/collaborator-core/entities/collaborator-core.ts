@@ -5,7 +5,7 @@ import {CostCenters} from "../../business-configuration/centers-costs/entities/c
 import {UtilityCenters} from "../../business-configuration/utility-center/entities/utility-center.entity";
 import {Collaborator} from "../../collaborators/entities/collaborators.entity";
 
-@Schema({timestamps: true})
+@Schema({collection: 'collaborators-core', timestamps: true})
 export class CollaboratorCore {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Collaborator'})
     collaborator: Collaborator[];

@@ -27,9 +27,27 @@ export class CollaboratorCoreService {
         });
     }
 
-    async findAll(): Promise<CollaboratorCore[]> {
+    async findAll(
+        by: string,
+        value: string | number,
+    ): Promise<CollaboratorCore[]> {
+        let query = {};
+        if (by !== 'find' && value !== 'all') {
+            if (typeof value === 'string' && !isNaN(Number(value))) {
+                query = {[by]: Number(value)};
+            } else if (typeof value === 'string') {
+                if (Types.ObjectId.isValid(value)) {
+                    query = {[by]: value};
+                } else {
+                    query = {[by]: {$regex: new RegExp(value, 'i')}};
+                }
+            } else if (typeof value === 'number') {
+                query = {[by]: value};
+            }
+        }
+
         return await this.coreModel
-            .find()
+            .find(query)
             .populate({
                 path: 'utilityCenter',
                 populate: {

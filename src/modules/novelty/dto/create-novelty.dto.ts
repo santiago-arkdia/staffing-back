@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import {IsArray, IsNumber, IsOptional, IsString} from 'class-validator';
+import {IsArray, IsDate, IsNumber, IsOptional, IsString} from 'class-validator';
 
 @Schema()
 export class CreateNoveltyDto {
@@ -13,13 +13,17 @@ export class CreateNoveltyDto {
   @IsString()
   concept: string;
 
+  @IsString()
+  @IsOptional()
+  description: string;
+
   @IsNumber()
   @IsOptional()
   value: number;
 
-  @IsString()
+  @IsDate()
   @IsOptional()
-  typeValue: string;
+  date: Date;
   
   @IsArray()
   @IsOptional()

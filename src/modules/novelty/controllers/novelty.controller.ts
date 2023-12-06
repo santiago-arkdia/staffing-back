@@ -16,8 +16,6 @@ export class NoveltyController {
   @ApiOperation({ summary: 'Crear reporte de novedad' })
   @UseGuards(AuthGuard)
   async create(@Body() novelty: CreateNoveltyDto): Promise<Novelty> {
-    novelty.initialDate = new Date(novelty.initialDate);
-    novelty.finalDate = new Date(novelty.finalDate);
     return await this.noveltyService.create(novelty);
   }
 
@@ -28,8 +26,6 @@ export class NoveltyController {
     @Param('id') id: string,
     @Body() updateNoveltyDto: UpdateNoveltyDto,
   ): Promise<UpdateNoveltyDto> {
-    updateNoveltyDto.initialDate = new Date(updateNoveltyDto.initialDate);
-    updateNoveltyDto.finalDate = new Date(updateNoveltyDto.finalDate);
     return await this.noveltyService.update(id, updateNoveltyDto);
   }
 

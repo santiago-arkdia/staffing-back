@@ -26,14 +26,8 @@ export class Novelty {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Concept'})
     concept: Concept;
 
-    @Prop()
-    contract: string;
-
     @Prop({type: Date})
-    initialDate: Date;
-
-    @Prop({type: Date})
-    finalDate: Date;
+    date: Date;
 
     @Prop()
     description: string;
