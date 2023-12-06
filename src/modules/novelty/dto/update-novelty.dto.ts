@@ -2,12 +2,11 @@
 import { Schema } from '@nestjs/mongoose';
 import {
   IsArray,
-  IsBoolean,
   IsNumber,
   IsString,
   IsOptional,
   IsDateString,
-  ValidateNested, IsDate
+  ValidateNested,
 } from 'class-validator';
 import {Type} from "class-transformer";
 class CommentObject {

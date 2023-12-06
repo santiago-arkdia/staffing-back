@@ -15,4 +15,8 @@ export class CreateCoreDto {
   @IsString()
   @IsOptional()
   utilityCenter: string;
+
+  @IsString()
+  @IsOptional()
+  novelty: string;
 }
