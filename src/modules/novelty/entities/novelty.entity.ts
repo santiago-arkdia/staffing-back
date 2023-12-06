@@ -23,9 +23,6 @@ export class Novelty {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CategoriesNovelty'})
     categoryNovelty: CategoriesNovelty;
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Concept'})
-    concept: Concept;
-
     @Prop({type: Date})
     date: Date;
 

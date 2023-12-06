@@ -11,9 +11,6 @@ export class CreateNoveltyDto {
   categoryNovelty: string;
 
   @IsString()
-  concept: string;
-
-  @IsString()
   @IsOptional()
   description: string;
 

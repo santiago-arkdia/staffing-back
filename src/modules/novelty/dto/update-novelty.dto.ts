@@ -31,10 +31,6 @@ export class UpdateNoveltyDto {
 
   @IsOptional()
   @IsString()
-  concept: string;
-
-  @IsOptional()
-  @IsString()
   description: string;
 
   @IsOptional()

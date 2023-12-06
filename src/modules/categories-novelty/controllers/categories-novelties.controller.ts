@@ -24,6 +24,14 @@ export class CategoriesNewsController {
   async findAll(): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewsService.findAll();
   }
+  @Get()
+  async findAllTypes(): Promise<CategoriesNovelty[]> {
+    return await this.categoriesNewsService.findAllTypes();
+  }
+  @Get(':name')
+  async findConcepts(@Param('name') name: any): Promise<CategoriesNovelty[]> {
+    return await this.categoriesNewsService.findAllConcepts(name);
+  }
 
   @Get(':id')
   async findOne(@Param('id') id: any): Promise<CategoriesNovelty> {
