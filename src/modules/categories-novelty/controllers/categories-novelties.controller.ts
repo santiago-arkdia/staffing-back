@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import { CategoriesNewsService } from '../services/categories-novelties.service';
 import { CreateCategoriesNewsDto } from '../dto/create-categories-novelties.dto';
 import { CategoriesNovelty } from '../entities/categories-novelties.entity';
+import {Types} from "mongoose";
 
 @ApiTags('Categories Novelties')
 @Controller('api/categories-novelty')
@@ -21,19 +22,23 @@ export class CategoriesNewsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Lista todas las categorias' })
   async findAll(): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewsService.findAll();
   }
   @Get()
-  async findAllTypes(): Promise<CategoriesNovelty[]> {
+  @ApiOperation({ summary: 'Lista todos los agrupadores de categoria' })
+  async findAllTypes(): Promise<{ name: string; _id: Types.ObjectId }[]> {
     return await this.categoriesNewsService.findAllTypes();
   }
   @Get(':name')
+  @ApiOperation({ summary: 'Filtra las categorias del agrupador seleccionado' })
   async findConcepts(@Param('name') name: any): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewsService.findAllConcepts(name);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Filtra una categoria por ID' })
   async findOne(@Param('id') id: any): Promise<CategoriesNovelty> {
     return await this.categoriesNewsService.findOne(id);
   }

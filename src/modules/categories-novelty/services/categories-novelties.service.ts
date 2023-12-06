@@ -37,8 +37,10 @@ export class CategoriesNewsService {
     return await this.categoriesNewsModel.findById(id).exec();
   }
 
-  async findAllTypes(): Promise<CategoriesNovelty[]> {
-    return await this.categoriesNewsModel.find().select('_id type').exec();
+  async findAllTypes(): Promise<{ name: string; _id: Types.ObjectId }[]> {
+    const categories = await this.categoriesNewsModel.find().select('name _id').exec();
+    console.log(categories);
+    return categories.map(category => ({ name: category.name, _id: category._id }));
   }
 
   async findAllConcepts(name: string): Promise<CategoriesNovelty[]> {
