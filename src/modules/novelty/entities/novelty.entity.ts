@@ -33,6 +33,9 @@ export class Novelty {
     description: string;
 
     @Prop()
+    contract: string;
+
+    @Prop()
     documents: string[];
 
     @Prop([CommentObject])

@@ -39,6 +39,10 @@ export class UpdateNoveltyDto {
   description: string;
 
   @IsOptional()
+  @IsString()
+  contract: string;
+
+  @IsOptional()
   @IsArray()
   documents: string[];
 

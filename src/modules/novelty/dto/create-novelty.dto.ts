@@ -17,6 +17,10 @@ export class CreateNoveltyDto {
   @IsOptional()
   description: string;
 
+  @IsString()
+  @IsOptional()
+  contract: string;
+
   @IsNumber()
   @IsOptional()
   value: number;
