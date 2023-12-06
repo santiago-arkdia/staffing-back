@@ -3,8 +3,7 @@ import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
 import {Collaborator} from 'src/modules/collaborators/entities/collaborators.entity';
-import {Diagnosis} from 'src/modules/diagnosis/entities/diagnosis.entity';
-import {Eps} from 'src/modules/eps/entities/eps.entity';
+import {Concept} from "../../concepts/entities/concepts.entity";
 
 export class CommentObject {
     comment: string;
@@ -24,11 +23,11 @@ export class Novelty {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CategoriesNovelty'})
     categoryNovelty: CategoriesNovelty;
 
-    @Prop()
-    contract: string;
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Concept'})
+    concept: Concept;
 
     @Prop()
-    concept: string;
+    contract: string;
 
     @Prop({type: Date})
     initialDate: Date;

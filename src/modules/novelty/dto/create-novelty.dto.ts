@@ -13,17 +13,6 @@ export class CreateNoveltyDto {
   @IsString()
   concept: string;
 
-  @IsString()
-  contract: string;
-
-  @IsString()
-  @IsOptional()
-  initialDate: Date;
-
-  @IsString()
-  @IsOptional()
-  finalDate: Date;
-
   @IsNumber()
   @IsOptional()
   value: number;
