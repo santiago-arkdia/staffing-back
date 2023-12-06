@@ -25,25 +25,16 @@ export class Novelty {
     categoryNovelty: CategoriesNovelty;
 
     @Prop()
-    numberInability: string;
+    contract: string;
+
+    @Prop()
+    concept: string;
 
     @Prop({type: Date})
     initialDate: Date;
 
     @Prop({type: Date})
     finalDate: Date;
-
-    @Prop()
-    typeOfAttention: string;
-
-    @Prop()
-    extension: boolean;
-
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Eps'})
-    eps: Eps;
-
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Diagnosis'})
-    diagnosis: Diagnosis;
 
     @Prop()
     description: string;

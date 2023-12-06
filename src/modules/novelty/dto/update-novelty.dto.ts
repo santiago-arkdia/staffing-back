@@ -32,7 +32,11 @@ export class UpdateNoveltyDto {
 
   @IsOptional()
   @IsString()
-  numberInability: string;
+  contract: string;
+
+  @IsOptional()
+  @IsString()
+  concept: string;
 
   @IsOptional()
   @IsString()
@@ -41,22 +45,6 @@ export class UpdateNoveltyDto {
   @IsOptional()
   @IsString()
   finalDate: Date;
-
-  @IsOptional()
-  @IsString()
-  typeOfAttention: string;
-
-  @IsOptional()
-  @IsBoolean()
-  extension: boolean;
-
-  @IsOptional()
-  @IsString()
-  eps: string;
-
-  @IsOptional()
-  @IsString()
-  diagnosis: string;
 
   @IsOptional()
   @IsString()
