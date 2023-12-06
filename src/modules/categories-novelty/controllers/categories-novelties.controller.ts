@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
-import {ApiOperation, ApiTags} from '@nestjs/swagger';
+import {Controller, Post, Put, Get, Param, Body} from '@nestjs/common';
+import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
 import { CategoriesNewsService } from '../services/categories-novelties.service';
 import { CreateCategoriesNewsDto } from '../dto/create-categories-novelties.dto';
 import { CategoriesNovelty } from '../entities/categories-novelties.entity';
@@ -26,24 +26,35 @@ export class CategoriesNewsController {
   async findAll(): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewsService.findAll();
   }
-  @Get()
-  @ApiOperation({ summary: 'Lista todos los agrupadores de categoria' })
+
+  @Get('list-types')
+  @ApiOperation({ summary: 'AGRUPADORES' })
   async findAllTypes(): Promise<{ name: string; _id: Types.ObjectId }[]> {
     return await this.categoriesNewsService.findAllTypes();
   }
-  @Get(':name')
-  @ApiOperation({ summary: 'Filtra las categorias del agrupador seleccionado' })
-  async findConcepts(@Param('name') name: any): Promise<CategoriesNovelty[]> {
-    return await this.categoriesNewsService.findAllConcepts(name);
+
+  @Post('concepts-by-type')
+  @ApiOperation({ summary: 'Filtrar por AGRUPADOR' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+    },
+  })
+  async findConcepts(@Body() body: Record<string, any> = {}): Promise<CategoriesNovelty[]> {
+    return await this.categoriesNewsService.findAllConcepts(body);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Filtra una categoria por ID' })
-  async findOne(@Param('id') id: any): Promise<CategoriesNovelty> {
+  async findOne(@Param('id') id: string): Promise<CategoriesNovelty> {
     return await this.categoriesNewsService.findOne(id);
   }
 
   @Get(':page/:limit/:by/:value')
+  @ApiOperation({ summary: 'Filtra por valor (opcional) y paginacion' })
   async findBy(
       @Param('page') page: number,
       @Param('limit') limit: number,
