@@ -15,7 +15,7 @@ import {RolessModule} from "../roles/roles.module";
         JwtModule.register({
             global: true,
             secret: jwtConstants.secret,
-            signOptions: {expiresIn: '5h'},
+            signOptions: {expiresIn: '72h'},
         }),
     ],
     providers: [AuthService],
