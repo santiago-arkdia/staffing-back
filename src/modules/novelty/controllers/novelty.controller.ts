@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
 import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {NoveltyService} from '../services/novelty.service';
-import {Body, Controller, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put, Req, UseGuards} from '@nestjs/common';
 import {CreateNoveltyDto} from '../dto/create-novelty.dto';
 import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
 import {Novelty} from '../entities/novelty.entity';
 import {AuthGuard} from "../../auth/auth.guard";
+import { Request } from 'express';
 
 @ApiTags('Novelty')
 @Controller('api/novelty')
@@ -44,9 +45,11 @@ export class NoveltyController {
     @Param('limit') limit: number,
     @Param('by') by: string,
     @Param('value') value: string,
-    @Body() requestBody: Record<string, any>
+    @Body() requestBody: Record<string, any>,
+    @Req() request: Request
   ): Promise<Novelty[]> {
-    return await this.noveltyService.findBy(page, limit, by, value, requestBody);
+    const { roleKey } = request['user'];
+    return await this.noveltyService.findBy(page, limit, by, value, requestBody, roleKey);
   }
 
   @Post('ws/find')

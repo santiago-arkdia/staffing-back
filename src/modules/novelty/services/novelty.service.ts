@@ -62,8 +62,10 @@ export class NoveltyService {
         limit: number,
         by: string,
         value: string | number,
-        requestBodyFilters: Record<string, any> = {}
+        requestBodyFilters: Record<string, any> = {},
+        roleKey: string
     ): Promise<Novelty[]> {
+        console.log('Role Key:', roleKey);
         let query = {};
         let queryBody = {};
 
@@ -110,7 +112,11 @@ export class NoveltyService {
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
                 .populate('collaborator')
-                .populate('categoryNovelty')
+                .populate({
+                    path: 'categoryNovelty',
+                    match: { approves: roleKey },
+                    select: '-manages',
+                })
                 .limit(limit)
                 .exec();
         } else {
@@ -118,15 +124,19 @@ export class NoveltyService {
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
                 .populate('collaborator')
-                .populate('categoryNovelty')
+                .populate({
+                    path: 'categoryNovelty',
+                    match: { approves: roleKey },
+                    select: '-manages',
+                })
                 .limit(limit)
                 .exec();
         }
 
-        const data = search;
+        const data = search.filter(novelty => novelty.categoryNovelty?.approves === roleKey);
 
         const novelties: any = {};
-        novelties.total = total;
+        novelties.total = data.length;
         novelties.pages = totalPages;
         novelties.data = data;
 
