@@ -37,9 +37,20 @@ export class CategoriesNewsService {
     return await this.categoriesNewsModel.findById(id).exec();
   }
 
-  async findAllTypes(): Promise<{ name: string; _id: Types.ObjectId }[]> {
-    const categories = await this.categoriesNewsModel.find().select('name _id').lean().exec();
-    return categories.map(category => ({ name: category.name, _id: category._id }));
+  async findAllTypes(): Promise<{ type: string; _id: Types.ObjectId }[]> {
+    const categories = await this.categoriesNewsModel.find().select('type _id').lean().exec();
+
+    const uniqueTypesSet = new Set<string>();
+    const uniqueCategories = categories.filter(category => {
+      const type = category.type;
+      if (!uniqueTypesSet.has(type)) {
+        uniqueTypesSet.add(type);
+        return true;
+      }
+      return false;
+    });
+
+    return uniqueCategories.map(category => ({ type: category.type, _id: category._id }));
   }
 
   async findAllConcepts(body: Record<string, any> = {}): Promise<CategoriesNovelty[]> {

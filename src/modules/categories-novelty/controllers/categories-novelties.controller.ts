@@ -29,7 +29,7 @@ export class CategoriesNewsController {
 
   @Get('list-types')
   @ApiOperation({ summary: 'AGRUPADORES' })
-  async findAllTypes(): Promise<{ name: string; _id: Types.ObjectId }[]> {
+  async findAllTypes(): Promise<{ type: string; _id: Types.ObjectId }[]> {
     return await this.categoriesNewsService.findAllTypes();
   }
 
@@ -39,7 +39,7 @@ export class CategoriesNewsController {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
+        type: { type: 'string' },
       },
     },
   })
