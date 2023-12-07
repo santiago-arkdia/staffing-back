@@ -4,7 +4,7 @@ import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 @Schema({collection: 'categories-novelties', timestamps: true})
 export class CategoriesNovelty {
     @Prop({type: String, required: true})
-    name: string;
+    concept: string;
 
     @Prop({type: String, required: true})
     type: string;

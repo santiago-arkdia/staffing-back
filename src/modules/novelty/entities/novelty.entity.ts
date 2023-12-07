@@ -3,7 +3,6 @@ import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
 import {Collaborator} from 'src/modules/collaborators/entities/collaborators.entity';
-import {Concept} from "../../concepts/entities/concepts.entity";
 
 export class CommentObject {
     comment: string;

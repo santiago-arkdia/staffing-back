@@ -111,8 +111,6 @@ export class NoveltyService {
                 .skip((page - 1) * limit)
                 .populate('collaborator')
                 .populate('categoryNovelty')
-                .populate('eps')
-                .populate('diagnosis')
                 .limit(limit)
                 .exec();
         } else {
@@ -121,8 +119,6 @@ export class NoveltyService {
                 .skip((page - 1) * limit)
                 .populate('collaborator')
                 .populate('categoryNovelty')
-                .populate('eps')
-                .populate('diagnosis')
                 .limit(limit)
                 .exec();
         }

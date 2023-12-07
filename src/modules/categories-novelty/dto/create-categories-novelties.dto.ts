@@ -5,7 +5,7 @@ import {IsBoolean, IsString} from 'class-validator';
 @Schema()
 export class CreateCategoriesNewsDto {
   @IsString()
-  name: string;
+  concept: string;
 
   @IsString()
   type: string;

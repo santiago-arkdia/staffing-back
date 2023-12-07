@@ -38,7 +38,7 @@ export class CategoriesNewsService {
   }
 
   async findAllTypes(): Promise<{ type: string; _id: Types.ObjectId }[]> {
-    const categories = await this.categoriesNewsModel.find().select('type _id').lean().exec();
+    const categories = await this.categoriesNewsModel.find().select('type _id').exec();
 
     const uniqueTypesSet = new Set<string>();
     const uniqueCategories = categories.filter(category => {
@@ -54,7 +54,7 @@ export class CategoriesNewsService {
   }
 
   async findAllConcepts(body: Record<string, any> = {}): Promise<CategoriesNovelty[]> {
-    return await this.categoriesNewsModel.find(body).select('_id name code manages').exec();
+    return await this.categoriesNewsModel.find(body).select('_id concept code manages').exec();
   }
 
   async findBy(
