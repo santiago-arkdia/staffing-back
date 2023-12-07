@@ -1,11 +1,10 @@
 /* eslint-disable prettier/prettier */
 import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {NoveltyService} from '../services/novelty.service';
-import {Body, Controller, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put} from '@nestjs/common';
 import {CreateNoveltyDto} from '../dto/create-novelty.dto';
 import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
 import {Novelty} from '../entities/novelty.entity';
-import {AuthGuard} from "../../auth/auth.guard";
 
 @ApiTags('Novelty')
 @Controller('api/novelty')
@@ -14,14 +13,14 @@ export class NoveltyController {
 
   @Post()
   @ApiOperation({ summary: 'Crear reporte de novedad' })
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async create(@Body() novelty: CreateNoveltyDto): Promise<Novelty> {
     return await this.noveltyService.create(novelty);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Actualizar novedad' })
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async update(
     @Param('id') id: string,
     @Body() updateNoveltyDto: UpdateNoveltyDto,
@@ -31,14 +30,14 @@ export class NoveltyController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string): Promise<Novelty> {
     return await this.noveltyService.findOne(id);
   }
 
   @Post(':page/:limit/:by/:value')
   @ApiOperation({ summary: 'Filtrar novedades por valor y paginación' })
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async findBy(
     @Param('page') page: number,
     @Param('limit') limit: number,
