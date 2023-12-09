@@ -41,50 +41,6 @@ export class CentersCostsService {
     async findOne(id: string): Promise<CostCenters> {
         return await this.centersCostsModel.findById(id).exec();
     }
-
-    async findAllBy(
-        by: string,
-        value: string | number,
-    ): Promise<CostCenters[]> {
-        let query = {};
-
-        if (by !== 'find' && value !== 'all') {
-            if (typeof value === 'string' && !isNaN(Number(value))) {
-                query = {[by]: Number(value)};
-            } else if (typeof value === 'string') {
-                if (Types.ObjectId.isValid(value)) {
-                    query = {[by]: value};
-                } else {
-                    query = {[by]: {$regex: new RegExp(value, 'i')}};
-                }
-            } else if (typeof value === 'number') {
-                query = {[by]: value};
-            }
-        }
-
-        const total =
-            by === 'find' && value === 'all'
-                ? await this.centersCostsModel.countDocuments().exec()
-                : await this.centersCostsModel.countDocuments(query).exec();
-
-        let queryBuilder
-
-        if (by === 'find' && value === 'all') {
-            queryBuilder = this.centersCostsModel.find();
-        }else{
-            queryBuilder = this.centersCostsModel.find(query);
-        }
-
-        queryBuilder = queryBuilder.populate('region')
-        const data = await queryBuilder.exec();
-
-        const centersCost: any = {};
-        centersCost.total = total;
-        centersCost.data = data;
-
-        return centersCost;
-    }
-
     async findBy(
         page: number,
         limit: number,
