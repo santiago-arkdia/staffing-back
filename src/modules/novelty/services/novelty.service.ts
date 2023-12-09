@@ -144,6 +144,7 @@ export class NoveltyService {
         const novelties: any = {};
         novelties.total = data.length;
         novelties.pages = totalPages;
+        novelties.roleKey = roleKey;
         novelties.data = data;
 
         return novelties;
