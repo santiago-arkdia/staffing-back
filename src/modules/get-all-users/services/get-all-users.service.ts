@@ -332,7 +332,7 @@ export class GetAllUsersService {
                     as: 'role',
                 },
             },
-            { $match: { 'role.fieldToMatch': value } },
+            // { $match: { 'role.fieldToMatch': value } },
             {
                 $lookup: {
                     from: 'admins',
@@ -341,7 +341,7 @@ export class GetAllUsersService {
                     as: 'admins',
                 },
             },
-            { $match: { 'admins.fieldToMatch': value } },
+            // { $match: { 'admins.fieldToMatch': value } },
             {
                 $lookup: {
                     from: 'admin-clients',
@@ -350,7 +350,7 @@ export class GetAllUsersService {
                     as: 'admin_clients',
                 },
             },
-            { $match: { 'admin_clients.fieldToMatch': value } },
+            // { $match: { 'admin_clients.fieldToMatch': value } },
             {
                 $lookup: {
                     from: 'clients',
@@ -359,7 +359,7 @@ export class GetAllUsersService {
                     as: 'clients',
                 },
             },
-            { $match: { 'clients.fieldToMatch': value } },
+            // { $match: { 'clients.fieldToMatch': value } },
             {
                 $lookup: {
                     from: 'payrolls',
@@ -368,7 +368,7 @@ export class GetAllUsersService {
                     as: 'payrolls',
                 },
             },
-            { $match: { 'payrolls.fieldToMatch': value } },
+            // { $match: { 'payrolls.fieldToMatch': value } },
             {
                 $skip: (page - 1) * limit,
             },
