@@ -46,6 +46,14 @@ export class CentersCostsController {
         return await this.centersCostsService.findBy(page, limit, by, value);
     }
 
+    @Get(':by/:value')
+    async findByAll(
+        @Param('by') by: string,
+        @Param('value') value: string,
+    ): Promise<CostCenters[]> {
+        return await this.centersCostsService.findAllBy(by, value);
+    }
+
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<CostCenters> {
         return await this.centersCostsService.delete(id);
