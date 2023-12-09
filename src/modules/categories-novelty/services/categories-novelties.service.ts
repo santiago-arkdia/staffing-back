@@ -84,23 +84,19 @@ export class CategoriesNewsService {
         : await this.categoriesNewsModel.countDocuments(query).exec();
     const totalPages = Math.ceil(total / limit);
 
-    let search;
+    let queryBuilder
 
     if (by === 'find' && value === 'all') {
-      search = this.categoriesNewsModel
-          .find()
-          .skip((page - 1) * limit)
-          .limit(limit)
-          .exec();
-    } else {
-      search = this.categoriesNewsModel
-          .find(query)
-          .skip((page - 1) * limit)
-          .limit(limit)
-          .exec();
+      queryBuilder = this.categoriesNewsModel.find();
+    }else{
+      queryBuilder = this.categoriesNewsModel.find(query);
     }
 
-    const data = await search;
+    if (page > 0 && limit > 0) {
+      queryBuilder = queryBuilder.skip((page - 1) * limit).limit(limit);
+    }
+
+    const data = await queryBuilder.exec();
 
     const categories: any = {};
     categories.total = total;

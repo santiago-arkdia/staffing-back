@@ -112,11 +112,12 @@ export class NoveltyService {
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
                 .populate('collaborator')
-                .populate({
-                    path: 'categoryNovelty',
-                    match: { approves: roleKey },
-                    select: '-manages',
-                })
+                .populate('categoryNovelty')
+                // .populate({
+                //     path: 'categoryNovelty',
+                //     match: { approves: roleKey },
+                //     select: '-manages',
+                // })
                 .limit(limit)
                 .exec();
         } else {
@@ -124,16 +125,21 @@ export class NoveltyService {
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
                 .populate('collaborator')
-                .populate({
-                    path: 'categoryNovelty',
-                    match: { approves: roleKey },
-                    select: '-manages',
-                })
+                .populate('categoryNovelty')
+                // .populate({
+                //     path: 'categoryNovelty',
+                //     match: { approves: roleKey },
+                //     select: '-manages',
+                // })
                 .limit(limit)
                 .exec();
         }
 
-        const data = search.filter(novelty => novelty.categoryNovelty?.approves === roleKey);
+        let data = search;
+
+        if(roleKey != "client"){
+            data = search.filter(novelty => novelty.categoryNovelty?.approves === roleKey);
+        }
 
         const novelties: any = {};
         novelties.total = data.length;

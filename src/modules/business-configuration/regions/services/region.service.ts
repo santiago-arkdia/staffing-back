@@ -64,30 +64,29 @@ export class RegionService {
                 : await this.regionModel.countDocuments(query).exec();
         const totalPages = Math.ceil(total / limit);
 
-        let search;
+        let queryBuilder
+
         if (by === 'find' && value === 'all') {
-            search = await this.regionModel
-                .find()
-                .skip((page - 1) * limit)
-                .populate('country')
-                .limit(limit)
-                .exec();
-        } else {
-            search = await this.regionModel
-                .find(query)
-                .skip((page - 1) * limit)
-                .populate('country')
-                .limit(limit)
-                .exec();
+            queryBuilder = this.regionModel.find();
+        }else{
+            queryBuilder = this.regionModel.find(query);
         }
 
-        const data = search;
+        queryBuilder = queryBuilder.populate('country')
+
+        if (page > 0 && limit > 0) {
+            queryBuilder = queryBuilder.skip((page - 1) * limit).limit(limit);
+        }
+
+        const data = await queryBuilder.exec();
+
         const regions: any = {};
         regions.total = total;
         regions.pages = totalPages;
         regions.data = data;
 
         return regions;
+
     }
 
     async delete(id: string): Promise<Region> {

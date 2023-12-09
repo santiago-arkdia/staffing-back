@@ -78,40 +78,33 @@ export class UtilityCenterService {
                 : await this.utilityCenterModel.countDocuments(query).exec();
         const totalPages = Math.ceil(total / limit);
 
-        let search;
+        let queryBuilder
+
         if (by === 'find' && value === 'all') {
-            search = await this.utilityCenterModel
-                .find()
-                .skip((page - 1) * limit)
-                .populate({
-                    path: 'region',
-                    populate: {
-                        path: 'country',
-                    },
-                })
-                .limit(limit)
-                .exec();
-        } else {
-            search = await this.utilityCenterModel
-                .find(query)
-                .skip((page - 1) * limit)
-                .populate({
-                    path: 'region',
-                    populate: {
-                        path: 'country',
-                    },
-                })
-                .limit(limit)
-                .exec();
+            queryBuilder = this.utilityCenterModel.find();
+        }else{
+            queryBuilder = this.utilityCenterModel.find(query);
         }
 
-        const data = search;
-        const regions: any = {};
-        regions.total = total;
-        regions.pages = totalPages;
-        regions.data = data;
+        queryBuilder = queryBuilder.populate({
+            path: 'region',
+            populate: {
+                path: 'country',
+            },
+        })
 
-        return regions;
+        if (page > 0 && limit > 0) {
+            queryBuilder = queryBuilder.skip((page - 1) * limit).limit(limit);
+        }
+
+        const data = await queryBuilder.exec();
+
+        const utilityCenter: any = {};
+        utilityCenter.total = total;
+        utilityCenter.pages = totalPages;
+        utilityCenter.data = data;
+
+        return utilityCenter;
     }
 
     async delete(id: string): Promise<UtilityCenters> {

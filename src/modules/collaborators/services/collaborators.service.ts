@@ -106,25 +106,20 @@ export class CollaboratorService {
             : await this.collaboratorModel.countDocuments(query).exec();
         const totalPages = Math.ceil(total / limit);
 
-        let search;
-
+        let queryBuilder;
         if (by === 'find' && value === 'all') {
-            search = await this.collaboratorModel
-                .find()
-                .skip((page - 1) * limit)
-                .populate('utilityCenter')
-                .populate('centersCosts')
-                .limit(limit)
-                .exec();
-        } else {
-            search = await this.collaboratorModel
-                .find(query)
-                .skip((page - 1) * limit)
-                .populate('utilityCenter')
-                .populate('centersCosts')
-                .limit(limit)
-                .exec();
+            queryBuilder = this.collaboratorModel.find();
+        }else{
+            queryBuilder = this.collaboratorModel.find(query);
         }
+
+        queryBuilder = queryBuilder.populate('utilityCenter').populate('centersCosts');
+        
+        if (page > 0 && limit > 0) {
+            queryBuilder = queryBuilder.skip((page - 1) * limit).limit(limit);
+        }
+
+        const search = await queryBuilder.exec();
 
         const data = search;
         const collaborators: any = {};

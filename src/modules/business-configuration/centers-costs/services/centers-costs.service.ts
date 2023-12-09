@@ -70,30 +70,29 @@ export class CentersCostsService {
                 : await this.centersCostsModel.countDocuments(query).exec();
         const totalPages = Math.ceil(total / limit);
 
-        let search;
+
+        let queryBuilder
+
         if (by === 'find' && value === 'all') {
-            search = await this.centersCostsModel
-                .find()
-                .skip((page - 1) * limit)
-                .populate('region')
-                .limit(limit)
-                .exec();
-        } else {
-            search = await this.centersCostsModel
-                .find(query)
-                .skip((page - 1) * limit)
-                .populate('region')
-                .limit(limit)
-                .exec();
+            queryBuilder = this.centersCostsModel.find();
+        }else{
+            queryBuilder = this.centersCostsModel.find(query);
         }
 
-        const data = search;
-        const regions: any = {};
-        regions.total = total;
-        regions.pages = totalPages;
-        regions.data = data;
+        queryBuilder = queryBuilder.populate('region')
 
-        return regions;
+        if (page > 0 && limit > 0) {
+            queryBuilder = queryBuilder.skip((page - 1) * limit).limit(limit);
+        }
+
+        const data = await queryBuilder.exec();
+
+        const centersCost: any = {};
+        centersCost.total = total;
+        centersCost.pages = totalPages;
+        centersCost.data = data;
+
+        return centersCost;
     }
 
     async delete(id: string): Promise<CostCenters> {
