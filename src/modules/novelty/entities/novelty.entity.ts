@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
 import {Collaborator} from 'src/modules/collaborators/entities/collaborators.entity';
+import {Concept} from "../../concepts/entities/concepts.entity";
 
 export class CommentObject {
     comment: string;
@@ -19,8 +19,8 @@ export class Novelty {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Collaborator'})
     collaborator: Collaborator;
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CategoriesNovelty'})
-    categoryNovelty: CategoriesNovelty;
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Concept'})
+    concept: Concept;
 
     @Prop({type: Date})
     date: Date;

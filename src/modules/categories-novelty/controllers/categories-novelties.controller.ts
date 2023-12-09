@@ -1,10 +1,9 @@
 /* eslint-disable prettier/prettier */
 import {Controller, Post, Put, Get, Param, Body} from '@nestjs/common';
-import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import { CategoriesNewsService } from '../services/categories-novelties.service';
 import { CreateCategoriesNewsDto } from '../dto/create-categories-novelties.dto';
 import { CategoriesNovelty } from '../entities/categories-novelties.entity';
-import {Types} from "mongoose";
 
 @ApiTags('Categories Novelties')
 @Controller('api/categories-novelty')
@@ -27,25 +26,6 @@ export class CategoriesNewsController {
     return await this.categoriesNewsService.findAll();
   }
 
-  @Get('list-types')
-  @ApiOperation({ summary: 'AGRUPADORES' })
-  async findAllTypes(): Promise<{ type: string; _id: Types.ObjectId }[]> {
-    return await this.categoriesNewsService.findAllTypes();
-  }
-
-  @Post('concepts-by-type')
-  @ApiOperation({ summary: 'Filtrar por AGRUPADOR' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        type: { type: 'string' },
-      },
-    },
-  })
-  async findConcepts(@Body() body: Record<string, any> = {}): Promise<CategoriesNovelty[]> {
-    return await this.categoriesNewsService.findAllConcepts(body);
-  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Filtra una categoria por ID' })

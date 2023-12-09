@@ -1,24 +1,28 @@
-import { Schema, Prop } from '@nestjs/mongoose';
-import { IsArray, IsBoolean, IsDate, IsNumber, IsObject, IsString } from 'class-validator';
-import mongoose from 'mongoose';
-import { Roles } from 'src/modules/roles/entities/roles.entity';
+/* eslint-disable prettier/prettier */
+import {Schema} from '@nestjs/mongoose';
+import {IsBoolean, IsOptional, IsString} from 'class-validator';
 
 @Schema()
-export class CreateModuleParameterizationsDto{
-  @IsString()
-  module: string;
+export class CreateModuleParameterizationsDto {
+    @IsString()
+    @IsOptional()
+    module: string;
 
-  @IsString()
-  subModule: string;
+    @IsString()
+    @IsOptional()
+    subModule: string;
 
-  @IsBoolean()
-  active: boolean;
+    @IsBoolean()
+    @IsOptional()
+    active: boolean;
 
-  @IsString()
-  path: string;
+    @IsString()
+    @IsOptional()
+    path: string;
 
-  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Roles' })
-  // role: Roles;
-  @IsString() 
-  role: string;
+    // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Roles' })
+    // role: Roles;
+    @IsString()
+    @IsOptional()
+    role: string;
 }
