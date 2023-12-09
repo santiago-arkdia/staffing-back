@@ -49,7 +49,7 @@ export class NoveltyController {
     @Req() request: Request
   ): Promise<Novelty[]> {
     const { roleKey } = request['user'];
-    return await this.noveltyService.findBy(page, limit, by, value, requestBody, "");
+    return await this.noveltyService.findBy(page, limit, by, value, requestBody, roleKey);
   }
 
   @Post('ws/find')
