@@ -19,7 +19,7 @@ export class ConceptsController {
     @Put(':id')
     async update(
         @Param('id') id: string,
-        @Body() concept: Concept,
+        @Body() concept: CreateConceptsDto,
     ): Promise<Concept> {
         return await this.conceptService.update(id, concept);
     }
