@@ -134,7 +134,7 @@ export class NoveltyService {
                 .limit(limit)
                 .exec();
         }
-
+  
         let data = search;
 
         if(roleKey != "client"){
