@@ -113,7 +113,6 @@ export class NoveltyService {
         let search;
 
         if (by === 'category') {
-            console.log('conceptList', conceptList);
             search = await this.noveltyModel
                 .find({concept: { $in: conceptList }})
                 .skip((page - 1) * limit)
