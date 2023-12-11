@@ -33,6 +33,17 @@ import {ArlModule} from './modules/arl/arl.module';
 import {SpreadsheetNoveltyModule} from './modules/spreadsheet-novelty/spreadsheet-novelty.module';
 import {CollaboratorModule} from './modules/collaborators/collaborators.module';
 import {CollaboratorCoreModule} from "./modules/collaborator-core/collaborator-core.module";
+import {AffiliationModule} from "./modules/integrations/affiliation/affiliation.module";
+import {ClientsTriModule} from "./modules/integrations/clients/clients.module";
+import {ContractsModule} from "./modules/integrations/contracts/contracts.module";
+import {ExperiencesModule} from "./modules/integrations/experiences/experiences.module";
+import {FamilyModule} from "./modules/integrations/family/family.module";
+import {JobCenterModule} from "./modules/integrations/job-center/job-center.module";
+import {LevelsModule} from "./modules/integrations/levels/levels.module";
+import {OffersModule} from "./modules/integrations/offers/offers.module";
+import {PositionsModule} from "./modules/integrations/positions/positions.module";
+import {StudiesModule} from "./modules/integrations/studies/studies.module";
+import {UsersTriModule} from "./modules/integrations/users/users.module";
 
 @Module({
     imports: [
@@ -67,7 +78,18 @@ import {CollaboratorCoreModule} from "./modules/collaborator-core/collaborator-c
         ArlModule,
         SpreadsheetNoveltyModule,
         CollaboratorModule,
-        CollaboratorCoreModule
+        CollaboratorCoreModule,
+        AffiliationModule,
+        ClientsTriModule,
+        ContractsModule,
+        ExperiencesModule,
+        FamilyModule,
+        JobCenterModule,
+        LevelsModule,
+        OffersModule,
+        PositionsModule,
+        StudiesModule,
+        UsersTriModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],
