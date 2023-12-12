@@ -2,7 +2,6 @@
 import { Schema } from '@nestjs/mongoose';
 import {IsBoolean, IsOptional, IsString} from 'class-validator';
 import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
-import { Roles } from 'src/modules/roles/entities/roles.entity';
 
 @Schema()
 export class CreateConceptsDto {
@@ -29,9 +28,25 @@ export class CreateConceptsDto {
 
   @IsString()
   @IsOptional()
-  registers: Roles
+  registers: string
 
   @IsString()
   @IsOptional()
-  approves: Roles
+  approves: string
+
+  @IsString()
+  @IsOptional()
+  state: number
+
+  @IsString()
+  @IsOptional()
+  applyDate: boolean
+
+  @IsString()
+  @IsOptional()
+  manages: string
+
+  @IsString()
+  @IsOptional()
+  measurement: string
 }

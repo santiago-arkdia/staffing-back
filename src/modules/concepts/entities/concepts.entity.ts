@@ -22,7 +22,7 @@ export class Concept {
     categoryNovelty: CategoriesNovelty;
 
     @Prop({type: String, required: true})
-    registers: string;
+    manages: string;
 
     @Prop({type: String, required: true})
     approves: string;
