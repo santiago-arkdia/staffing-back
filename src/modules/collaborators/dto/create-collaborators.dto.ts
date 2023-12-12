@@ -27,5 +27,5 @@ export class CreateCollaboratorDto {
 
   @IsOptional()
   @IsString()
-  jobPositions: string;
+  jobPosition: string;
 }
