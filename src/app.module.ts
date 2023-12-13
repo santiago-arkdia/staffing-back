@@ -33,7 +33,9 @@ import {ArlModule} from './modules/arl/arl.module';
 import {SpreadsheetNoveltyModule} from './modules/spreadsheet-novelty/spreadsheet-novelty.module';
 import {CollaboratorModule} from './modules/collaborators/collaborators.module';
 import {CollaboratorCoreModule} from "./modules/collaborator-core/collaborator-core.module";
-
+import { UploadsModule } from './modules/uploads/uploads.module';
+import * as firebaseAdmin from 'firebase-admin';
+import * as serviceAccount from './config/serviceAccountKey.json'
 @Module({
     imports: [
         ConfigModule.forRoot(),
@@ -67,13 +69,20 @@ import {CollaboratorCoreModule} from "./modules/collaborator-core/collaborator-c
         ArlModule,
         SpreadsheetNoveltyModule,
         CollaboratorModule,
-        CollaboratorCoreModule
+        CollaboratorCoreModule,
+        UploadsModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(AllowAnyIPMiddleware).forRoutes('*'); // Aplica la middleware a todas las rutas
+        consumer.apply(AllowAnyIPMiddleware).forRoutes('*');
+        firebaseAdmin.initializeApp({
+            credential: firebaseAdmin.credential.cert(
+              serviceAccount as firebaseAdmin.ServiceAccount,
+            ),
+            storageBucket: 'staffing-dev-c122d.appspot.com',
+          });
     }
 }
