@@ -7,6 +7,7 @@ import {CreateNoveltyDto} from '../dto/create-novelty.dto';
 import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
 import axios, {AxiosResponse} from "axios";
 import {Counter} from "../entities/counter.entity";
+import {Concept} from "../../concepts/entities/concepts.entity";
 
 @Injectable()
 export class NoveltyService {
@@ -14,14 +15,15 @@ export class NoveltyService {
         @InjectModel(Novelty.name)
         private readonly noveltyModel: Model<Novelty>,
         @InjectModel(Counter.name) private counterModel: Model<Counter>,
+        @InjectModel(Concept.name) private conceptModel: Model<Concept>,
     ) {
     }
 
     async create(novelty: CreateNoveltyDto): Promise<Novelty> {
         const counter = await this.counterModel.findOneAndUpdate(
-            { model: 'Novelty', field: 'uid' },
-            { $inc: { count: 1 } },
-            { upsert: true, new: true },
+            {model: 'Novelty', field: 'uid'},
+            {$inc: {count: 1}},
+            {upsert: true, new: true},
         );
 
         const createdNovelty = new this.noveltyModel({
@@ -65,9 +67,9 @@ export class NoveltyService {
         requestBodyFilters: Record<string, any> = {},
         roleKey: string
     ): Promise<Novelty[]> {
-        console.log('Role Key:', roleKey);
         let query = {};
         let queryBody = {};
+        let conceptList= []
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
@@ -82,6 +84,9 @@ export class NoveltyService {
                 query = {[by]: value};
             }
         }
+        if (by === 'category') {
+            conceptList = await this.conceptModel.find({categoryNovelty: value}).select('_id').exec();
+        }
 
         if (Object.keys(requestBodyFilters).length > 0) {
             Object.entries(requestBodyFilters).forEach(([key, val]) => {
@@ -91,7 +96,7 @@ export class NoveltyService {
                     if (mongoose.Types.ObjectId.isValid(val)) {
                         queryBody[key] = val;
                     } else {
-                        queryBody[key] = { $regex: new RegExp(val, 'i') };
+                        queryBody[key] = {$regex: new RegExp(val, 'i')};
                     }
                 } else if (typeof val === 'number') {
                     queryBody[key] = val;
@@ -99,7 +104,7 @@ export class NoveltyService {
             });
         }
 
-        const combinedQuery = { ...query, ...queryBody };
+        const combinedQuery = {...query, ...queryBody};
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(combinedQuery).exec()
             : await this.noveltyModel.countDocuments(combinedQuery).exec();
@@ -107,17 +112,17 @@ export class NoveltyService {
 
         let search;
 
-        if (by === 'find' && value === 'all') {
+        if (by === 'category') {
             search = await this.noveltyModel
-                .find(combinedQuery)
+                .find({concept: { $in: conceptList }})
                 .skip((page - 1) * limit)
                 .populate('collaborator')
-                .populate('categoryNovelty')
-                // .populate({
-                //     path: 'categoryNovelty',
-                //     match: { approves: roleKey },
-                //     select: '-manages',
-                // })
+                .populate({
+                    path: 'concept',
+                    populate: {
+                        path: 'categoryNovelty',
+                    }
+                })
                 .limit(limit)
                 .exec();
         } else {
@@ -125,20 +130,20 @@ export class NoveltyService {
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
                 .populate('collaborator')
-                .populate('categoryNovelty')
-                // .populate({
-                //     path: 'categoryNovelty',
-                //     match: { approves: roleKey },
-                //     select: '-manages',
-                // })
+                .populate({
+                    path: 'concept',
+                    populate: {
+                        path: 'categoryNovelty',
+                    }
+                })
                 .limit(limit)
                 .exec();
         }
-  
+
         let data = search;
 
-        if(roleKey != "client"){
-            data = search.filter(novelty => novelty.categoryNovelty?.approves === roleKey);
+        if (roleKey != "client") {
+            data = search.filter(novelty => novelty.concept?.approves === roleKey);
         }
 
         const novelties: any = {};

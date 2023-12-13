@@ -8,7 +8,7 @@ export class CreateNoveltyDto {
   collaborator: string;
 
   @IsString()
-  categoryNovelty: string;
+  concept: string;
 
   @IsString()
   @IsOptional()

@@ -75,7 +75,12 @@ export class CollaboratorService {
                     path: 'region',
                 },
             })
-            .populate({path: 'jobPosition'})
+            .populate({
+                path: 'jobPosition',
+                populate: {
+                    path: 'region',
+                },
+            })
             .exec();
     }
 
@@ -113,15 +118,13 @@ export class CollaboratorService {
             queryBuilder = this.collaboratorModel.find(query);
         }
 
-        queryBuilder = queryBuilder.populate('utilityCenter').populate('centersCosts');
+        queryBuilder = queryBuilder.populate('utilityCenter').populate('centersCosts').populate('jobPosition');
         
         if (page > 0 && limit > 0) {
             queryBuilder = queryBuilder.skip((page - 1) * limit).limit(limit);
         }
 
-        const search = await queryBuilder.exec();
-
-        const data = search;
+        const data = await queryBuilder.exec();
         const collaborators: any = {};
         collaborators.total = total;
         collaborators.pages = totalPages;

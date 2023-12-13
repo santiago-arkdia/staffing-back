@@ -45,7 +45,6 @@ export class CentersCostsController {
     ): Promise<CostCenters[]> {
         return await this.centersCostsService.findBy(page, limit, by, value);
     }
-
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<CostCenters> {
         return await this.centersCostsService.delete(id);

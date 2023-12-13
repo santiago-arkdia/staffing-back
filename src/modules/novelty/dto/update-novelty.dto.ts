@@ -27,7 +27,7 @@ export class UpdateNoveltyDto {
 
   @IsOptional()
   @IsString()
-  categoryNovelty: string;
+  concept: string;
 
   @IsOptional()
   @IsString()

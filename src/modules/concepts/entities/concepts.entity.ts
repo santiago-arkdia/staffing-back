@@ -22,13 +22,19 @@ export class Concept {
     categoryNovelty: CategoriesNovelty;
 
     @Prop({type: String, required: true})
-    registers: string;
+    manages: string;
 
     @Prop({type: String, required: true})
     approves: string;
 
+    @Prop({type: String, required: true})
+    measurement: string;
+
     @Prop({type: Number, default: 1})
     state: number;
+
+    @Prop({type: Boolean, default: false})
+    applyDate: boolean;
 
     @Prop({ type: Object })
     more: Record<string, any>;

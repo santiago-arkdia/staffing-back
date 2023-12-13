@@ -36,6 +36,18 @@ import {CollaboratorCoreModule} from "./modules/collaborator-core/collaborator-c
 import { UploadsModule } from './modules/uploads/uploads.module';
 import * as firebaseAdmin from 'firebase-admin';
 import * as serviceAccount from './config/serviceAccountKey.json'
+import {AffiliationModule} from "./modules/integrations/affiliation/affiliation.module";
+import {ClientsTriModule} from "./modules/integrations/clients/clients.module";
+import {ContractsModule} from "./modules/integrations/contracts/contracts.module";
+import {ExperiencesModule} from "./modules/integrations/experiences/experiences.module";
+import {FamilyModule} from "./modules/integrations/family/family.module";
+import {JobCenterModule} from "./modules/integrations/job-center/job-center.module";
+import {LevelsModule} from "./modules/integrations/levels/levels.module";
+import {OffersModule} from "./modules/integrations/offers/offers.module";
+import {PositionsModule} from "./modules/integrations/positions/positions.module";
+import {StudiesModule} from "./modules/integrations/studies/studies.module";
+import {UsersTriModule} from "./modules/integrations/users/users.module";
+
 @Module({
     imports: [
         ConfigModule.forRoot(),
@@ -70,7 +82,18 @@ import * as serviceAccount from './config/serviceAccountKey.json'
         SpreadsheetNoveltyModule,
         CollaboratorModule,
         CollaboratorCoreModule,
-        UploadsModule
+        UploadsModule,
+        AffiliationModule,
+        ClientsTriModule,
+        ContractsModule,
+        ExperiencesModule,
+        FamilyModule,
+        JobCenterModule,
+        LevelsModule,
+        OffersModule,
+        PositionsModule,
+        StudiesModule,
+        UsersTriModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],

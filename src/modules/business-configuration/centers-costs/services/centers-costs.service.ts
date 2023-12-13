@@ -41,7 +41,6 @@ export class CentersCostsService {
     async findOne(id: string): Promise<CostCenters> {
         return await this.centersCostsModel.findById(id).exec();
     }
-
     async findBy(
         page: number,
         limit: number,
