@@ -26,8 +26,12 @@ export class UploadsController {
   })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     try {
+      
       const result = await this.uploadsService.uploadToFirebase(file);
-      return result;
+      const upload: any = {};
+      upload.data = result;
+      return upload;
+
     } catch (error) {
       throw new HttpException(
         'Error al subir la imagen',
