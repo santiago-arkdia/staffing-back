@@ -12,9 +12,6 @@ export class ClientController {
 
   @Post()
   async create(@Body() client: CreateClientsDto): Promise<Client> {
-    client.closeBillingDate = new Date(client.closeBillingDate);
-    client.premiumPaymentDate = new Date(client.premiumPaymentDate);
-
     return await this.clientService.create(client);
   }
 

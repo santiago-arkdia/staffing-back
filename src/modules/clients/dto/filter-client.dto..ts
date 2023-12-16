@@ -7,10 +7,6 @@ export class FilterClientsDto {
   @IsOptional()
   name: string;
 
-  @IsString()
-  @IsOptional()
-  lastName: string;
-
   @IsNumber()
   @IsOptional()
   state: number;
