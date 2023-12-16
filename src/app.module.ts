@@ -47,6 +47,8 @@ import {OffersModule} from "./modules/integrations/offers/offers.module";
 import {PositionsModule} from "./modules/integrations/positions/positions.module";
 import {StudiesModule} from "./modules/integrations/studies/studies.module";
 import {UsersTriModule} from "./modules/integrations/users/users.module";
+import { ConceptsRetirementModule } from './modules/concepts-retirement/concepts-retirement.module';
+import { NoveltyRetirementModule } from './modules/novelty-retirement/novelty-retirement.module';
 
 @Module({
     imports: [
@@ -93,7 +95,9 @@ import {UsersTriModule} from "./modules/integrations/users/users.module";
         OffersModule,
         PositionsModule,
         StudiesModule,
-        UsersTriModule
+        UsersTriModule,
+        ConceptsRetirementModule,
+        NoveltyRetirementModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],
