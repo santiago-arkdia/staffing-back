@@ -25,7 +25,40 @@ export class PayrollService {
         });
     }
 
+    async findBy(by: string, value: string, key: string): Promise<Payroll[]> {
+        if (key) {
+            const query = {
+                [key]: {
+                    $elemMatch: {
+                        [by]: value,
+                    },
+                },
+            };
+            return await this.payrollModel
+                .find(query)
+                .populate({
+                    path: 'user',
+                    populate: {
+                        path: 'role',
+                    },
+                })
+                .exec();
+        } else {
+            const query = {[by]: value};
+            return await this.payrollModel
+                .find(query)
+                .populate({
+                    path: 'user',
+                    populate: {
+                        path: 'role',
+                    },
+                })
+                .exec();
+        }
+    }
+
     async findAll(): Promise<Payroll[]> {
+
         const total = await this.payrollModel.countDocuments().exec();
         const payrolls = await this.payrollModel.find()
             .populate({
@@ -55,7 +88,7 @@ export class PayrollService {
             .exec();
     }
 
-    async findBy(
+    async findByFilters(
         page: number,
         limit: number,
         by: string,

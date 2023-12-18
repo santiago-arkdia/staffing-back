@@ -24,6 +24,11 @@ export class PayrollController {
         return await this.payrollService.update(id, payroll);
     }
 
+    @Get('by/:by/:value')
+    async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Payroll[]> {
+      return await this.payrollService.findBy(by, value, null);
+    }
+
     @Get()
     async findAll(): Promise<Payroll[]> {
         return await this.payrollService.findAll();
@@ -35,12 +40,12 @@ export class PayrollController {
     }
 
     @Get(':page/:limit/:by/:value')
-    async findBy(
+    async findByFilters(
         @Param('page') page: number,
         @Param('limit') limit: number,
         @Param('by') by: string,
         @Param('value') value: string,
     ): Promise<Payroll[]> {
-        return await this.payrollService.findBy(page, limit, by, value);
+        return await this.payrollService.findByFilters(page, limit, by, value);
     }
 }

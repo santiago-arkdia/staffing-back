@@ -67,12 +67,24 @@ export class ClientService {
           .find()
           .skip((page - 1) * limit)
           .limit(limit)
+          .populate({
+            path: 'user',
+            populate: {
+              path: 'role',
+            },
+          })
           .exec();
     } else {
       search = await this.clientModel
           .find(query)
           .skip((page - 1) * limit)
           .limit(limit)
+          .populate({
+            path: 'user',
+            populate: {
+              path: 'role',
+            },
+          })
           .exec();
     }
 
