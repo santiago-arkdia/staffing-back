@@ -9,4 +9,7 @@ export class CreateCategoriesNewsDto {
 
   @IsString()
   description: string;
+
+  @IsString()
+  approves: string;
 }

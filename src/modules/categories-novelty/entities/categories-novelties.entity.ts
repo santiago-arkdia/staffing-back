@@ -13,6 +13,9 @@ export class CategoriesNovelty {
     @Prop({type: Number, default: 1})
     state: number;
 
+    @Prop({type: String})
+    approves: string;
+
     @Prop({ type: Object })
     more: Record<string, any>;
 }
