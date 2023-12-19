@@ -12,10 +12,10 @@ export class Concept {
     @Prop({type: String, required: true})
     name: string;
 
-    @Prop({type: Boolean, required: true})
+    @Prop({type: Boolean})
     benefit: boolean;
 
-    @Prop({type: String, required: true})
+    @Prop({type: String})
     reportType: string;
 
     @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'CategoriesNovelty'}]})
