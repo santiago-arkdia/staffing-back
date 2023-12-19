@@ -4,6 +4,7 @@ import { Client } from '../entities/client.entity';
 import { ClientService } from '../services/client.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CreateClientsDto } from '../dto/create-client.dto';
+import { UpdateClientsDto } from '../dto/update-client.dto';
 
 @ApiTags('Clients')
 @Controller('api/clients')
@@ -18,7 +19,7 @@ export class ClientController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() client: Client,
+    @Body() client: UpdateClientsDto,
   ): Promise<Client> {
     return await this.clientService.update(id, client);
   }

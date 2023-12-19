@@ -2,8 +2,9 @@
 import {Controller, Post, Put, Get, Param, Body} from '@nestjs/common';
 import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import { CategoriesNewsService } from '../services/categories-novelties.service';
-import { CreateCategoriesNewsDto } from '../dto/create-categories-novelties.dto';
+import { CreateCategoriesNoveltiesDto } from '../dto/create-categories-novelties.dto';
 import { CategoriesNovelty } from '../entities/categories-novelties.entity';
+import { UpdateModuleParameterizationsDto } from '../dto/update-categories-novelties.dto';
 
 @ApiTags('Categories Novelties')
 @Controller('api/categories-novelty')
@@ -11,12 +12,12 @@ export class CategoriesNewsController {
   constructor(private readonly categoriesNewsService: CategoriesNewsService) {}
 
   @Post()
-  async create(@Body() categoriesNews: CreateCategoriesNewsDto): Promise<CategoriesNovelty> {
+  async create(@Body() categoriesNews: CreateCategoriesNoveltiesDto): Promise<CategoriesNovelty> {
     return await this.categoriesNewsService.create(categoriesNews);
   }
 
   @Put(':id')
-  async update( @Param('id') id: string, @Body() categoriesNews: CategoriesNovelty): Promise<CategoriesNovelty> {
+  async update( @Param('id') id: string, @Body() categoriesNews: UpdateModuleParameterizationsDto): Promise<CategoriesNovelty> {
     return await this.categoriesNewsService.update(id, categoriesNews);
   }
 

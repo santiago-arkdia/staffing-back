@@ -3,7 +3,8 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {CategoriesNovelty} from '../entities/categories-novelties.entity';
 import {Model, Types} from 'mongoose';
-import {CreateCategoriesNewsDto} from '../dto/create-categories-novelties.dto';
+import {CreateCategoriesNoveltiesDto} from '../dto/create-categories-novelties.dto';
+import { UpdateModuleParameterizationsDto } from '../dto/update-categories-novelties.dto';
 
 @Injectable()
 export class CategoriesNewsService {
@@ -13,7 +14,7 @@ export class CategoriesNewsService {
   ) {}
 
   async create(
-    categoriesNews: CreateCategoriesNewsDto,
+    categoriesNews: CreateCategoriesNoveltiesDto,
   ): Promise<CategoriesNovelty> {
     const createdCategoriesNews = new this.categoriesNewsModel(categoriesNews);
     return await createdCategoriesNews.save();
@@ -21,7 +22,7 @@ export class CategoriesNewsService {
 
   async update(
     id: string,
-    categoriesNews: CategoriesNovelty,
+    categoriesNews: UpdateModuleParameterizationsDto,
   ): Promise<CategoriesNovelty> {
     return this.categoriesNewsModel.findByIdAndUpdate(
         id,

@@ -1,9 +1,10 @@
-import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
+import { Controller, Post, Put, Get, Param, Body, Delete } from '@nestjs/common';
 import { ModuleParameterization } from '../entities/module-parameterization.entity';
 import { ModuleParameterizationService } from '../services/module-parameterization.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateModuleParameterizationsDto } from '../dto/create-module-parameterization.dto';
 import { UsersService } from 'src/modules/users/services/users.service';
+import { UpdateModuleParameterizationsDto } from '../dto/update-module-parameterization.dto copy';
 
 @ApiTags('Module Parameterization')
 @Controller('api/module-parameterization')
@@ -24,7 +25,7 @@ export class ModuleParameterizationController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() moduleParameterization: ModuleParameterization,
+    @Body() moduleParameterization: UpdateModuleParameterizationsDto,
   ): Promise<ModuleParameterization> {
     return await this.moduleParameterizationService.update(
       id,
@@ -49,4 +50,10 @@ export class ModuleParameterizationController {
   ): Promise<ModuleParameterization[]> {
     return await this.moduleParameterizationService.findBy(by, value);
   }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<ModuleParameterization> {
+    return await this.moduleParameterizationService.delete(id);
+  }
+  
 }

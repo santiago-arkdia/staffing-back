@@ -5,6 +5,7 @@ import {Model, Types} from 'mongoose';
 import {Client} from '../entities/client.entity';
 import {CreateClientsDto} from '../dto/create-client.dto';
 import axios, {AxiosResponse} from 'axios';
+import { UpdateClientsDto } from '../dto/update-client.dto';
 
 @Injectable()
 export class ClientService {
@@ -17,7 +18,7 @@ export class ClientService {
     return await createdClient.save();
   }
 
-  async update(id: string, client: Client): Promise<Client> {
+  async update(id: string, client: UpdateClientsDto): Promise<Client> {
     return this.clientModel.findByIdAndUpdate(id, client, {new: true});
   }
 

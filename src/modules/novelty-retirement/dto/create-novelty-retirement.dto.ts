@@ -20,7 +20,7 @@ export class CreateNoveltyDto {
   @IsOptional()
   endDate: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
   note: string;
 

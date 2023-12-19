@@ -3,7 +3,7 @@ import { Schema } from '@nestjs/mongoose';
 import {IsString} from 'class-validator';
 
 @Schema()
-export class CreateCategoriesNewsDto {
+export class CreateCategoriesNoveltiesDto {
   @IsString()
   type: string;
 

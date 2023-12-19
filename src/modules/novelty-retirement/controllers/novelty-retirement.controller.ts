@@ -15,7 +15,7 @@ export class NoveltyRetirementController {
 
   @Post()
   @ApiOperation({ summary: 'Crear reporte de novedad' })
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async create(@Body() novelty: CreateNoveltyDto): Promise<NoveltyRetirement> {
     return await this.noveltyRetirementService.create(novelty);
   }
