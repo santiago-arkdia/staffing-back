@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Roles } from '../entities/roles.entity';
 import { CreateRolesDto } from '../dto/create-roles.dto';
+import { UpdateRolesDto } from '../dto/update-roles.dto';
 
 @Injectable()
 export class RolesService {
@@ -15,7 +16,7 @@ export class RolesService {
     return await createdRoles.save();
   }
 
-  async update(id: string, roles: Roles): Promise<Roles> {
+  async update(id: string, roles: UpdateRolesDto): Promise<Roles> {
     return await this.rolesModel.findByIdAndUpdate(id, roles, { new: true });
   }
 

@@ -4,6 +4,7 @@ import { RolesService } from '../services/roles.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateRolesDto } from '../dto/create-roles.dto';
 import { UsersService } from 'src/modules/users/services/users.service';
+import { UpdateRolesDto } from '../dto/update-roles.dto';
 
 @ApiTags('Roles')
 @Controller('api/roles')
@@ -16,7 +17,7 @@ export class RolesController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() roles: Roles): Promise<Roles> {
+  async update(@Param('id') id: string, @Body() roles: UpdateRolesDto): Promise<Roles> {
     return await this.rolesService.update(id, roles);
   }
 
