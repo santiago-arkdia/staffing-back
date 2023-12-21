@@ -8,6 +8,7 @@ import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
 import axios, {AxiosResponse} from "axios";
 import {Counter} from "../entities/counter.entity";
 import {Concept} from "../../concepts/entities/concepts.entity";
+import { Roles } from 'src/modules/roles/entities/roles.entity';
 
 @Injectable()
 export class NoveltyService {
@@ -16,6 +17,7 @@ export class NoveltyService {
         private readonly noveltyModel: Model<Novelty>,
         @InjectModel(Counter.name) private counterModel: Model<Counter>,
         @InjectModel(Concept.name) private conceptModel: Model<Concept>,
+        @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
     ) {
     }
 
@@ -142,8 +144,15 @@ export class NoveltyService {
 
         let data = search;
 
-        if (roleKey != "client") {
-            data = search.filter(novelty => novelty.concept?.approves === roleKey);
+        let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: roleKey }).exec();
+        if (roleKeys.length != 0){
+            data = search.filter(novelty => {
+                return roleKeys.some(role => role.role_key === novelty.concept?.approves);
+            });
+        }else{
+            if (roleKey != "client") {
+                data = search.filter(novelty => novelty.concept?.approves === roleKey);
+            }
         }
 
         const novelties: any = {};
