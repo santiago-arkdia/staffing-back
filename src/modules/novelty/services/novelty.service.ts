@@ -73,6 +73,7 @@ export class NoveltyService {
         let queryBody = {};
         let conceptList= []
 
+
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
                 query = {[by]: Number(value)};
@@ -107,6 +108,7 @@ export class NoveltyService {
         }
 
         const combinedQuery = {...query, ...queryBody};
+        console.log(combinedQuery);
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(combinedQuery).exec()
             : await this.noveltyModel.countDocuments(combinedQuery).exec();
@@ -114,49 +116,49 @@ export class NoveltyService {
 
         let search;
 
-        if (by === 'category') {
-            search = await this.noveltyModel
-                .find({concept: { $in: conceptList }})
-                .skip((page - 1) * limit)
-                .populate('collaborator')
-                .populate({
-                    path: 'concept',
-                    populate: {
-                        path: 'categoryNovelty',
-                    }
-                })
-                .limit(limit)
-                .exec();
-        } else {
-            search = await this.noveltyModel
-                .find(combinedQuery)
-                .skip((page - 1) * limit)
-                .populate('collaborator')
-                .populate({
-                    path: 'concept',
-                    populate: {
-                        path: 'categoryNovelty',
-                    }
-                })
-                .limit(limit)
-                .exec();
+        let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: roleKey }).exec();
+        const queryConcept = {}
+         if (roleKeys.length !== 0) {
+            queryConcept['concept'] = { '$in': roleKeys.map(role => role._id) };
+        } else if (roleKey !== "client") {
+            queryConcept["approves"] = roleKey;
         }
+
+        let concepts = await this.conceptModel.find(queryConcept).exec();
+        const queryNovelty = by === 'category' ? { concept: { $in: conceptList } } : combinedQuery;
+        queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
+       
+
+        search = await this.noveltyModel
+            .find(queryNovelty)
+            .skip((page - 1) * limit)
+            .populate('collaborator')
+            .populate({
+                path: 'concept',
+                populate: {
+                    path: 'categoryNovelty',
+                },
+            })
+            .limit(limit)
+            .exec();
+
+            
+
 
         let data = search;
 
-        let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: roleKey }).exec();
-        if (roleKeys.length != 0){
-            data = search.filter(novelty => {
-                return roleKeys.some(role => role.role_key === novelty.concept?.approves);
-            });
-        }else{
-            if (roleKey != "client") {
-                data = search.filter(novelty => novelty.concept?.approves === roleKey);
-            }
-        }
+        // if (roleKeys.length != 0){
+        //     data = search.filter(novelty => {
+        //         return roleKeys.some(role => role.role_key === novelty.concept?.approves);
+        //     });
+        // }else{
+        //     if (roleKey != "client") {
+        //         data = search.filter(novelty => novelty.concept?.approves === roleKey);
+        //     }
+        // }
 
         const novelties: any = {};
-        novelties.total = data.length;
+        //novelties.total = data.length;
         novelties.pages = totalPages;
         novelties.roleKey = roleKey;
         novelties.data = data;
