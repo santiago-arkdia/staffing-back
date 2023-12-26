@@ -5,7 +5,7 @@ import { Contract } from 'src/shared/models/contract';
 import { Documents } from 'src/shared/models/documents';
 
 @Schema()
-export class CreateNoveltyDto {
+export class CreateNoveltyRetirementDto {
   @IsString()
   collaborator: string;
 

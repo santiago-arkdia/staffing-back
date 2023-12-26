@@ -33,6 +33,9 @@ export class NoveltyRetirement {
     @Prop([Contract])
     contract: Contract[];
 
+    @Prop({type: Number, default: 2})
+    state: number;
+
 }
 
 export const NNoveltyRetirementSchema = SchemaFactory.createForClass(NoveltyRetirement);

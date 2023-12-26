@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {Body, Controller, Get, Param, Post, Put, Req, UseGuards} from '@nestjs/common';
-import {CreateNoveltyDto} from '../dto/create-novelty-retirement.dto';
-import {UpdateNoveltyDto} from '../dto/update-novelty-retirement.dto';
+import {CreateNoveltyRetirementDto} from '../dto/create-novelty-retirement.dto';
+import {UpdateConceptsRetirementDto} from '../dto/update-novelty-retirement.dto';
 import {AuthGuard} from "../../auth/auth.guard";
 import { Request } from 'express';
 import { NoveltyRetirement } from '../entities/novelty-retirement.entity';
@@ -16,7 +16,7 @@ export class NoveltyRetirementController {
   @Post()
   @ApiOperation({ summary: 'Crear reporte de novedad' })
   // @UseGuards(AuthGuard)
-  async create(@Body() novelty: CreateNoveltyDto): Promise<NoveltyRetirement> {
+  async create(@Body() novelty: CreateNoveltyRetirementDto): Promise<NoveltyRetirement> {
     return await this.noveltyRetirementService.create(novelty);
   }
 
@@ -25,8 +25,8 @@ export class NoveltyRetirementController {
   @UseGuards(AuthGuard)
   async update(
     @Param('id') id: string,
-    @Body() updateNoveltyDto: UpdateNoveltyDto,
-  ): Promise<UpdateNoveltyDto> {
+    @Body() updateNoveltyDto: UpdateConceptsRetirementDto,
+  ): Promise<UpdateConceptsRetirementDto> {
     return await this.noveltyRetirementService.update(id, updateNoveltyDto);
   }
 

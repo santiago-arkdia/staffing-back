@@ -2,8 +2,8 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import mongoose, {Model, Types} from 'mongoose';
-import {CreateNoveltyDto} from '../dto/create-novelty-retirement.dto';
-import {UpdateNoveltyDto} from '../dto/update-novelty-retirement.dto';
+import {CreateNoveltyRetirementDto} from '../dto/create-novelty-retirement.dto';
+import {UpdateConceptsRetirementDto} from '../dto/update-novelty-retirement.dto';
 import axios, {AxiosResponse} from "axios";
 import {Counter} from "../entities/counter.entity";
 import {Concept} from "../../concepts/entities/concepts.entity";
@@ -19,7 +19,7 @@ export class NoveltyRetirementService {
     ) {
     }
 
-    async create(novelty: CreateNoveltyDto): Promise<NoveltyRetirement> {
+    async create(novelty: CreateNoveltyRetirementDto): Promise<NoveltyRetirement> {
         const counter = await this.counterModel.findOneAndUpdate(
             {model: 'Novelty', field: 'uid'},
             {$inc: {count: 1}},
@@ -34,7 +34,7 @@ export class NoveltyRetirementService {
         return await createdNovelty.save();
     }
 
-    async update(id: string, updateNoveltyDto: UpdateNoveltyDto): Promise<UpdateNoveltyDto> {
+    async update(id: string, updateNoveltyDto: UpdateConceptsRetirementDto): Promise<UpdateConceptsRetirementDto> {
         const noveltyToUpdate = await this.noveltyModel.findById(id);
         if (!noveltyToUpdate) {
             throw new NotFoundException('Novedad no encontrada');
@@ -115,7 +115,10 @@ export class NoveltyRetirementService {
                 .skip((page - 1) * limit)
                 .populate('collaborator')
                 .populate({
-                    path: 'conceptsRetirement'
+                    path: 'conceptsRetirement',
+                    populate: {
+                        path: 'categoriesRetirement',
+                    },
                 })
                 .limit(limit)
                 .exec();
@@ -126,10 +129,15 @@ export class NoveltyRetirementService {
                 .populate('collaborator')
                 .populate({
                     path: 'conceptsRetirement',
+                    populate: {
+                        path: 'categoriesRetirement',
+                    },
                 })
                 .limit(limit)
                 .exec();
         }
+
+       
 
         let data = search;
 
