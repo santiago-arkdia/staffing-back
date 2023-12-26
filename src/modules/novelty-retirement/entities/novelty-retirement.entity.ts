@@ -6,7 +6,7 @@ import { Documents } from 'src/shared/models/documents';
 import { Contract } from 'src/shared/models/contract';
 import { ConceptsRetirement } from 'src/modules/concepts-retirement/entities/concepts-retirement.entity';
 
-@Schema({timestamps: true})
+@Schema({collection: 'novelty-retirement', timestamps: true})
 export class NoveltyRetirement {
 
     @Prop({type: Number, unique: true, immutable: true})
