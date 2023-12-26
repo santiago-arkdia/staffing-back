@@ -14,7 +14,7 @@ export class ConceptsRetirementService {
     return await createdConceptsRetirement.save();
   }
 
-  async update(id: string, conceptsretirement: ConceptsRetirement): Promise<UpdateConceptsRetirementDto> {
+  async update(id: string, conceptsretirement: UpdateConceptsRetirementDto): Promise<UpdateConceptsRetirementDto> {
     return await this.conceptsretirementModel.findByIdAndUpdate(id, conceptsretirement, { new: true });
   }
 

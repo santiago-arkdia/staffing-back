@@ -49,6 +49,7 @@ import {StudiesModule} from "./modules/integrations/studies/studies.module";
 import {UsersTriModule} from "./modules/integrations/users/users.module";
 import { ConceptsRetirementModule } from './modules/concepts-retirement/concepts-retirement.module';
 import { NoveltyRetirementModule } from './modules/novelty-retirement/novelty-retirement.module';
+import { CategoriesRetirementModule } from './modules/categories-retirement/categories-retirement.module';
 
 @Module({
     imports: [
@@ -97,7 +98,8 @@ import { NoveltyRetirementModule } from './modules/novelty-retirement/novelty-re
         StudiesModule,
         UsersTriModule,
         ConceptsRetirementModule,
-        NoveltyRetirementModule
+        NoveltyRetirementModule,
+        CategoriesRetirementModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],

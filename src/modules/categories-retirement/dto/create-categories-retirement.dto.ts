@@ -1,12 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsString } from 'class-validator';
+import {IsOptional, IsString} from 'class-validator';
 
 @Schema()
-export class CreateConceptsRetirementDto {
+export class CreateCategoriesNoveltiesDto {
   @IsString()
   name: string;
 
   @IsString()
-  categoriesRetirement: string;
+  @IsOptional()
+  state: number;
+
 }

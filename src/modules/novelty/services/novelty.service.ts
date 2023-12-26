@@ -58,7 +58,15 @@ export class NoveltyService {
     }
 
     async findOne(id: string): Promise<Novelty> {
-        return await this.noveltyModel.findById(id).exec();
+        return await this.noveltyModel.findById(id)
+            .populate('collaborator')
+            .populate({
+                path: 'concept',
+                populate: {
+                    path: 'categoryNovelty',
+                },
+            })
+            .exec();
     }
 
     async findBy(
@@ -91,6 +99,7 @@ export class NoveltyService {
             conceptList = await this.conceptModel.find({categoryNovelty: value}).select('_id').exec();
         }
 
+        //filtrar 
         if (Object.keys(requestBodyFilters).length > 0) {
             Object.entries(requestBodyFilters).forEach(([key, val]) => {
                 if (typeof val === 'string' && !isNaN(Number(val))) {
