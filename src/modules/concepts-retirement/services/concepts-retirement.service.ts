@@ -19,15 +19,15 @@ export class ConceptsRetirementService {
   }
 
   async findAll(): Promise<ConceptsRetirement[]> {
-    return await this.conceptsretirementModel.find().exec();
+    return await this.conceptsretirementModel.find().populate("categoriesRetirement").exec();
   }
 
   async findOne(id: string): Promise<ConceptsRetirement> {
-    return await this.conceptsretirementModel.findById(id).exec();
+    return await this.conceptsretirementModel.findById(id).populate("categoriesRetirement").exec();
   }
 
   async findBy(by: string, value: string): Promise<ConceptsRetirement[]> {
     const query = { [by]: value };
-    return await this.conceptsretirementModel.find(query).exec();
+    return await this.conceptsretirementModel.find(query).populate("categoriesRetirement").exec();
   }
 }
