@@ -133,10 +133,6 @@ export class NoveltyRetirementService {
 
         let data = search;
 
-        if (roleKey != "client") {
-            data = search.filter(novelty => novelty.concept?.approves === roleKey);
-        }
-
         const novelties: any = {};
         novelties.total = data.length;
         novelties.pages = totalPages;

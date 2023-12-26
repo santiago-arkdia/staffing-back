@@ -81,6 +81,8 @@ export class NoveltyService {
         let queryBody = {};
         let conceptList= []
 
+        console.log(requestBodyFilters);
+
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
@@ -152,7 +154,8 @@ export class NoveltyService {
             .exec();
 
             
-
+// estadoo
+// documentos en vacio 
 
         let data = search;
 

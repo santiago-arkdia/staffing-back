@@ -1,15 +1,8 @@
 /* eslint-disable prettier/prettier */
 import {Schema} from '@nestjs/mongoose';
-import {IsJSON, IsNumber, IsString} from 'class-validator';
+import { CreateConceptsRetirementDto } from './create-concepts-retirement.dto';
+import { PartialType } from '@nestjs/swagger';
 
 @Schema()
-export class UpdateConceptsRetirementDto {
-    @IsString()
-    name: string;
+export class UpdateConceptsRetirementDto extends PartialType(CreateConceptsRetirementDto) {}
 
-    @IsString()
-    categoriesRetirement: string;
-    
-    @IsNumber()
-    state: number;
-}
