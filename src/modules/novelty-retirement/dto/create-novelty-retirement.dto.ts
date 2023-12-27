@@ -32,4 +32,8 @@ export class CreateNoveltyRetirementDto {
   @IsOptional()
   contract: Contract[];
 
+  @IsNumber()
+  @IsOptional()
+  state: number;
+
 }

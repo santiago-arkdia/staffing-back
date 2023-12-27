@@ -53,7 +53,15 @@ export class NoveltyRetirementService {
     }
 
     async findOne(id: string): Promise<NoveltyRetirement> {
-        return await this.noveltyModel.findById(id).exec();
+        return await this.noveltyModel.findById(id)
+                .populate('collaborator')
+                .populate({
+                    path: 'conceptsRetirement',
+                    populate: {
+                        path: 'categoriesRetirement',
+                    },
+                })
+                .exec();
     }
 
     async findBy(
