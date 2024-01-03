@@ -294,8 +294,6 @@ export class GetAllUsersService {
         roleKey: string
     ): Promise<UserDto[]> {
         let matchStage: any = {};
-        let unwindStages = [];
-
 
         // Roles 
         // Supervisor_role
@@ -388,8 +386,7 @@ export class GetAllUsersService {
             });
         }
 
-
-        if(roleKey){
+        if(roleKey && roleKey != 'super_admin'){
             aggregatePipeline.push({
                 $match: {
                     $or: [
@@ -407,7 +404,6 @@ export class GetAllUsersService {
 
         const countResult = await this.userModel.aggregate(aggregatePipeline);
         const totalUsers = countResult.length > 0 ? countResult[0].total : 0;
-        console.log(totalUsers+"totalUsers");
 
         const totalPages = Math.ceil(totalUsers / limit);
 
