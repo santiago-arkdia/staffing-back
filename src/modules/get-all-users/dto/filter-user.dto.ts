@@ -13,6 +13,10 @@ export class UserDto {
     @IsOptional()
     name: string;
 
+    @IsNumber()
+    @IsOptional()
+    documentNumber: string;
+
     @IsString()
     @IsOptional()
     role: string;

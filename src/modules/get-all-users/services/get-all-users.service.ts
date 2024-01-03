@@ -290,33 +290,28 @@ export class GetAllUsersService {
     async findBy(
         page: number,
         limit: number,
-        by: string,
-        value: string | number,
+        user: UserDto,
+        roleKey: string
     ): Promise<UserDto[]> {
         let matchStage: any = {};
+        let unwindStages = [];
 
-        if (by !== 'find' && value !== 'all') {
-            let query: any = {};
 
-            if (typeof value === 'string' && !isNaN(Number(value))) {
-                query = { [by]: Number(value) };
-            } else if (typeof value === 'string') {
-                if (Types.ObjectId.isValid(value)) {
-                    query = { [by]: value };
-                } else {
-                    query = { [by]: { $regex: new RegExp(value, 'i') } };
-                }
-            } else if (typeof value === 'number') {
-                query = { [by]: value };
-            }
+        // Roles 
+        // Supervisor_role
+        // Nommbres
+        // Documento
+        // Mallas horarias
+        // 
 
-            matchStage = query;
+        if (user.email) {
+            matchStage.email = { $regex: new RegExp(user.email, 'i') };
         }
 
-        const total = by === 'find' && value === 'all'
-            ? await this.userModel.countDocuments().exec()
-            : await this.userModel.countDocuments(matchStage).exec();
-        const totalPages = Math.ceil(total / limit);
+        if (user.state) {
+            matchStage.state = { $regex: new RegExp(user.state, 'i') };
+        }
+
 
         const aggregatePipeline: any[] = [];
 
@@ -332,7 +327,6 @@ export class GetAllUsersService {
                     as: 'role',
                 },
             },
-            // { $match: { 'role.fieldToMatch': value } },
             {
                 $lookup: {
                     from: 'admins',
@@ -341,7 +335,6 @@ export class GetAllUsersService {
                     as: 'admins',
                 },
             },
-            // { $match: { 'admins.fieldToMatch': value } },
             {
                 $lookup: {
                     from: 'admin-clients',
@@ -350,7 +343,6 @@ export class GetAllUsersService {
                     as: 'admin_clients',
                 },
             },
-            // { $match: { 'admin_clients.fieldToMatch': value } },
             {
                 $lookup: {
                     from: 'clients',
@@ -359,7 +351,6 @@ export class GetAllUsersService {
                     as: 'clients',
                 },
             },
-            // { $match: { 'clients.fieldToMatch': value } },
             {
                 $lookup: {
                     from: 'payrolls',
@@ -368,19 +359,68 @@ export class GetAllUsersService {
                     as: 'payrolls',
                 },
             },
-            // { $match: { 'payrolls.fieldToMatch': value } },
-            {
-                $skip: (page - 1) * limit,
-            },
-            {
-                $limit: limit,
-            },
+        );
+
+        if(user.name){
+            aggregatePipeline.push({
+                $match: {
+                    $or: [
+                        { 'admins.name': user.name },
+                        { 'admin_clients.name': user.name },
+                        { 'clients.name': user.name },
+                        { 'payrolls.name': user.name },
+                    ]
+                }
+            });
+        }
+
+
+        if(user.documentNumber){
+            aggregatePipeline.push({
+                $match: {
+                    $or: [
+                        { 'admins.documentNumber': user.documentNumber },
+                        { 'admin_clients.documentNumber': user.documentNumber },
+                        { 'clients.documentNumber': user.documentNumber },
+                        { 'payrolls.documentNumber': user.documentNumber },
+                    ]
+                }
+            });
+        }
+
+
+        if(roleKey){
+            aggregatePipeline.push({
+                $match: {
+                    $or: [
+                        { 'role.role_key': roleKey },
+                        { 'role.supervisor_role': roleKey },
+                    ]
+                }
+            });
+        }
+
+
+        aggregatePipeline.push({
+            $count: 'total'
+        });
+
+        const countResult = await this.userModel.aggregate(aggregatePipeline);
+        const totalUsers = countResult.length > 0 ? countResult[0].total : 0;
+        console.log(totalUsers+"totalUsers");
+
+        const totalPages = Math.ceil(totalUsers / limit);
+
+        aggregatePipeline.pop();
+        aggregatePipeline.push(
+            { $skip: (page - 1) * limit },
+            { $limit: limit }
         );
 
         const data = await this.userModel.aggregate(aggregatePipeline).allowDiskUse(true);
 
         const users: any = {};
-        users.total = total;
+        users.total = totalUsers;
         users.pages = totalPages;
         users.data = data;
 

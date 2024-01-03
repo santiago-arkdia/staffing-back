@@ -1,8 +1,10 @@
 /* eslint-disable prettier/prettier */
-import {Controller, Get, Param} from '@nestjs/common';
+import {Body, Controller, Get, Param, Req, UseGuards} from '@nestjs/common';
 import {GetAllUsersService} from '../services/get-all-users.service';
 import {ApiTags} from '@nestjs/swagger';
 import {UserDto} from '../dto/filter-user.dto';
+import { Request } from 'express';
+import { AuthGuard } from 'src/modules/auth/auth.guard';
 
 @ApiTags('Get all Users')
 @Controller('api/get-all-users')
@@ -36,13 +38,15 @@ export class GetAllUsersController {
         }
     }*/
 
-    @Get(':page/:limit/:by/:value')
+    @Get(':page/:limit')
+    @UseGuards(AuthGuard)
     async findBy(
         @Param('page') page: number,
         @Param('limit') limit: number,
-        @Param('by') by: string,
-        @Param('value') value: string,
+        @Body() user: UserDto,
+        @Req() request: Request
     ): Promise<UserDto[]> {
-        return await this.userService.findBy(page, limit, by, value);
+        const { roleKey } = request['user'];
+        return await this.userService.findBy(page, limit, user, roleKey);
     }
 }
