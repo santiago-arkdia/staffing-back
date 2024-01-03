@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {Body, Controller, Get, Param, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Req, UseGuards} from '@nestjs/common';
 import {GetAllUsersService} from '../services/get-all-users.service';
 import {ApiTags} from '@nestjs/swagger';
 import {UserDto} from '../dto/filter-user.dto';
@@ -38,7 +38,7 @@ export class GetAllUsersController {
         }
     }*/
 
-    @Get(':page/:limit')
+    @Post(':page/:limit')
     @UseGuards(AuthGuard)
     async findBy(
         @Param('page') page: number,
