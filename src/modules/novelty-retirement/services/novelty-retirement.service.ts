@@ -108,7 +108,7 @@ export class NoveltyRetirementService {
                 }
             });
         }
-
+//documentos vacios
         const combinedQuery = {...query, ...queryBody};
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(combinedQuery).exec()

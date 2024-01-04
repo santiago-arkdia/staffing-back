@@ -50,6 +50,8 @@ import {UsersTriModule} from "./modules/integrations/users/users.module";
 import { ConceptsRetirementModule } from './modules/concepts-retirement/concepts-retirement.module';
 import { NoveltyRetirementModule } from './modules/novelty-retirement/novelty-retirement.module';
 import { CategoriesRetirementModule } from './modules/categories-retirement/categories-retirement.module';
+import { HourlyMeshessModule } from './modules/hourly-meshes/hourly-meshes.module';
+import { SchedulessModule } from './modules/schedules/schedules.module';
 
 @Module({
     imports: [
@@ -99,7 +101,9 @@ import { CategoriesRetirementModule } from './modules/categories-retirement/cate
         UsersTriModule,
         ConceptsRetirementModule,
         NoveltyRetirementModule,
-        CategoriesRetirementModule
+        CategoriesRetirementModule,
+        HourlyMeshessModule,
+        SchedulessModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],
