@@ -300,7 +300,6 @@ export class GetAllUsersService {
         // Nommbres
         // Documento
         // Mallas horarias
-        // 
 
         if (user.email) {
             matchStage.email = { $regex: new RegExp(user.email, 'i') };

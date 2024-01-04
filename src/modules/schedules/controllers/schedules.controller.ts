@@ -6,7 +6,7 @@ import { CreateSchedulesDto } from '../dto/create-schedules.dto';
 import { UpdateSchedulesDto } from '../dto/update-schedules.dto';
 
 @ApiTags('Schedules')
-@Controller('api/roles')
+@Controller('api/schedules')
 export class SchedulesController {
   constructor(private readonly rolesService: SchedulesService) {}
 
