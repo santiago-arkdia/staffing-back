@@ -1,12 +1,26 @@
 import { Schema, Prop } from '@nestjs/mongoose';
-import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsBoolean, IsDate, IsNumber, IsString, ValidateNested } from 'class-validator';
 
 @Schema()
 export class CreateSchedulesDto{
 
   @IsString()
-  jobPositions: string;
+  name: string;
 
-  
+  @IsString()
+  startTime: string;
 
+  @IsString()
+  endTime: string;
+
+  @IsString()
+  weekDay: string;
+
+}
+
+export class CreateMultipleSchedulesDto {
+  @ValidateNested({ each: true })
+  @Type(() => CreateSchedulesDto)
+  schedules: CreateSchedulesDto[];
 }

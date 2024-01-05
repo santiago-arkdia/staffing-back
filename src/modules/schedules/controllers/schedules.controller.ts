@@ -2,36 +2,36 @@ import { Controller, Post, Put, Get, Param, Body } from '@nestjs/common';
 import { Schedules } from '../entities/schedules.entity';
 import { SchedulesService } from '../services/schedules.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateSchedulesDto } from '../dto/create-schedules.dto';
+import { CreateMultipleSchedulesDto, CreateSchedulesDto } from '../dto/create-schedules.dto';
 import { UpdateSchedulesDto } from '../dto/update-schedules.dto';
 
 @ApiTags('Schedules')
-@Controller('api/roles')
+@Controller('api/schedules')
 export class SchedulesController {
-  constructor(private readonly rolesService: SchedulesService) {}
+  constructor(private readonly schedulesService: SchedulesService) {}
 
   @Post()
-  async create(@Body() roles: CreateSchedulesDto): Promise<Schedules> {
-    return await this.rolesService.create(roles);
+  async create(@Body() schedules: CreateMultipleSchedulesDto): Promise<Schedules[]> {
+    return await this.schedulesService.create(schedules.schedules);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() roles: UpdateSchedulesDto): Promise<Schedules> {
-    return await this.rolesService.update(id, roles);
+  async update(@Param('id') id: string, @Body() schedules: UpdateSchedulesDto): Promise<Schedules> {
+    return await this.schedulesService.update(id, schedules);
   }
 
   @Get()
   async findAll(): Promise<Schedules[]> {
-    return await this.rolesService.findAll();
+    return await this.schedulesService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Schedules> {
-    return await this.rolesService.findOne(id);
+    return await this.schedulesService.findOne(id);
   }
 
   @Get(':by/:value')
   async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Schedules[]> {
-    return await this.rolesService.findBy(by, value);
+    return await this.schedulesService.findBy(by, value);
   }
 }

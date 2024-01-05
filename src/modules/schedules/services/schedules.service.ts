@@ -8,28 +8,27 @@ import { UpdateSchedulesDto } from '../dto/update-schedules.dto';
 @Injectable()
 export class SchedulesService {
   constructor(
-    @InjectModel(Schedules.name) private readonly rolesModel: Model<Schedules>,
+    @InjectModel(Schedules.name) private readonly schedulesModel: Model<Schedules>,
   ) {}
 
-  async create(roles: CreateSchedulesDto): Promise<Schedules> {
-    const createdSchedules = new this.rolesModel(roles);
-    return await createdSchedules.save();
+  async create(schedules: CreateSchedulesDto[]): Promise<Schedules[]> {
+    return await this.schedulesModel.insertMany(schedules);
   }
 
-  async update(id: string, roles: UpdateSchedulesDto): Promise<Schedules> {
-    return await this.rolesModel.findByIdAndUpdate(id, roles, { new: true });
+  async update(id: string, schedules: UpdateSchedulesDto): Promise<Schedules> {
+    return await this.schedulesModel.findByIdAndUpdate(id, schedules, { new: true });
   }
 
   async findAll(): Promise<Schedules[]> {
-    return await this.rolesModel.find().exec();
+    return await this.schedulesModel.find().exec();
   }
 
   async findOne(id: any): Promise<Schedules> {
-    return await this.rolesModel.findById(id).exec();
+    return await this.schedulesModel.findById(id).exec();
   }
 
   async findBy(by: string, value: string): Promise<Schedules[]> {
     const query = { [by]: value };
-    return await this.rolesModel.find(query).exec();
+    return await this.schedulesModel.find(query).exec();
   }
 }

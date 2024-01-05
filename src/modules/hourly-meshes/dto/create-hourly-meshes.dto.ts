@@ -1,5 +1,6 @@
 import { Schema, Prop } from '@nestjs/mongoose';
-import { IsBoolean, IsDate, IsNumber, IsString, isNumber } from 'class-validator';
+import { IsArray, IsBoolean, IsDate, IsNumber, IsOptional, IsString, isNumber } from 'class-validator';
+import { Schedules } from 'src/modules/schedules/entities/schedules.entity';
 
 @Schema()
 export class CreateHourlyMeshesDto{
@@ -8,7 +9,12 @@ export class CreateHourlyMeshesDto{
   name: string;
 
   @IsString()
+  @IsOptional()
   jobPositions: string;
+
+  @IsArray()
+  @IsOptional()
+  schedules: Schedules[];
 
   @IsNumber()
   state: number;
