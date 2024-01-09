@@ -21,11 +21,17 @@ export class HourlyMeshesService {
   }
 
   async findAll(): Promise<HourlyMeshes[]> {
-    return await this.rolesModel.find().exec();
+    return await this.rolesModel.find()
+          .populate("schedules")
+          .populate("jobPositions")
+          .exec();
   }
 
   async findOne(id: any): Promise<HourlyMeshes> {
-    return await this.rolesModel.findById(id).exec();
+    return await this.rolesModel.findById(id)
+          .populate("schedules")
+          .populate("jobPositions")
+          .exec();
   }
 
   async findBy(by: string, value: string): Promise<HourlyMeshes[]> {
