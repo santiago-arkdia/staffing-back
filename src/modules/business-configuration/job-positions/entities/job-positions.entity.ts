@@ -23,10 +23,10 @@ export class JobPositions {
     description: string;
 
     @Prop()
-    responsibility: string;
+    responsability: string;
 
     @Prop()
-    objective: string;
+    objetive: string;
 
     @Prop()
     arl: string;

@@ -27,11 +27,11 @@ export class CreateJobPositionsDto {
 
     @IsString()
     @IsOptional()
-    responsibility: string;
+    responsability: string;
 
     @IsString()
     @IsOptional()
-    objective: string;
+    objetive: string;
 
 
     @IsString()
