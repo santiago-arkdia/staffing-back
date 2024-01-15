@@ -130,7 +130,7 @@ export class NoveltyService {
         let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: roleKey }).exec();
         const queryConcept = {}
          if (roleKeys.length !== 0) {
-            queryConcept['concept'] = { '$in': roleKeys.map(role => role._id) };
+            queryConcept['approves'] = { '$in': roleKeys.map(role => role.role_key) };
         } else if (roleKey !== "client") {
             queryConcept["approves"] = roleKey;
         }
