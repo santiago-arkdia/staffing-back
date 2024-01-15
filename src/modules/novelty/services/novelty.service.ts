@@ -119,7 +119,7 @@ export class NoveltyService {
         }
 
         const combinedQuery = {...query, ...queryBody};
-        console.log(combinedQuery);
+        
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(combinedQuery).exec()
             : await this.noveltyModel.countDocuments(combinedQuery).exec();
@@ -127,13 +127,17 @@ export class NoveltyService {
 
         let search;
 
+        
+
         let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: roleKey }).exec();
         const queryConcept = {}
          if (roleKeys.length !== 0) {
-            queryConcept['concept'] = { '$in': roleKeys.map(role => role._id) };
+            queryConcept['approves'] = { '$in': roleKeys.map(role => role.role_key) };
         } else if (roleKey !== "client") {
             queryConcept["approves"] = roleKey;
         }
+
+        console.log(queryConcept);
 
         let concepts = await this.conceptModel.find(queryConcept).exec();
         const queryNovelty = by === 'category' ? { concept: { $in: conceptList } } : combinedQuery;

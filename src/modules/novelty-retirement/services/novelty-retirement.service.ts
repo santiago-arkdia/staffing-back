@@ -150,8 +150,6 @@ export class NoveltyRetirementService {
                 .exec();
         }
 
-       
-
         let data = search;
 
         const novelties: any = {};
