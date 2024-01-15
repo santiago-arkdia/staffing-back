@@ -108,8 +108,9 @@ export class NoveltyRetirementService {
                 }
             });
         }
-//documentos vacios
-        const combinedQuery = {...query, ...queryBody};
+
+
+        const combinedQuery = {...query, ...queryBody, documents: { $size: 0 }};
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(combinedQuery).exec()
             : await this.noveltyModel.countDocuments(combinedQuery).exec();
@@ -119,7 +120,10 @@ export class NoveltyRetirementService {
 
         if (by === 'category') {
             search = await this.noveltyModel
-                .find({concept: { $in: conceptList }})
+                .find({
+                    concept: { $in: conceptList },
+                    documents: { $size: 0 }
+                })
                 .skip((page - 1) * limit)
                 .populate('collaborator')
                 .populate({
@@ -131,6 +135,7 @@ export class NoveltyRetirementService {
                 .limit(limit)
                 .exec();
         } else {
+            combinedQuery.documents = { $size: 0 };
             search = await this.noveltyModel
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
