@@ -1,12 +1,14 @@
 /* eslint-disable prettier/prettier */
 import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {NoveltyService} from '../services/novelty.service';
-import {Body, Controller, Get, Param, Post, Put, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Headers, Param, Post, Put, Req, UseGuards} from '@nestjs/common';
 import {CreateNoveltyDto} from '../dto/create-novelty.dto';
 import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
 import {Novelty} from '../entities/novelty.entity';
 import {AuthGuard} from "../../auth/auth.guard";
 import { Request } from 'express';
+import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
+import { AxiosResponse } from 'axios';
 
 @ApiTags('Novelty')
 @Controller('api/novelty')
@@ -126,4 +128,14 @@ export class NoveltyController {
       token,
     );
   }
+
+
+
+  @Post('ws/maestro')
+  @ApiOperation({ summary: 'Maestro para el crud de novedades' })
+  @UseGuards(AuthGuard)
+  async createNoveltyMaster(@Body() novelty: NoveltyMasterTemporappDto, @Headers('authorization-temporapp') token: string): Promise<AxiosResponse> {
+    return await this.noveltyService.createNoveltyMaster(novelty, token);
+  }
+  
 }

@@ -9,6 +9,7 @@ import axios, {AxiosResponse} from "axios";
 import {Counter} from "../entities/counter.entity";
 import {Concept} from "../../concepts/entities/concepts.entity";
 import { Roles } from 'src/modules/roles/entities/roles.entity';
+import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 
 @Injectable()
 export class NoveltyService {
@@ -237,6 +238,22 @@ export class NoveltyService {
         };
 
         const response = await axios.post(url, data, config);
+        return response.data.mensaje;
+    }
+
+
+    async createNoveltyMaster(novelty: NoveltyMasterTemporappDto,
+        token: string
+    ): Promise<AxiosResponse<any>> {
+        const url = 'http://34.214.124.124:9896/ws/novedades/maestro';
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const response = await axios.post(url, novelty, config);
         return response.data.mensaje;
     }
 }

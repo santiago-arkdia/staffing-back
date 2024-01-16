@@ -31,6 +31,12 @@ export class ClientService {
           path: 'role',
         },
       })
+      .populate({
+        path: 'analysts',
+        populate: {
+          path: 'user',
+        },
+      })
       .exec();
   }
 
