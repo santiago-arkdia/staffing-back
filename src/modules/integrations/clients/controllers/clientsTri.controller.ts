@@ -40,7 +40,7 @@ export class ClientsTriController {
             },
         },
     })
-    async createNovelty(
+    async createClient(
         @Body('instance') instance: string,
         @Body('nit') nit: string,
         @Body('name') name: string,
