@@ -46,7 +46,7 @@ import {LevelsModule} from "./modules/integrations/levels/levels.module";
 import {OffersModule} from "./modules/integrations/offers/offers.module";
 import {PositionsModule} from "./modules/integrations/positions/positions.module";
 import {StudiesModule} from "./modules/integrations/studies/studies.module";
-import {UsersTriModule} from "./modules/integrations/users/users.module";
+import {CollaboratorsTriModule} from "./modules/integrations/collaborators/collaborators.module";
 import { ConceptsRetirementModule } from './modules/concepts-retirement/concepts-retirement.module';
 import { NoveltyRetirementModule } from './modules/novelty-retirement/novelty-retirement.module';
 import { CategoriesRetirementModule } from './modules/categories-retirement/categories-retirement.module';
@@ -98,7 +98,7 @@ import { SchedulessModule } from './modules/schedules/schedules.module';
         OffersModule,
         PositionsModule,
         StudiesModule,
-        UsersTriModule,
+        CollaboratorsTriModule,
         ConceptsRetirementModule,
         NoveltyRetirementModule,
         CategoriesRetirementModule,

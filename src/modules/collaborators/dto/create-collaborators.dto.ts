@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {Schema} from '@nestjs/mongoose';
-import {IsOptional, IsString} from 'class-validator';
+import {IsEmail, IsOptional, IsString} from 'class-validator';
 
 @Schema()
 export class CreateCollaboratorDto {
@@ -9,6 +9,9 @@ export class CreateCollaboratorDto {
 
   @IsString()
   document: string;
+
+  @IsEmail()
+  email: string;
 
   @IsString()
   documentType: string;

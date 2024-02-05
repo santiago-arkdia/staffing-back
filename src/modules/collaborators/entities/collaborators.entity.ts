@@ -19,6 +19,12 @@ export class Collaborator {
     @Prop({type: String})
     document: string;
 
+    @Prop({type: String})
+    email: string;
+
+    @Prop({type: Number})
+    idTri: number;
+
     @Prop({type: Number, default: 1})
     status: number;
 
