@@ -36,4 +36,20 @@ export class CreateNoveltyRetirementDto {
   @IsOptional()
   state: number;
 
+  @IsNumber()
+  @IsOptional()
+  signedByApprover: number;
+
+  @IsNumber()
+  @IsOptional()
+  signedByCollaborator: number;
+
+  @IsNumber()
+  @IsOptional()
+  loadedOnPayroll: number;
+
+  @IsArray()
+  @IsOptional()
+  comments: any[];
+
 }

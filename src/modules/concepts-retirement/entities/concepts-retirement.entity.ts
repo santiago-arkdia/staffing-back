@@ -8,6 +8,12 @@ export class ConceptsRetirement {
     @Prop({type: String, required: true})
     name: string;
 
+    @Prop({type: String, required: true})
+    manages: string;
+
+    @Prop({type: String})
+    approves: string;
+
     @Prop({type: Number, default: 1})
     state: number;
 

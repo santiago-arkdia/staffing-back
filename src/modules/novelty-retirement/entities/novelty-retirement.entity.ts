@@ -33,6 +33,18 @@ export class NoveltyRetirement {
     @Prop([Contract])
     contract: Contract[];
 
+    @Prop({type: Number})
+    signedByApprover: number;
+
+    @Prop({type: Number})
+    signedByCollaborator: number;
+
+    @Prop({type: Number})
+    loadedOnPayroll: number;
+
+    @Prop({type: Array})
+    comments: any[];
+
     @Prop({type: Number, default: 2})
     state: number;
 
