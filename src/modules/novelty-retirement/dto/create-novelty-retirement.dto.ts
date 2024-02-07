@@ -46,6 +46,10 @@ export class CreateNoveltyRetirementDto {
 
   @IsNumber()
   @IsOptional()
+  signedByManagment: number;
+
+  @IsNumber()
+  @IsOptional()
   loadedOnPayroll: number;
 
   @IsArray()
