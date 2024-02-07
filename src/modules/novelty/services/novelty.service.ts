@@ -10,12 +10,14 @@ import {Counter} from "../entities/counter.entity";
 import {Concept} from "../../concepts/entities/concepts.entity";
 import { Roles } from 'src/modules/roles/entities/roles.entity';
 import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
+import { NoveltyRetirement } from 'src/modules/novelty-retirement/entities/novelty-retirement.entity';
 
 @Injectable()
 export class NoveltyService {
     constructor(
         @InjectModel(Novelty.name)
         private readonly noveltyModel: Model<Novelty>,
+        @InjectModel(NoveltyRetirement.name) private noveltyRetirementModel: Model<NoveltyRetirement>,
         @InjectModel(Counter.name) private counterModel: Model<Counter>,
         @InjectModel(Concept.name) private conceptModel: Model<Concept>,
         @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
@@ -56,6 +58,115 @@ export class NoveltyService {
         );
 
         return updateNovelty.toObject();
+    }
+
+    async findAllNovelties(
+        page: number,
+        limit: number
+    ): Promise<any> {
+        
+       
+        const validPage = Number(page) > 0 ? Number(page) : 1;
+        const validLimit = Number(limit) > 0 ? Number(limit) : 10;
+      
+        const totalNovelties = await this.noveltyModel.countDocuments();
+        const totalNoveltyTers = await this.noveltyRetirementModel.countDocuments();
+        const totalRecords = totalNovelties + totalNoveltyTers;
+      
+        const totalPages = Math.ceil(totalRecords / validLimit);
+      
+        const halfLimit = Math.ceil(validLimit / 2);
+      
+        let limitForNovelties = halfLimit;
+        let limitForNoveltyTers = validLimit - halfLimit;
+
+        const novelties = await this.noveltyModel.find()
+          .limit(limitForNovelties)
+          .populate('collaborator')
+          .populate({
+                path: 'concept',
+                populate: {
+                    path: 'categoryNovelty',
+                },
+          })
+          .skip((validPage - 1) * limitForNovelties);
+      
+        const noveltyTers = await this.noveltyRetirementModel.find()
+          .limit(limitForNoveltyTers)
+          .populate('collaborator')
+          .populate({
+            path: 'conceptsRetirement',
+            populate: {
+                path: 'categoriesRetirement',
+            },
+          })
+          .skip((validPage - 1) * limitForNoveltyTers);
+      
+        const combinedData = [...novelties, ...noveltyTers];
+      
+        const noveltiesResponse = {
+          total: totalRecords,
+          pages: totalPages,
+          data: combinedData,
+        };
+      
+        return noveltiesResponse;
+
+
+
+        /*let search = await this.noveltyModel
+            .find()
+            .skip((page - 1) * limit)
+            .populate('collaborator')
+            .populate({
+                path: 'concept',
+                populate: {
+                    path: 'categoryNovelty',
+                },
+            })
+            .limit(limit)
+            .exec();
+
+        const dataUsers = await this.noveltyModel.aggregate([
+            { $unionWith: { coll: "novelty-retirement" } },
+            {
+                $lookup: {
+                    from: 'collaborators',
+                    localField: 'collaborator',
+                    foreignField: '_id',
+                    as: 'collaborator',
+                },
+            },
+            {
+                $addFields: {
+                    collaborator: { $arrayElemAt: ["$collaborator", 0] } 
+                }
+            },
+            {
+                $lookup: {
+                    from: 'categoryNovelty',
+                    localField: 'categoryNovelty',
+                    foreignField: '_id',
+                    as: 'categoryNovelty',
+                },
+            },
+            /*{
+                $addFields: {
+                    categoryNovelty: { $arrayElemAt: ["$categoryNovelty", 0] } 
+                }
+            }
+        ]);
+        //categories-novelties
+
+        //dataUsers.populate('collaborator')
+
+        const novelties: any = {};
+        //novelties.total = data.length;
+        novelties.pages = "totalPages";
+        novelties.roleKey = "roleKey";
+        novelties.data = search;
+
+        return dataUsers;*/
     }
 
     async findOne(id: string): Promise<Novelty> {

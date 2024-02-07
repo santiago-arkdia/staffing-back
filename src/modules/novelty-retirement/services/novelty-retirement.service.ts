@@ -39,7 +39,6 @@ export class NoveltyRetirementService {
         if (!noveltyToUpdate) {
             throw new NotFoundException('Novedad no encontrada');
         }
-     
         const updateNovelty = await this.noveltyModel.findByIdAndUpdate(
             id,
             updateNoveltyDto,
@@ -160,6 +159,8 @@ export class NoveltyRetirementService {
 
         return novelties;
     }
+
+    //servicio para traer novedades por el manejador que tengan signedByManager en 1 y que sea el rol legalAnlist
 
     //servicio para traer novedades por el manejador que tengan signedByManager en 1 y que sea el rol legalAnlist
 

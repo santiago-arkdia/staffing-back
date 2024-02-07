@@ -32,6 +32,13 @@ export class NoveltyController {
     return await this.noveltyService.update(id, updateNoveltyDto);
   }
 
+  @Get(':page/:limit')
+  @ApiOperation({ summary: 'Filtrar novedad por ID' })
+  //@UseGuards(AuthGuard)
+  async findAllNovelties(@Param('page') page: number, @Param('limit') limit: number): Promise<any> {
+    return await this.noveltyService.findAllNovelties(page, limit);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   @UseGuards(AuthGuard)

@@ -21,6 +21,12 @@ export class AdminController {
     return await this.adminService.update(id, admin);
   }
 
+  @Get('')
+  async getAll():Promise<Admin[]> {
+    return await this.adminService.getAll();
+  }
+
+
   @Get(':page/:limit')
   async findAll(@Param('page') page: number, @Param('limit') limit: number):Promise<Admin[]> {
     return await this.adminService.findAll(page, limit);

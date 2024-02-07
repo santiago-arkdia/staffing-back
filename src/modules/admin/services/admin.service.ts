@@ -22,6 +22,21 @@ export class AdminService {
         return await this.adminModel.findByIdAndUpdate(id, admin, {new: true});
     }
 
+    async getAll(): Promise<Admin[]> {
+        
+        const admins = await this.adminModel
+            .find()
+            .populate({
+                path: 'user',
+                populate: {
+                    path: 'role',
+                },
+            })
+            .exec();
+
+        return admins;
+    }
+
     async findAll(page: number, limit: number): Promise<Admin[]> {
 
         const total = await this.adminModel.countDocuments().exec();

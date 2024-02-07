@@ -37,6 +37,9 @@ export class NoveltyRetirement {
     signedByApprover: number;
 
     @Prop({type: Number})
+    signedByManagment: number;
+
+    @Prop({type: Number})
     signedByCollaborator: number;
 
     @Prop({type: Number})
