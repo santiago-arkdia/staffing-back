@@ -161,4 +161,6 @@ export class NoveltyRetirementService {
         return novelties;
     }
 
+    //servicio para traer novedades por el manejador que tengan signedByManager en 1 y que sea el rol legalAnlist
+
 }
