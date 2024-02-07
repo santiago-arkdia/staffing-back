@@ -138,11 +138,14 @@ export class NoveltyService {
             queryConcept["approves"] = roleKey;
         }
 
-        console.log(queryConcept);
-
         let concepts = await this.conceptModel.find(queryConcept).exec();
         const queryNovelty = by === 'category' ? { concept: { $in: conceptList } } : combinedQuery;
         queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
+
+
+        if (by === 'documents'){
+            queryNovelty['documents'] = { $size: 0 };
+        }
        
 
         search = await this.noveltyModel

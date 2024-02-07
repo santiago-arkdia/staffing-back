@@ -110,7 +110,7 @@ export class NoveltyRetirementService {
         }
 
 
-        const combinedQuery = {...query, ...queryBody, documents: { $size: 0 }};
+        const combinedQuery = {...query, ...queryBody};
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(combinedQuery).exec()
             : await this.noveltyModel.countDocuments(combinedQuery).exec();
@@ -122,7 +122,7 @@ export class NoveltyRetirementService {
             search = await this.noveltyModel
                 .find({
                     concept: { $in: conceptList },
-                    documents: { $size: 0 }
+                    //documents: { $size: 0 }
                 })
                 .skip((page - 1) * limit)
                 .populate('collaborator')
@@ -135,7 +135,7 @@ export class NoveltyRetirementService {
                 .limit(limit)
                 .exec();
         } else {
-            combinedQuery.documents = { $size: 0 };
+            //combinedQuery.documents = { $size: 0 };
             search = await this.noveltyModel
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
