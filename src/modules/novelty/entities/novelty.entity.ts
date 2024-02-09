@@ -36,6 +36,9 @@ export class Novelty {
     @Prop({type: Number, default: 2})
     state: number;
 
+    @Prop({type: Number, default: 0})
+    outDate: number;
+
     @Prop({ type: Object })
     more: Record<string, any>;
 }

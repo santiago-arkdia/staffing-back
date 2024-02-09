@@ -53,5 +53,10 @@ export class UpdateNoveltyDto {
 
   @IsNumber()
   @IsOptional()
+  outDate: number;
+
+  @IsNumber()
+  @IsOptional()
   value: number;
+  
 }

@@ -19,4 +19,8 @@ export class FilterNoveltyDto {
     @IsNumber()
     @IsOptional()
     state: number;
+
+    @IsNumber()
+    @IsOptional()
+    outDate: number;
 }

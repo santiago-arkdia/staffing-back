@@ -51,6 +51,9 @@ export class NoveltyRetirement {
     @Prop({type: Number, default: 2})
     state: number;
 
+    @Prop({type: Number, default: 0})
+    outDate: number;
+
 }
 
 export const NNoveltyRetirementSchema = SchemaFactory.createForClass(NoveltyRetirement);
