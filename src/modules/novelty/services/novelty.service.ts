@@ -60,64 +60,88 @@ export class NoveltyService {
         return updateNovelty.toObject();
     }
 
-    async findAllNovelties(
-        page: number,
-        limit: number,
-        year: string,
-        month: string
-    ): Promise<any> {
-        
-       
+    async findAllNovelties(page: number, limit: number, year: string, month: string): Promise<any> {
         const validPage = Number(page) > 0 ? Number(page) : 1;
         const validLimit = Number(limit) > 0 ? Number(limit) : 10;
-
+    
         const query = { state: { $in: [0, 1] } };
-      
-        const totalNovelties = await this.noveltyModel.countDocuments();
-        const totalNoveltyTers = await this.noveltyRetirementModel.countDocuments();
-        const totalRecords = totalNovelties + totalNoveltyTers;
-      
-        const totalPages = Math.ceil(totalRecords / validLimit);
 
-        console.log(totalPages+"totalPages");
-      
-        const halfLimit = Math.ceil(validLimit / 2);
-      
-        let limitForNovelties = halfLimit;
-        let limitForNoveltyTers = validLimit - halfLimit;
+        if (year || month) {
+            let startDate = new Date();
+            let endDate = new Date();
+    
+            if (year) {
+                startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
+                endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
+            }
+    
+            if (month) {
+                endDate.setMonth(endDate.getMonth() + 1);
+            } else {
+                
+                startDate.setMonth(0);
+                endDate.setMonth(0);
+                endDate.setFullYear(endDate.getFullYear() + 1);
+            }
 
+            query['createdAt'] = {
+                $gte: startDate,
+                $lt: endDate
+            };
+        }
+    
+        const totalNovelties = await this.noveltyModel.countDocuments(query);
+        const totalNoveltyTers = await this.noveltyRetirementModel.countDocuments(query);
+    
+        const totalPagesNovelties = Math.ceil(totalNovelties / validLimit);
+        const totalPagesNoveltyTers = Math.ceil(totalNoveltyTers / validLimit);
+    
+        let skipForNovelties = (validPage - 1) * validLimit;
+        let skipForNoveltyTers = (validPage - 1) * validLimit;
+    
+
+        if (skipForNovelties >= totalNovelties) {
+            skipForNovelties = Math.max(0, totalNovelties - validLimit);
+        }
+        if (skipForNoveltyTers >= totalNoveltyTers) {
+            skipForNoveltyTers = Math.max(0, totalNoveltyTers - validLimit);
+        }
+    
         const novelties = await this.noveltyModel.find(query)
-          .limit(limitForNovelties)
-          .populate('collaborator')
-          .populate({
+            .limit(validLimit)
+            .populate('collaborator')
+            .populate({
                 path: 'concept',
                 populate: {
                     path: 'categoryNovelty',
                 },
-          })
-          .skip((validPage - 1) * limitForNovelties);
-      
+            })
+            .skip(skipForNovelties);
+    
         const noveltyTers = await this.noveltyRetirementModel.find(query)
-          .limit(limitForNoveltyTers)
-          .populate('collaborator')
-          .populate({
-            path: 'conceptsRetirement',
-            populate: {
-                path: 'categoriesRetirement',
-            },
-          })
-          .skip((validPage - 1) * limitForNoveltyTers);
-      
+            .limit(validLimit)
+            .populate('collaborator')
+            .populate({
+                path: 'conceptsRetirement',
+                populate: {
+                    path: 'categoriesRetirement',
+                },
+            })
+            .skip(skipForNoveltyTers);
+    
         const combinedData = [...novelties, ...noveltyTers];
-      
+        const totalRecords = totalNovelties + totalNoveltyTers;
+        const totalPages = Math.max(totalPagesNovelties, totalPagesNoveltyTers);
+    
         const noveltiesResponse = {
-          total: totalRecords,
-          pages: totalPages,
-          data: combinedData,
+            total: totalRecords,
+            pages: totalPages,
+            data: combinedData,
         };
-      
+    
         return noveltiesResponse;
     }
+    
 
     async findOne(id: string): Promise<Novelty> {
         return await this.noveltyModel.findById(id)
