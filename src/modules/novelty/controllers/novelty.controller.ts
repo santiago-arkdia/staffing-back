@@ -32,12 +32,26 @@ export class NoveltyController {
     return await this.noveltyService.update(id, updateNoveltyDto);
   }
 
+  
+
   @Get(':page/:limit')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   //@UseGuards(AuthGuard)
-  async findAllNovelties(@Param('page') page: number, @Param('limit') limit: number, @Query('year') year: string, @Query('month') month: string): Promise<any> {
-    console.log(year);
-    console.log(month);
+  async findAllNoveltiesBasic(@Param('page') page: number, @Param('limit') limit: number): Promise<any> {
+    return await this.noveltyService.findAllNovelties(page, limit, null, null);
+  }
+
+  @Get(':page/:limit/:year')
+  @ApiOperation({ summary: 'Filtrar novedad por ID' })
+  //@UseGuards(AuthGuard)
+  async findAllNoveltiesYear(@Param('page') page: number, @Param('limit') limit: number, @Param('year') year?: string): Promise<any> {
+    return await this.noveltyService.findAllNovelties(page, limit, year, null);
+  }
+  
+  @Get(':page/:limit/:year/:month')
+  @ApiOperation({ summary: 'Filtrar novedad por ID' })
+  //@UseGuards(AuthGuard)
+  async findAllNovelties(@Param('page') page: number, @Param('limit') limit: number, @Param('year') year?: string, @Param('month') month?: string): Promise<any> {
     return await this.noveltyService.findAllNovelties(page, limit, year, month);
   }
 

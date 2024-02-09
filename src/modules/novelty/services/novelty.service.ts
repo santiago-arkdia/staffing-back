@@ -65,25 +65,26 @@ export class NoveltyService {
         const validLimit = Number(limit) > 0 ? Number(limit) : 10;
     
         const query = { state: { $in: [0, 1] } };
-
-        if (year || month) {
+    
+        if (year) {
             let startDate = new Date();
             let endDate = new Date();
     
-            if (year) {
-                startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
-                endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
-            }
+            // Establecer el año y, si se proporciona, el mes (ajustando por el índice base 0 de los meses en JS)
+            startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
+            startDate.setHours(0, 0, 0, 0); // Comienzo del día
     
+            endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
             if (month) {
-                endDate.setMonth(endDate.getMonth() + 1);
+                endDate.setMonth(endDate.getMonth() + 1); // Mover al próximo mes
             } else {
-                
-                startDate.setMonth(0);
-                endDate.setMonth(0);
+                // Si no se proporciona mes, ajustar para cubrir todo el año
+                startDate.setMonth(0); // Comienzo del año
+                endDate.setMonth(0); // Comienzo del siguiente año
                 endDate.setFullYear(endDate.getFullYear() + 1);
             }
-
+            endDate.setHours(0, 0, 0, -1); // Justo antes de que comience el próximo periodo
+    
             query['createdAt'] = {
                 $gte: startDate,
                 $lt: endDate
@@ -96,16 +97,7 @@ export class NoveltyService {
         const totalPagesNovelties = Math.ceil(totalNovelties / validLimit);
         const totalPagesNoveltyTers = Math.ceil(totalNoveltyTers / validLimit);
     
-        let skipForNovelties = (validPage - 1) * validLimit;
-        let skipForNoveltyTers = (validPage - 1) * validLimit;
-    
-
-        if (skipForNovelties >= totalNovelties) {
-            skipForNovelties = Math.max(0, totalNovelties - validLimit);
-        }
-        if (skipForNoveltyTers >= totalNoveltyTers) {
-            skipForNoveltyTers = Math.max(0, totalNoveltyTers - validLimit);
-        }
+        let skipAmount = (validPage - 1) * validLimit;
     
         const novelties = await this.noveltyModel.find(query)
             .limit(validLimit)
@@ -116,7 +108,7 @@ export class NoveltyService {
                     path: 'categoryNovelty',
                 },
             })
-            .skip(skipForNovelties);
+            .skip(skipAmount);
     
         const noveltyTers = await this.noveltyRetirementModel.find(query)
             .limit(validLimit)
@@ -127,20 +119,21 @@ export class NoveltyService {
                     path: 'categoriesRetirement',
                 },
             })
-            .skip(skipForNoveltyTers);
+            .skip(skipAmount);
     
         const combinedData = [...novelties, ...noveltyTers];
         const totalRecords = totalNovelties + totalNoveltyTers;
         const totalPages = Math.max(totalPagesNovelties, totalPagesNoveltyTers);
     
-        const noveltiesResponse = {
+        const response = {
             total: totalRecords,
             pages: totalPages,
             data: combinedData,
         };
     
-        return noveltiesResponse;
+        return response;
     }
+    
     
 
     async findOne(id: string): Promise<Novelty> {
