@@ -62,7 +62,9 @@ export class NoveltyService {
 
     async findAllNovelties(
         page: number,
-        limit: number
+        limit: number,
+        year: string,
+        month: string
     ): Promise<any> {
         
        

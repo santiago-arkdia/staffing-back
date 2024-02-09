@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {NoveltyService} from '../services/novelty.service';
-import {Body, Controller, Get, Headers, Param, Post, Put, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Headers, Param, Post, Put, Query, Req, UseGuards} from '@nestjs/common';
 import {CreateNoveltyDto} from '../dto/create-novelty.dto';
 import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
 import {Novelty} from '../entities/novelty.entity';
@@ -35,8 +35,10 @@ export class NoveltyController {
   @Get(':page/:limit')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   //@UseGuards(AuthGuard)
-  async findAllNovelties(@Param('page') page: number, @Param('limit') limit: number): Promise<any> {
-    return await this.noveltyService.findAllNovelties(page, limit);
+  async findAllNovelties(@Param('page') page: number, @Param('limit') limit: number, @Query('year') year: string, @Query('month') month: string): Promise<any> {
+    console.log(year);
+    console.log(month);
+    return await this.noveltyService.findAllNovelties(page, limit, year, month);
   }
 
   @Get(':id')

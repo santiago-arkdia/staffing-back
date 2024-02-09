@@ -8,6 +8,7 @@ import axios, {AxiosResponse} from "axios";
 import {Counter} from "../entities/counter.entity";
 import {Concept} from "../../concepts/entities/concepts.entity";
 import { NoveltyRetirement } from '../entities/novelty-retirement.entity';
+import { Roles } from 'src/modules/roles/entities/roles.entity';
 
 @Injectable()
 export class NoveltyRetirementService {
@@ -16,6 +17,7 @@ export class NoveltyRetirementService {
         private readonly noveltyModel: Model<NoveltyRetirement>,
         @InjectModel(Counter.name) private counterModel: Model<Counter>,
         @InjectModel(Concept.name) private conceptModel: Model<Concept>,
+        @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
     ) {
     }
 
@@ -156,6 +158,53 @@ export class NoveltyRetirementService {
         novelties.pages = totalPages;
         novelties.roleKey = roleKey;
         novelties.data = data;
+
+        return novelties;
+    }
+
+
+    async findBySignedByManager(
+        page: number,
+        limit: number,
+        roleKey: string
+    ): Promise<NoveltyRetirement[]> {
+        let query = {};
+        let queryBody = {};
+
+        const combinedQuery = {...query, ...queryBody};
+        const total = await this.noveltyModel.find({ signedByManager : 1 }).countDocuments(combinedQuery).exec()
+            
+        const totalPages = Math.ceil(total / limit);
+
+        let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: roleKey }).exec();
+        const queryConcept = {}
+         if (roleKeys.length !== 0) {
+            queryConcept['approves'] = { '$in': roleKeys.map(role => role.role_key) };
+        } else if (roleKey !== "client") {
+            queryConcept["approves"] = roleKey;
+        }
+
+
+        let search = await this.noveltyModel
+            .find({
+                signedByManager : 1
+            })
+            .skip((page - 1) * limit)
+            .populate('collaborator')
+            .populate({
+                path: 'conceptsRetirement',
+                populate: {
+                    path: 'categoriesRetirement',
+                },
+            })
+            .limit(limit)
+            .exec();
+        
+        const novelties: any = {};
+        novelties.total = total;
+        novelties.pages = totalPages;
+        novelties.roleKey = roleKey;
+        novelties.data = search;
 
         return novelties;
     }

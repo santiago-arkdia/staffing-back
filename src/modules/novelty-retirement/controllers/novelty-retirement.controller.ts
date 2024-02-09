@@ -30,6 +30,14 @@ export class NoveltyRetirementController {
     return await this.noveltyRetirementService.update(id, updateNoveltyDto);
   }
 
+  @Get('find-by-signed-manager/:page/:limit')
+  @ApiOperation({ summary: 'Filtrar novedad por ID' })
+  @UseGuards(AuthGuard)
+  async findBySignedByManager( @Param('page') page: number,  @Param('limit') limit: number, @Req() request: Request): Promise<NoveltyRetirement[]> {
+    const { roleKey } = request['user'];
+    return await this.noveltyRetirementService.findBySignedByManager(page, limit, roleKey);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   @UseGuards(AuthGuard)
