@@ -52,6 +52,9 @@ import { NoveltyRetirementModule } from './modules/novelty-retirement/novelty-re
 import { CategoriesRetirementModule } from './modules/categories-retirement/categories-retirement.module';
 import { HourlyMeshessModule } from './modules/hourly-meshes/hourly-meshes.module';
 import { SchedulessModule } from './modules/schedules/schedules.module';
+import { CategoriesSocialSecurityModule } from './modules/categories-social-security/categories-social-security.module';
+import { ConceptsSocialSecurityModule } from './modules/concepts-social-security/concepts-social-security.module';
+import { NoveltySocialSecurityModule } from './modules/novelty-social-security/novelty-social-security.module';
 
 @Module({
     imports: [
@@ -103,7 +106,10 @@ import { SchedulessModule } from './modules/schedules/schedules.module';
         NoveltyRetirementModule,
         CategoriesRetirementModule,
         HourlyMeshessModule,
-        SchedulessModule
+        SchedulessModule,
+        CategoriesSocialSecurityModule,
+        ConceptsSocialSecurityModule,
+        NoveltySocialSecurityModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],
