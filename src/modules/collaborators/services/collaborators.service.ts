@@ -57,6 +57,12 @@ export class CollaboratorService {
                     path: 'region',
                 },
             })
+            .populate({
+                path: 'user',
+                populate: {
+                    path: 'role',
+                },
+            })
             .exec();
     }
 
@@ -79,6 +85,12 @@ export class CollaboratorService {
                 path: 'jobPosition',
                 populate: {
                     path: 'region',
+                },
+            })
+            .populate({
+                path: 'user',
+                populate: {
+                    path: 'role',
                 },
             })
             .exec();

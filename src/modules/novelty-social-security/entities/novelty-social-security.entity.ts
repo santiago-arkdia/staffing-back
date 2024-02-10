@@ -33,19 +33,10 @@ export class NoveltySocialSecurity {
     previousPeriod: string;
 
     @Prop({type: String})
-    hours: string;
-
-    @Prop({type: String})
-    units: string;
-
-    @Prop({type: String})
-    minutes: string;
-
-    @Prop({type: String})
     observations: string;
 
-    @Prop({type: String})
-    file: string;
+    @Prop([Documents])
+    documents: Documents[];
 
     @Prop({type: Number, default: 2})
     state: number;

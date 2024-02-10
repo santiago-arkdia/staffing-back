@@ -31,4 +31,7 @@ export class UpdateCollaboratorDto {
   @IsOptional()
   @IsString()
   jobPosition: string;
+
+  @IsString()
+  user: string;
 }

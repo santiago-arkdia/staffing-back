@@ -14,6 +14,9 @@ export class ConceptsSocialSecurity {
     @Prop({type: String})
     approves: string;
 
+    @Prop({type: String, required: true})
+    measurement: string;
+
     @Prop({type: Number, default: 1})
     state: number;
 

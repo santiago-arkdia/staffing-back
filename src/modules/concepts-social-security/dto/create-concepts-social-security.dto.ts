@@ -15,5 +15,9 @@ export class CreateConceptsSocialSecurityDto {
   approves: string;
 
   @IsString()
-  categoriesRetirement: string;
+  categoriesSocialSecurity: string;
+
+  @IsString()
+  @IsOptional()
+  measurement: string
 }

@@ -33,25 +33,17 @@ export class CreateNoveltySocialSecurityDto {
   @IsString()
   @IsOptional()
   previousPeriod: string;
-  
-  @IsString()
-  @IsOptional()
-  hours: string;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  units: string;
-
-  @IsString()
-  @IsOptional()
-  minutes: string;
+  value: number;
 
   @IsString()
   @IsOptional()
   observations: string;
 
-  @IsString()
+  @IsArray()
   @IsOptional()
-  file: string;
+  documents: string[];
 
 }
