@@ -2,11 +2,23 @@
 import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Documents } from 'src/shared/models/documents';
-import { Contract } from 'src/shared/models/contract';
 import { UtilityCenters } from 'src/modules/business-configuration/utility-center/entities/utility-center.entity';
 import { CostCenters } from 'src/modules/business-configuration/centers-costs/entities/centers-costs.entity';
 import { ConceptsSocialSecurity } from 'src/modules/concepts-social-security/entities/concepts-social-security.entity';
 import { Collaborator } from 'src/modules/collaborators/entities/collaborators.entity';
+
+
+class Contract {
+
+    @Prop({ type: String })
+    id: string;
+  
+    @Prop({ type: String })
+    observation: string;
+  
+    @Prop({ type: String })
+    file: string;
+}
 
 @Schema({collection: 'novelty-social-security', timestamps: true})
 export class NoveltySocialSecurity {
@@ -37,6 +49,9 @@ export class NoveltySocialSecurity {
 
     @Prop([Documents])
     documents: Documents[];
+
+    @Prop({type: Object})
+    contract: Contract;
 
     @Prop({type: Number, default: 2})
     state: number;
