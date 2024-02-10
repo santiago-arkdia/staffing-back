@@ -20,20 +20,20 @@ export class ConceptsSocialSecurityService {
 
   async findAll(): Promise<ConceptsSocialSecurity[]> {
     return await this.conceptsretirementModel.find()
-            .populate("categoriesRetirement")
+            .populate("categoriesSocialSecurity")
             .exec();
   }
 
   async findOne(id: string): Promise<ConceptsSocialSecurity> {
     return await this.conceptsretirementModel.findById(id)
-          .populate("categoriesRetirement")
+          .populate("categoriesSocialSecurity")
           .exec();
   }
 
   async findBy(by: string, value: string): Promise<ConceptsSocialSecurity[]> {
     const query = { [by]: value };
     return await this.conceptsretirementModel.find(query)
-        .populate("categoriesRetirement")
+        .populate("categoriesSocialSecurity")
         .exec();
   }
 }

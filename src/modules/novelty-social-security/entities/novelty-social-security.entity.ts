@@ -14,9 +14,6 @@ export class NoveltySocialSecurity {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Collaborator'})
     collaborator: Collaborator;
 
-    @Prop({type: String})
-    motive: string;
-
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'UtilityCenters'})
     utilityCenter: UtilityCenters;
 
@@ -35,20 +32,20 @@ export class NoveltySocialSecurity {
     @Prop({type: String})
     previousPeriod: string;
 
-    @Prop([Documents])
-    hours: Documents[];
+    @Prop({type: String})
+    hours: string;
 
-    @Prop([Contract])
-    units: Contract[];
+    @Prop({type: String})
+    units: string;
 
-    @Prop({type: Number})
-    minutes: number;
+    @Prop({type: String})
+    minutes: string;
 
-    @Prop({type: Number})
-    observations: number;
+    @Prop({type: String})
+    observations: string;
 
-    @Prop({type: Number})
-    file: number;
+    @Prop({type: String})
+    file: string;
 
     @Prop({type: Number, default: 2})
     state: number;

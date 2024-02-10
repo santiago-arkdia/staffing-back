@@ -10,9 +10,6 @@ export class CreateNoveltySocialSecurityDto {
   @IsString()
   collaborator: string;
 
-  @IsString()
-  motive: string;
-
   @IsOptional()
   @IsString()
   utilityCenter: string;
@@ -37,24 +34,24 @@ export class CreateNoveltySocialSecurityDto {
   @IsOptional()
   previousPeriod: string;
   
-  @IsArray()
+  @IsString()
   @IsOptional()
-  hours: Contract[];
+  hours: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  units: number;
+  units: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  minutes: number;
+  minutes: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  observations: number;
+  observations: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  file: number;
+  file: string;
 
 }
