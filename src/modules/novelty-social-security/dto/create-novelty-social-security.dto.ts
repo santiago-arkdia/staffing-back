@@ -6,15 +6,28 @@ import { Documents } from 'src/shared/models/documents';
 
 @Schema()
 export class CreateNoveltySocialSecurityDto {
+
   @IsString()
   collaborator: string;
 
   @IsString()
-  conceptsSocialSecurity: string;
+  motive: string;
+
+  @IsOptional()
+  @IsString()
+  utilityCenter: string;
+
+  @IsOptional()
+  @IsString()
+  centersCosts: string;
+
+  @IsOptional()
+  @IsString()
+  conceptSocialSecurity: string;
 
   @IsString()
   @IsOptional()
-  finishDate: string;
+  startDate: string;
 
   @IsString()
   @IsOptional()
@@ -22,38 +35,26 @@ export class CreateNoveltySocialSecurityDto {
 
   @IsString()
   @IsOptional()
-  note: string;
-
-  @IsArray()
-  @IsOptional()
-  documents: Documents[];
+  previousPeriod: string;
   
   @IsArray()
   @IsOptional()
-  contract: Contract[];
+  hours: Contract[];
 
   @IsNumber()
   @IsOptional()
-  state: number;
+  units: number;
 
   @IsNumber()
   @IsOptional()
-  signedByApprover: number;
+  minutes: number;
 
   @IsNumber()
   @IsOptional()
-  signedByCollaborator: number;
+  observations: number;
 
   @IsNumber()
   @IsOptional()
-  signedByManagment: number;
-
-  @IsNumber()
-  @IsOptional()
-  loadedOnPayroll: number;
-
-  @IsArray()
-  @IsOptional()
-  comments: any[];
+  file: number;
 
 }

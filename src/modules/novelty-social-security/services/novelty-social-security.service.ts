@@ -127,6 +127,8 @@ export class NoveltySocialSecurityService {
                 })
                 .skip((page - 1) * limit)
                 .populate('collaborator')
+                .populate('utilityCenter')
+                .populate('centersCosts')
                 .populate({
                     path: 'conceptsSocialSecurity',
                     populate: {
@@ -141,8 +143,10 @@ export class NoveltySocialSecurityService {
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
                 .populate('collaborator')
+                .populate('utilityCenter')
+                .populate('centersCosts')
                 .populate({
-                    path: 'conceptsSocialSecurity',
+                    path: 'conceptSocialSecurity',
                     populate: {
                         path: 'categoriesSocialSecurity',
                     },
