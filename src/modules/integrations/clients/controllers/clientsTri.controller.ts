@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {Body, Controller, Get, Headers, Param, Post} from '@nestjs/common';
 import {ApiBody, ApiOperation, ApiTags} from "@nestjs/swagger";
 import {AxiosResponse} from "axios";
 import {ClientsTriService} from "../services/clientsTri.service";
@@ -10,16 +10,15 @@ export class ClientsTriController {
     constructor(private readonly clientsTriService: ClientsTriService) {
     }
 
-    @Get()
+    @Post("list")
     @ApiOperation({summary: 'Permite listar todos los clientes de la plataforma. Opcionalmente se pueden usar filtros de fechas de creación de clientes.'})
     async show(
-        @Param('document') document: string,
-        @Param('instance') instance: string,
-        @Param('startDate') startDate: string,
-        @Param('endDate') endDate: string,
-        @Param('token') token: string,
+        @Body('instance') instance: string,
+        @Body('startDate') startDate: string,
+        @Body('endDate') endDate: string,
+        @Headers('x-api-key') token
     ): Promise<AxiosResponse<any>> {
-        return await this.clientsTriService.show(document, instance,startDate, endDate, token);
+        return await this.clientsTriService.show(instance,startDate, endDate, token);
     }
 
     @Post()

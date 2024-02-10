@@ -19,6 +19,9 @@ export class Client {
     @Prop()
     cutoffDate: number;
 
+    @Prop({type: Number})
+    idTri: number;
+
     @Prop({type: mongoose.Schema.Types.Array, ref: 'Admin'})
     analysts: Admin[];
 
