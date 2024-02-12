@@ -90,7 +90,7 @@ export class NoveltySocialSecurityService {
                 query = {[by]: value};
             }
         }
-        if (by === 'category') {
+        if (by === 'categoriesSocialSecurity') {
             conceptList = await this.conceptModel.find({categoryNovelty: value}).select('_id').exec();
         }
 
@@ -119,7 +119,7 @@ export class NoveltySocialSecurityService {
 
         let search;
 
-        if (by === 'category') {
+        if (by === 'categoriesSocialSecurity') {
             search = await this.noveltyModel
                 .find({
                     concept: { $in: conceptList },

@@ -8,17 +8,17 @@ import { ConceptsSocialSecurity } from 'src/modules/concepts-social-security/ent
 import { Collaborator } from 'src/modules/collaborators/entities/collaborators.entity';
 
 
-class Contract {
+// class Contract {
 
-    @Prop({ type: String })
-    id: string;
+//     @Prop({ type: String })
+//     id: string;
   
-    @Prop({ type: String })
-    observation: string;
+//     @Prop({ type: String })
+//     observation: string;
   
-    @Prop({ type: String })
-    file: string;
-}
+//     @Prop({ type: String })
+//     file: string;
+// }
 
 @Schema({collection: 'novelty-social-security', timestamps: true})
 export class NoveltySocialSecurity {
@@ -50,8 +50,8 @@ export class NoveltySocialSecurity {
     @Prop([Documents])
     documents: Documents[];
 
-    @Prop({type: Object})
-    contract: Contract;
+    @Prop({type: Number})
+    contract: number;
 
     @Prop({type: Number, default: 2})
     state: number;

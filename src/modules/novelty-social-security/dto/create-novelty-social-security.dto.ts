@@ -1,19 +1,19 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
 import {IsArray, IsDate, IsNumber, IsObject, IsOptional, IsString} from 'class-validator';
-class ContractDto {
-  @IsOptional()
-  @IsString()
-  id: string;
+// class ContractDto {
+//   @IsOptional()
+//   @IsString()
+//   id: string;
 
-  @IsOptional()
-  @IsString()
-  observation: string;
+//   @IsOptional()
+//   @IsString()
+//   observation: string;
 
-  @IsOptional()
-  @IsString()
-  file: string;
-}
+//   @IsOptional()
+//   @IsString()
+//   file: string;
+// }
 @Schema()
 export class CreateNoveltySocialSecurityDto {
 
@@ -56,8 +56,8 @@ export class CreateNoveltySocialSecurityDto {
   @IsOptional()
   documents: string[];
 
-  @IsObject()
+  @IsNumber()
   @IsOptional()
-  contract: ContractDto;
+  contract: number;
 
 }
