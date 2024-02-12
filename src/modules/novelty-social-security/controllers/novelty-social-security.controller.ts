@@ -32,7 +32,7 @@ export class NoveltySocialSecurityController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   async findOne(@Param('id') id: string): Promise<NoveltySocialSecurity> {
     return await this.noveltySocialSecurityService.findOne(id);
   }

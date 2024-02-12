@@ -56,8 +56,10 @@ export class NoveltySocialSecurityService {
     async findOne(id: string): Promise<NoveltySocialSecurity> {
         return await this.noveltyModel.findById(id)
                 .populate('collaborator')
+                .populate('utilityCenter')
+                .populate('centersCosts')
                 .populate({
-                    path: 'conceptsSocialSecurity',
+                    path: 'conceptSocialSecurity',
                     populate: {
                         path: 'categoriesSocialSecurity',
                     },
@@ -130,7 +132,7 @@ export class NoveltySocialSecurityService {
                 .populate('utilityCenter')
                 .populate('centersCosts')
                 .populate({
-                    path: 'conceptsSocialSecurity',
+                    path: 'conceptSocialSecurity',
                     populate: {
                         path: 'categoriesSocialSecurity',
                     },
