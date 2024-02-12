@@ -96,6 +96,9 @@ export class NoveltySocialSecurityService {
             conceptList = await this.conceptModel.find({categoryNovelty: value}).select('_id').exec();
         }
 
+        
+
+
         if (Object.keys(requestBodyFilters).length > 0) {
             Object.entries(requestBodyFilters).forEach(([key, val]) => {
                 if (typeof val === 'string' && !isNaN(Number(val))) {
@@ -112,12 +115,16 @@ export class NoveltySocialSecurityService {
             });
         }
 
-
-        const combinedQuery = {...query, ...queryBody};
+        let documents;
+        const combinedQuery = {...query, ...queryBody, ...documents};
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(combinedQuery).exec()
             : await this.noveltyModel.countDocuments(combinedQuery).exec();
         const totalPages = Math.ceil(total / limit);
+
+        if (by === 'documents') {
+            combinedQuery.documents = { $size: 0 };
+        }
 
         let search;
 
