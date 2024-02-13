@@ -2,7 +2,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model, Types} from 'mongoose';
-import {PayrollUser} from '../entities/payroll-user.entity';
+import {Payroll} from '../entities/payroll-user.entity';
 import {PayrollUsersDto} from '../dto/payroll-user.dto';
 import {FilterPayrollUserDto} from '../dto/filter-payroll-user.dto.';
 import {CategoriesNovelty} from "../../categories-novelty/entities/categories-novelties.entity";
@@ -10,22 +10,22 @@ import {CategoriesNovelty} from "../../categories-novelty/entities/categories-no
 @Injectable()
 export class PayrollUserService {
     constructor(
-        @InjectModel(PayrollUser.name) private readonly payrollModel: Model<PayrollUser>,
+        @InjectModel(Payroll.name) private readonly payrollModel: Model<Payroll>,
     ) {
     }
 
-    async create(payroll: PayrollUsersDto): Promise<PayrollUser> {
+    async create(payroll: PayrollUsersDto): Promise<Payroll> {
         const createdPayrollUser = new this.payrollModel(payroll);
         return await createdPayrollUser.save();
     }
 
-    async update(id: string, payroll: PayrollUsersDto): Promise<PayrollUser> {
+    async update(id: string, payroll: PayrollUsersDto): Promise<Payroll> {
         return this.payrollModel.findByIdAndUpdate(id, payroll, {
             new: true,
         });
     }
 
-    async findBy(by: string, value: string, key: string): Promise<PayrollUser[]> {
+    async findBy(by: string, value: string, key: string): Promise<Payroll[]> {
         if (key) {
             const query = {
                 [key]: {
@@ -57,7 +57,7 @@ export class PayrollUserService {
         }
     }
 
-    async findAll(): Promise<PayrollUser[]> {
+    async findAll(): Promise<Payroll[]> {
 
         const total = await this.payrollModel.countDocuments().exec();
         const payrolls = await this.payrollModel.find()
@@ -76,7 +76,7 @@ export class PayrollUserService {
         return payroll;
     }
 
-    async findOne(id: any): Promise<PayrollUser> {
+    async findOne(id: any): Promise<Payroll> {
         return await this.payrollModel
             .findById(id)
             .populate({
@@ -93,7 +93,7 @@ export class PayrollUserService {
         limit: number,
         by: string,
         value: string | number,
-    ): Promise<PayrollUser[]> {
+    ): Promise<Payroll[]> {
         let query = {};
 
         if (by !== 'find' && value !== 'all') {

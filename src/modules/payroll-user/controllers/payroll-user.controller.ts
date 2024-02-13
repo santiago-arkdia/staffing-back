@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {Controller, Post, Put, Get, Param, Body} from '@nestjs/common';
-import {PayrollUser} from '../entities/payroll-user.entity';
+import {Payroll} from '../entities/payroll-user.entity';
 import {PayrollUserService} from '../services/payroll-user.service';
 import {ApiTags} from '@nestjs/swagger';
 import {PayrollUsersDto} from '../dto/payroll-user.dto';
@@ -12,7 +12,7 @@ export class PayrollUserController {
     }
 
     @Post()
-    async create(@Body() payroll: PayrollUsersDto): Promise<PayrollUser> {
+    async create(@Body() payroll: PayrollUsersDto): Promise<Payroll> {
         return await this.payrollService.create(payroll);
     }
 
@@ -20,22 +20,22 @@ export class PayrollUserController {
     async update(
         @Param('id') id: string,
         @Body() payroll: PayrollUsersDto,
-    ): Promise<PayrollUser> {
+    ): Promise<Payroll> {
         return await this.payrollService.update(id, payroll);
     }
 
     @Get('by/:by/:value')
-    async findBy(@Param('by') by: string, @Param('value') value: string): Promise<PayrollUser[]> {
+    async findBy(@Param('by') by: string, @Param('value') value: string): Promise<Payroll[]> {
       return await this.payrollService.findBy(by, value, null);
     }
 
     @Get()
-    async findAll(): Promise<PayrollUser[]> {
+    async findAll(): Promise<Payroll[]> {
         return await this.payrollService.findAll();
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<PayrollUser> {
+    async findOne(@Param('id') id: string): Promise<Payroll> {
         return await this.payrollService.findOne(id);
     }
 
@@ -45,7 +45,7 @@ export class PayrollUserController {
         @Param('limit') limit: number,
         @Param('by') by: string,
         @Param('value') value: string,
-    ): Promise<PayrollUser[]> {
+    ): Promise<Payroll[]> {
         return await this.payrollService.findByFilters(page, limit, by, value);
     }
 }
