@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { CategoriesSocialSecurityController } from 'src/modules/categories-social-security/controllers/categories-social-security.controller';
+import { CategoriesSocialSecurity } from 'src/modules/categories-social-security/entities/categories-social-security.entity';
 
 @Schema({timestamps: true})
 export class ConceptsSocialSecurity {
@@ -21,7 +21,7 @@ export class ConceptsSocialSecurity {
     state: number;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CategoriesSocialSecurity'})
-    categoriesSocialSecurity: CategoriesSocialSecurityController;
+    categoriesSocialSecurity: CategoriesSocialSecurity;
 
 }
 

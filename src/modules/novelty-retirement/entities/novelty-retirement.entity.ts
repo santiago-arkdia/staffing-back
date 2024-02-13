@@ -5,12 +5,16 @@ import {Collaborator} from 'src/modules/collaborators/entities/collaborators.ent
 import { Documents } from 'src/shared/models/documents';
 import { Contract } from 'src/shared/models/contract';
 import { ConceptsRetirement } from 'src/modules/concepts-retirement/entities/concepts-retirement.entity';
+import { Client } from 'src/modules/clients/entities/client.entity';
 
 @Schema({collection: 'novelty-retirement', timestamps: true})
 export class NoveltyRetirement {
 
     @Prop({type: Number, unique: true, immutable: true})
     uid: number;
+
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Client'})
+    client: Client;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Collaborator'})
     collaborator: Collaborator;

@@ -5,6 +5,9 @@ import {IsArray, IsDate, IsNumber, IsOptional, IsString} from 'class-validator';
 @Schema()
 export class CreateNoveltyDto {
   @IsString()
+  client: string;
+
+  @IsString()
   collaborator: string;
 
   @IsString()

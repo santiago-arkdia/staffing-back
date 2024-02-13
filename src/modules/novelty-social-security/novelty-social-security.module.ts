@@ -7,6 +7,8 @@ import { NoveltySocialSecurityController } from './controllers/novelty-social-se
 import {Counter, CounterSchema} from "./entities/counter.entity";
 import {Concept, ConceptSchema} from "../concepts/entities/concepts.entity";
 import { Roles, RolesSchema } from '../roles/entities/roles.entity';
+import { ConceptsSocialSecurity, ConceptsSocialSecuritySchema } from '../concepts-social-security/entities/concepts-social-security.entity';
+import { Client, ClientSchema } from '../clients/entities/client.entity';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { Roles, RolesSchema } from '../roles/entities/roles.entity';
     MongooseModule.forFeature([{ name: Counter.name, schema: CounterSchema }]),
     MongooseModule.forFeature([{ name: Concept.name, schema: ConceptSchema }]),
     MongooseModule.forFeature([{ name: Roles.name, schema: RolesSchema }]),
+    MongooseModule.forFeature([{ name: ConceptsSocialSecurity.name, schema: ConceptsSocialSecuritySchema }]),
+    MongooseModule.forFeature([{ name: Client.name, schema: ClientSchema }]),
   ],
   controllers: [NoveltySocialSecurityController],
   providers: [NoveltySocialSecurityService],

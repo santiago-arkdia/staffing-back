@@ -18,6 +18,9 @@ import {IsArray, IsDate, IsNumber, IsObject, IsOptional, IsString} from 'class-v
 export class CreateNoveltySocialSecurityDto {
 
   @IsString()
+  client: string;
+
+  @IsString()
   collaborator: string;
 
   @IsOptional()

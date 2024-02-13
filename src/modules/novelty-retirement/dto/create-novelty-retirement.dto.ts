@@ -7,6 +7,9 @@ import { Documents } from 'src/shared/models/documents';
 @Schema()
 export class CreateNoveltyRetirementDto {
   @IsString()
+  client: string;
+
+  @IsString()
   collaborator: string;
 
   @IsString()

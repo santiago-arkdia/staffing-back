@@ -9,39 +9,45 @@ import {Counter} from "../entities/counter.entity";
 import {Concept} from "../../concepts/entities/concepts.entity";
 import { NoveltySocialSecurity } from '../entities/novelty-social-security.entity';
 import { Roles } from 'src/modules/roles/entities/roles.entity';
+import { ConceptsSocialSecurity } from 'src/modules/concepts-social-security/entities/concepts-social-security.entity';
+import { Client } from 'src/modules/clients/entities/client.entity';
 
 @Injectable()
 export class NoveltySocialSecurityService {
     constructor(
-        @InjectModel(NoveltySocialSecurity.name)
-        private readonly noveltyModel: Model<NoveltySocialSecurity>,
-        @InjectModel(Counter.name) private counterModel: Model<Counter>,
-        @InjectModel(Concept.name) private conceptModel: Model<Concept>,
+        @InjectModel(NoveltySocialSecurity.name) private readonly noveltySocialSecurityModel: Model<NoveltySocialSecurity>,
+        @InjectModel(ConceptsSocialSecurity.name) private conceptSocialSecurityModel: Model<ConceptsSocialSecurity>,
+        @InjectModel(Client.name) private client: Model<Client>,
         @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
     ) {
     }
 
-    async create(novelty: CreateNoveltySocialSecurityDto): Promise<NoveltySocialSecurity> {
-        const counter = await this.counterModel.findOneAndUpdate(
+    async create(noveltySocialSecurity: CreateNoveltySocialSecurityDto): Promise<NoveltySocialSecurity> {
+
+        let client = await this.client.findOne({idTri : noveltySocialSecurity.client}).select('_id').exec();
+
+        noveltySocialSecurity.client = client._id.toString();
+
+        const counter = await this.conceptSocialSecurityModel.findOneAndUpdate(
             {model: 'Novelty', field: 'uid'},
             {$inc: {count: 1}},
             {upsert: true, new: true},
         );
 
-        const createdNovelty = new this.noveltyModel({
-            uid: counter.count,
-            ...novelty,
+        const createdNovelty = new this.noveltySocialSecurityModel({
+            //uid: counter.count,
+            ...noveltySocialSecurity,
         });
 
         return await createdNovelty.save();
     }
 
     async update(id: string, updateNoveltyDto: UpdateConceptsSocialSecurityDto): Promise<UpdateConceptsSocialSecurityDto> {
-        const noveltyToUpdate = await this.noveltyModel.findById(id);
+        const noveltyToUpdate = await this.noveltySocialSecurityModel.findById(id);
         if (!noveltyToUpdate) {
             throw new NotFoundException('Novedad no encontrada');
         }
-        const updateNovelty = await this.noveltyModel.findByIdAndUpdate(
+        const updateNovelty = await this.noveltySocialSecurityModel.findByIdAndUpdate(
             id,
             updateNoveltyDto,
             {
@@ -54,7 +60,7 @@ export class NoveltySocialSecurityService {
     }
 
     async findOne(id: string): Promise<NoveltySocialSecurity> {
-        return await this.noveltyModel.findById(id)
+        return await this.noveltySocialSecurityModel.findById(id)
                 .populate('collaborator')
                 .populate('utilityCenter')
                 .populate('centersCosts')
@@ -93,7 +99,7 @@ export class NoveltySocialSecurityService {
             }
         }
         if (by === 'categoriesSocialSecurity') {
-            conceptList = await this.conceptModel.find({categoryNovelty: value}).select('_id').exec();
+            conceptList = await this.conceptSocialSecurityModel.find({categoriesSocialSecurity : value}).select('_id').exec();
         }
 
         
@@ -118,8 +124,8 @@ export class NoveltySocialSecurityService {
         let documents;
         const combinedQuery = {...query, ...queryBody, ...documents};
         const total = by === 'find' && value === 'all'
-            ? await this.noveltyModel.countDocuments(combinedQuery).exec()
-            : await this.noveltyModel.countDocuments(combinedQuery).exec();
+            ? await this.noveltySocialSecurityModel.countDocuments(combinedQuery).exec()
+            : await this.noveltySocialSecurityModel.countDocuments(combinedQuery).exec();
         const totalPages = Math.ceil(total / limit);
 
         if (by === 'documents') {
@@ -127,11 +133,10 @@ export class NoveltySocialSecurityService {
         }
 
         let search;
-
         if (by === 'categoriesSocialSecurity') {
-            search = await this.noveltyModel
+            search = await this.noveltySocialSecurityModel
                 .find({
-                    concept: { $in: conceptList },
+                    conceptSocialSecurity: { $in: conceptList },
                     //documents: { $size: 0 }
                 })
                 .skip((page - 1) * limit)
@@ -148,7 +153,7 @@ export class NoveltySocialSecurityService {
                 .exec();
         } else {
             //combinedQuery.documents = { $size: 0 };
-            search = await this.noveltyModel
+            search = await this.noveltySocialSecurityModel
                 .find(combinedQuery)
                 .skip((page - 1) * limit)
                 .populate('collaborator')

@@ -6,6 +6,7 @@ import { UtilityCenters } from 'src/modules/business-configuration/utility-cente
 import { CostCenters } from 'src/modules/business-configuration/centers-costs/entities/centers-costs.entity';
 import { ConceptsSocialSecurity } from 'src/modules/concepts-social-security/entities/concepts-social-security.entity';
 import { Collaborator } from 'src/modules/collaborators/entities/collaborators.entity';
+import { Client } from 'src/modules/clients/entities/client.entity';
 
 
 // class Contract {
@@ -22,6 +23,9 @@ import { Collaborator } from 'src/modules/collaborators/entities/collaborators.e
 
 @Schema({collection: 'novelty-social-security', timestamps: true})
 export class NoveltySocialSecurity {
+
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Client'})
+    client: Client;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Collaborator'})
     collaborator: Collaborator;
