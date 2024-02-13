@@ -5,7 +5,7 @@ import {ModuleParameterization} from 'src/modules/module-parameterization/entiti
 import {UserEntity} from 'src/modules/users/entities/user.entity';
 
 @Schema({timestamps: true})
-export class Payroll {
+export class PayrollUser {
     @Prop({type: String, required: true})
     name: string;
 
@@ -31,4 +31,4 @@ export class Payroll {
     more: Record<string, any>;
 }
 
-export const PayrollSchema = SchemaFactory.createForClass(Payroll);
+export const PayrollUserSchema = SchemaFactory.createForClass(PayrollUser);

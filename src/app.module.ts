@@ -11,7 +11,7 @@ import {AllowAnyIPMiddleware} from './middleware/auth.middleware';
 import {AuthService} from './modules/auth/auth.service';
 import {ClientsModule} from './modules/clients/clients.module';
 import {AdminsModule} from './modules/admin/admin.module';
-import {PayrollModule} from './modules/payroll/payroll.module';
+import {PayrollModule} from './modules/payroll-user/payroll.module';
 import {CountrysModule} from './modules/business-configuration/country/country.module';
 import {RegionsModule} from './modules/business-configuration/regions/region.module';
 import {CostCentersModule} from './modules/business-configuration/centers-costs/centers-costs.module';

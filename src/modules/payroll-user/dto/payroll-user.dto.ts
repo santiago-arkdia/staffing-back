@@ -10,7 +10,7 @@ import {
 import { ModuleParameterization } from 'src/modules/module-parameterization/entities/module-parameterization.entity';
 
 @Schema()
-export class PayrollsDto {
+export class PayrollUsersDto {
   @IsString()
   name: string;
 

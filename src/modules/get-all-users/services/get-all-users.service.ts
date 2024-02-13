@@ -5,7 +5,7 @@ import {Model, Types} from 'mongoose';
 import {Admin} from '../../admin/entities/admin.entity';
 import {AdminClient} from '../../admin-client/entities/adminClient.entity';
 import {Client} from '../../clients/entities/client.entity';
-import {Payroll} from '../../payroll/entities/payroll.entity';
+import {Payroll} from '../../payroll-user/entities/payroll-user.entity';
 import {UserDocument, UserEntity} from '../../users/entities/user.entity';
 import {UserDto} from '../dto/filter-user.dto';
 

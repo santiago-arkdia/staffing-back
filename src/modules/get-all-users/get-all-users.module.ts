@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminSchema } from '../admin/entities/admin.entity';
 import {  AdminClient, AdminClientSchema } from '../admin-client/entities/adminClient.entity';
 import { Client, ClientSchema } from '../clients/entities/client.entity';
-import { Payroll, PayrollSchema } from '../payroll/entities/payroll.entity';
+import { Payroll, PayrollSchema } from '../payroll-user/entities/payroll-user.entity';
 import { GetAllUsersService } from './services/get-all-users.service';
 import { UserEntity, UserSchema } from '../users/entities/user.entity';
 
