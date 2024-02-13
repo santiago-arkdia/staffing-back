@@ -10,11 +10,4 @@ import {
 export class PayrollsDto {
   @IsString()
   client: string;
-
-  @IsString()
-  approvedBYClient: string;
-
-  @IsString()
-  sendtobeApproved: string;
-
 }

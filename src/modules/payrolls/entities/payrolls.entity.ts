@@ -29,7 +29,7 @@ export class Payrolls {
     client: string;
 
     @Prop()
-    approvedBYClient: Date;
+    approvedByClient: Date;
 
     @Prop()
     sendtobeApproved: Date;
