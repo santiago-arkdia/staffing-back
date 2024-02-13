@@ -14,4 +14,4 @@ import { UsersService } from '../users/services/users.service';
   controllers: [PayrollController],
   providers: [PayrollService],
 })
-export class PayrollsModule {}
+export class PayrollModule {}

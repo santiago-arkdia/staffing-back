@@ -6,7 +6,7 @@ import {ApiTags} from '@nestjs/swagger';
 import {PayrollsDto} from '../dto/payroll.dto';
 
 @ApiTags('Payroll')
-@Controller('api/payrolls')
+@Controller('api/payroll')
 export class PayrollController {
     constructor(private readonly payrollService: PayrollService) {
     }

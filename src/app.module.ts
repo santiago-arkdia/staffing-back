@@ -11,7 +11,7 @@ import {AllowAnyIPMiddleware} from './middleware/auth.middleware';
 import {AuthService} from './modules/auth/auth.service';
 import {ClientsModule} from './modules/clients/clients.module';
 import {AdminsModule} from './modules/admin/admin.module';
-import {PayrollsModule} from './modules/payroll/payroll.module';
+import {PayrollModule} from './modules/payroll/payroll.module';
 import {CountrysModule} from './modules/business-configuration/country/country.module';
 import {RegionsModule} from './modules/business-configuration/regions/region.module';
 import {CostCentersModule} from './modules/business-configuration/centers-costs/centers-costs.module';
@@ -55,6 +55,7 @@ import { SchedulessModule } from './modules/schedules/schedules.module';
 import { CategoriesSocialSecurityModule } from './modules/categories-social-security/categories-social-security.module';
 import { ConceptsSocialSecurityModule } from './modules/concepts-social-security/concepts-social-security.module';
 import { NoveltySocialSecurityModule } from './modules/novelty-social-security/novelty-social-security.module';
+import { PayrollsModule } from './modules/payrolls/payrolls.module';
 
 @Module({
     imports: [
@@ -70,7 +71,7 @@ import { NoveltySocialSecurityModule } from './modules/novelty-social-security/n
         AuthModule,
         ClientsModule,
         AdminsModule,
-        PayrollsModule,
+        PayrollModule,
         CountrysModule,
         RegionsModule,
         CostCentersModule,
@@ -109,7 +110,8 @@ import { NoveltySocialSecurityModule } from './modules/novelty-social-security/n
         SchedulessModule,
         CategoriesSocialSecurityModule,
         ConceptsSocialSecurityModule,
-        NoveltySocialSecurityModule
+        NoveltySocialSecurityModule,
+        PayrollsModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],
