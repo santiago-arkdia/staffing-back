@@ -6,6 +6,7 @@ import { NoveltySocialSecurity } from 'src/modules/novelty-social-security/entit
 import { Novelty } from 'src/modules/novelty/entities/novelty.entity';
 import { Documents } from 'src/shared/models/documents';
 import { Comment } from 'src/shared/models/commet';
+import { Client } from 'src/modules/clients/entities/client.entity';
 
 @Schema({timestamps: true})
 export class Payrolls {
@@ -25,8 +26,8 @@ export class Payrolls {
     @Prop({type: String})
     year: string;
 
-    @Prop({type: String})
-    client: string;
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Client'})
+    client: Client;
 
     @Prop()
     approvedByClient: Date;

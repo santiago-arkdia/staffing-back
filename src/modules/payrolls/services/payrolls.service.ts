@@ -32,9 +32,7 @@ export class PayrollsService {
             outDate: 0
           }).select("_id").exec();
 
-        console.log(noveltiesIds); 
-        console.log(startDate);
-        console.log(endDate);
+          console.log(noveltiesIds);
 
         const noveltiesRetirementIds = await this.noveltyRetirementModel.find({
             createdAt: { $gte: startDate, $lt: endDate },
@@ -58,7 +56,7 @@ export class PayrollsService {
           novelties: noveltiesIds,
           noveltiesRetirement: noveltiesRetirementIds,
           noveltiesSocialSecurity: noveltiesSocialSecurityIds,
-          payrollsDto
+          client: payrollsDto.client,
         });
     
         return newPayroll.save();
@@ -83,7 +81,7 @@ export class PayrollsService {
 
     async findBy( page: number, limit: number, requestBodyFilters: Record<string, any> = {} ): Promise<Payrolls[]> {
 
-        const total = await this.noveltySocialSecurityModel.countDocuments(requestBodyFilters).exec();
+        const total = await this.payrollModel.countDocuments(requestBodyFilters).exec();
         const totalPages = Math.ceil(total / limit);
 
         let search = await this.payrollModel
@@ -92,6 +90,7 @@ export class PayrollsService {
                 .populate('novelties')
                 .populate('noveltiesRetirement')
                 .populate('noveltiesSocialSecurity')
+                .populate('client')
                 .limit(limit)
                 .exec();
 

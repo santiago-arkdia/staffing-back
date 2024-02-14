@@ -69,6 +69,13 @@ export class ClientService {
 
     let search;
 
+
+    if(by == "analysts"){
+      query = {
+        analysts: { $in: value }
+      }
+    }
+
     if (by === 'find' && value === 'all') {
       search = await this.clientModel
           .find()
@@ -82,6 +89,7 @@ export class ClientService {
           })
           .exec();
     } else {
+      console.log("object");
       search = await this.clientModel
           .find(query)
           .skip((page - 1) * limit)

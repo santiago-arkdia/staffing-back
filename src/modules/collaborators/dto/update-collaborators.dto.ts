@@ -1,37 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Schema } from '@nestjs/mongoose';
-import {IsOptional, IsString} from 'class-validator';
+import { PartialType } from "@nestjs/swagger";
+import { CreateCollaboratorDto } from "./create-collaborators.dto";
 
-@Schema()
-export class UpdateCollaboratorDto {
-  @IsOptional()
-  @IsString()
-  name: string;
-
-  @IsOptional()
-  @IsString()
-  document: string;
-
-  @IsOptional()
-  @IsString()
-  documentType: string;
-
-  @IsOptional()
-  @IsString()
-  description: string;
-
-  @IsOptional()
-  @IsString()
-  utilityCenter: string;
-
-  @IsOptional()
-  @IsString()
-  centersCosts: string;
-
-  @IsOptional()
-  @IsString()
-  jobPosition: string;
-
-  @IsString()
-  user: string;
-}
+export class UpdateCollaboratorDto extends PartialType(CreateCollaboratorDto) {}
