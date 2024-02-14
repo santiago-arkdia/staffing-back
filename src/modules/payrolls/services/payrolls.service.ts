@@ -57,6 +57,8 @@ export class PayrollsService {
           noveltiesRetirement: noveltiesRetirementIds,
           noveltiesSocialSecurity: noveltiesSocialSecurityIds,
           client: payrollsDto.client,
+          year: year,
+          month: month
         });
     
         return newPayroll.save();
