@@ -21,12 +21,15 @@ export class PayrollsController {
     async update( @Param('id') id: string,  @Body() payroll: UpdatPayrollDto): Promise<UpdatPayrollDto> {
       return await this.payrollService.update(id, payroll);
     }
+
+    @Get(':id')
+    async findById( @Param('id') id: string): Promise<Payrolls> {
+      return await this.payrollService.findById(id);
+    }
   
     @Post(':page/:limit')
     //@UseGuards(AuthGuard)
     async findBy( @Param('page') page: number, @Param('limit') limit: number, @Body() requestBody: Record<string, any>): Promise<Payrolls[]> {
       return await this.payrollService.findBy(page, limit, requestBody);
     }
-
-    
 }

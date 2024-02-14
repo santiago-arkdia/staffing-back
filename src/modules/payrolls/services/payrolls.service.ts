@@ -105,4 +105,19 @@ export class PayrollsService {
 
         return novelties;
     }
+
+
+    async findById(id: string): Promise<Payrolls> {
+
+      let payrolls = await this.payrollModel
+          .findById(id)
+          .populate('novelties')
+          .populate('noveltiesRetirement')
+          .populate('noveltiesSocialSecurity')
+          .populate('client')
+          .exec();
+
+      return payrolls;
+
+  }
 }
