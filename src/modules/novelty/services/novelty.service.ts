@@ -11,6 +11,7 @@ import {Concept} from "../../concepts/entities/concepts.entity";
 import { Roles } from 'src/modules/roles/entities/roles.entity';
 import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 import { NoveltyRetirement } from 'src/modules/novelty-retirement/entities/novelty-retirement.entity';
+import { Client } from 'src/modules/clients/entities/client.entity';
 
 @Injectable()
 export class NoveltyService {
@@ -20,6 +21,7 @@ export class NoveltyService {
         @InjectModel(NoveltyRetirement.name) private noveltyRetirementModel: Model<NoveltyRetirement>,
         @InjectModel(Counter.name) private counterModel: Model<Counter>,
         @InjectModel(Concept.name) private conceptModel: Model<Concept>,
+        @InjectModel(Client.name) private readonly clientModel: Model<Client>,
         @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
     ) {
     }
@@ -154,14 +156,14 @@ export class NoveltyService {
         by: string,
         value: string | number,
         requestBodyFilters: Record<string, any> = {},
-        roleKey: string
+        roleKey: string,
+        userId: string
     ): Promise<Novelty[]> {
         let query = {};
         let queryBody = {};
         let conceptList= []
-
-        console.log(requestBodyFilters);
-
+        
+        let clients = await this.clientModel.find({analysts: { $in: userId }}).exec();
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
@@ -225,6 +227,7 @@ export class NoveltyService {
             queryNovelty['documents'] = { $size: 0 };
         }
        
+        queryNovelty['client'] = { '$in': clients.map(client => client._id) };
 
         search = await this.noveltyModel
             .find(queryNovelty)
