@@ -182,7 +182,6 @@ export class NoveltyService {
             conceptList = await this.conceptModel.find({categoryNovelty: value}).select('_id').exec();
         }
 
-        //filtrar 
         if (Object.keys(requestBodyFilters).length > 0) {
             Object.entries(requestBodyFilters).forEach(([key, val]) => {
                 if (typeof val === 'string' && !isNaN(Number(val))) {
@@ -200,6 +199,7 @@ export class NoveltyService {
         }
 
         const combinedQuery = {...query, ...queryBody};
+        combinedQuery['client'] = { '$in': clients.map(client => client._id) };
         
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(combinedQuery).exec()

@@ -57,7 +57,7 @@ export class NoveltyRetirementController {
     @Req() request: Request
   ): Promise<NoveltyRetirement[]> {
     const { roleKey } = request['user'];
-    return await this.noveltyRetirementService.findBy(page, limit, by, value, requestBody, roleKey);
+    return await this.noveltyRetirementService.findBy(page, limit, by, value, requestBody, roleKey, request['user'].userAdmin);
   }
 
 }

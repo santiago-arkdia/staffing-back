@@ -9,6 +9,7 @@ import {Counter} from "../entities/counter.entity";
 import {Concept} from "../../concepts/entities/concepts.entity";
 import { NoveltyRetirement } from '../entities/novelty-retirement.entity';
 import { Roles } from 'src/modules/roles/entities/roles.entity';
+import { Client } from 'src/modules/clients/entities/client.entity';
 
 @Injectable()
 export class NoveltyRetirementService {
@@ -18,6 +19,7 @@ export class NoveltyRetirementService {
         @InjectModel(Counter.name) private counterModel: Model<Counter>,
         @InjectModel(Concept.name) private conceptModel: Model<Concept>,
         @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
+        @InjectModel(Client.name) private readonly clientModel: Model<Client>,
     ) {
     }
 
@@ -71,11 +73,14 @@ export class NoveltyRetirementService {
         by: string,
         value: string | number,
         requestBodyFilters: Record<string, any> = {},
-        roleKey: string
+        roleKey: string,
+        userId: string
     ): Promise<NoveltyRetirement[]> {
         let query = {};
         let queryBody = {};
         let conceptList= []
+
+        let clients = await this.clientModel.find({analysts: { $in: userId }}).exec();
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
@@ -112,6 +117,7 @@ export class NoveltyRetirementService {
 
 
         const combinedQuery = {...query, ...queryBody};
+        combinedQuery['client'] = { '$in': clients.map(client => client._id) };
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(combinedQuery).exec()
             : await this.noveltyModel.countDocuments(combinedQuery).exec();

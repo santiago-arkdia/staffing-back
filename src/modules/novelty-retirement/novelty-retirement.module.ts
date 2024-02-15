@@ -7,6 +7,7 @@ import { NoveltyRetirementController } from './controllers/novelty-retirement.co
 import {Counter, CounterSchema} from "./entities/counter.entity";
 import {Concept, ConceptSchema} from "../concepts/entities/concepts.entity";
 import { Roles, RolesSchema } from '../roles/entities/roles.entity';
+import { Client, ClientSchema } from '../clients/entities/client.entity';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { Roles, RolesSchema } from '../roles/entities/roles.entity';
     MongooseModule.forFeature([{ name: Counter.name, schema: CounterSchema }]),
     MongooseModule.forFeature([{ name: Concept.name, schema: ConceptSchema }]),
     MongooseModule.forFeature([{ name: Roles.name, schema: RolesSchema }]),
+    MongooseModule.forFeature([{ name: Client.name, schema: ClientSchema }]),
   ],
   controllers: [NoveltyRetirementController],
   providers: [NoveltyRetirementService],
