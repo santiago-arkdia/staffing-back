@@ -42,6 +42,7 @@ export class CategoriesNewsService {
       limit: number,
       by: string,
       value: string | number,
+      typeNovelty: string
   ): Promise<CategoriesNovelty[]> {
     let query = {};
 
@@ -60,16 +61,16 @@ export class CategoriesNewsService {
     }
 
     const total = by === 'find' && value === 'all'
-        ? await this.categoriesNewsModel.countDocuments().exec()
-        : await this.categoriesNewsModel.countDocuments(query).exec();
+        ? await this.categoriesNewsModel.countDocuments({typeNovelty: typeNovelty}).exec()
+        : await this.categoriesNewsModel.countDocuments({typeNovelty: typeNovelty},query).exec();
     const totalPages = Math.ceil(total / limit);
 
     let queryBuilder
 
     if (by === 'find' && value === 'all') {
-      queryBuilder = this.categoriesNewsModel.find();
+      queryBuilder = this.categoriesNewsModel.find({typeNovelty: typeNovelty}).select("type").select("typeNovelty");
     }else{
-      queryBuilder = this.categoriesNewsModel.find(query);
+      queryBuilder = this.categoriesNewsModel.find({typeNovelty: typeNovelty}, query).select("type").select("typeNovelty");
     }
 
     if (page > 0 && limit > 0) {

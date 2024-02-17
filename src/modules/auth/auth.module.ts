@@ -8,13 +8,14 @@ import {jwtConstants} from './constants';
 import {RolessModule} from "../roles/roles.module";
 import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminSchema } from '../admin/entities/admin.entity';
-import { AdminsModule } from '../admin/admin.module';
+import { UsersExternalsModule } from '../users-externals/users-externals.module';
 
 // import { AdminGuard } from './admin.guard';
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: Admin.name, schema: AdminSchema }]),
         UsersModule,
+        UsersExternalsModule,
         RolessModule,
         JwtModule.register({
             global: true,

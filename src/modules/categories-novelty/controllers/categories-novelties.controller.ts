@@ -34,14 +34,15 @@ export class CategoriesNewsController {
     return await this.categoriesNewsService.findOne(id);
   }
 
-  @Get(':page/:limit/:by/:value')
+  @Get(':type/:page/:limit/:by/:value')
   @ApiOperation({ summary: 'Filtra por valor (opcional) y paginacion' })
   async findBy(
       @Param('page') page: number,
       @Param('limit') limit: number,
       @Param('by') by: string,
       @Param('value') value: string,
+      @Param('type') typeNovelty: string
   ): Promise<CategoriesNovelty[]> {
-    return await this.categoriesNewsService.findBy(page, limit, by, value);
+    return await this.categoriesNewsService.findBy(page, limit, by, value, typeNovelty);
   }
 }

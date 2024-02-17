@@ -49,4 +49,7 @@ export class CreateConceptsDto {
   @IsString()
   @IsOptional()
   measurement: string
+
+  @IsString()
+  typeNovelty: 'novelty' | 'retirement' | 'social-security';
 }

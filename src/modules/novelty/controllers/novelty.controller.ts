@@ -34,25 +34,25 @@ export class NoveltyController {
 
   
 
-  @Get(':page/:limit')
+  @Get(':page/:limit/:type')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   //@UseGuards(AuthGuard)
-  async findAllNoveltiesBasic(@Param('page') page: number, @Param('limit') limit: number): Promise<any> {
-    return await this.noveltyService.findAllNovelties(page, limit, null, null);
+  async findAllNoveltiesBasic(@Param('page') page: number, @Param('limit') limit: number, @Param('type') typeNovelty: string): Promise<any> {
+    return await this.noveltyService.findAllNovelties(page, limit, null, null, typeNovelty);
   }
 
-  @Get(':page/:limit/:year')
+  @Get(':page/:limit/:year/:type')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   //@UseGuards(AuthGuard)
-  async findAllNoveltiesYear(@Param('page') page: number, @Param('limit') limit: number, @Param('year') year?: string): Promise<any> {
-    return await this.noveltyService.findAllNovelties(page, limit, year, null);
+  async findAllNoveltiesYear(@Param('page') page: number, @Param('limit') limit: number, @Param('year') year: string, @Param('type') typeNovelty: string): Promise<any> {
+    return await this.noveltyService.findAllNovelties(page, limit, year, null, typeNovelty);
   }
   
-  @Get(':page/:limit/:year/:month')
+  @Get(':page/:limit/:year/:month/:type')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   //@UseGuards(AuthGuard)
-  async findAllNovelties(@Param('page') page: number, @Param('limit') limit: number, @Param('year') year?: string, @Param('month') month?: string): Promise<any> {
-    return await this.noveltyService.findAllNovelties(page, limit, year, month);
+  async findAllNovelties(@Param('page') page: number, @Param('limit') limit: number, @Param('year') year: string, @Param('month') month: string, @Param('type') typeNovelty: string): Promise<any> {
+    return await this.noveltyService.findAllNovelties(page, limit, year, month, typeNovelty);
   }
 
   @Get(':id')
@@ -61,6 +61,15 @@ export class NoveltyController {
   async findOne(@Param('id') id: string): Promise<Novelty> {
     return await this.noveltyService.findOne(id);
   }
+
+  @Get('find-by-client/:page/:limit/:id/:type')
+  @ApiOperation({ summary: 'Filtrar novedad por ID' })
+  @UseGuards(AuthGuard)
+  async findByClient( @Param('page') page: number,  @Param('limit') limit: number, @Param('type') typeNovelty: string, @Req() request: Request): Promise<any[]> {
+    const { roleKey } = request['user'];
+    return await this.noveltyService.findByClient(page, limit, typeNovelty, roleKey);
+  }
+
 
   @Post(':page/:limit/:by/:value')
   @ApiOperation({ summary: 'Filtrar novedades por valor y paginación' })

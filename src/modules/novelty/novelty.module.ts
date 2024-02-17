@@ -9,6 +9,7 @@ import {Concept, ConceptSchema} from "../concepts/entities/concepts.entity";
 import { Roles, RolesSchema } from '../roles/entities/roles.entity';
 import { NNoveltyRetirementSchema, NoveltyRetirement } from '../novelty-retirement/entities/novelty-retirement.entity';
 import { Client, ClientSchema } from '../clients/entities/client.entity';
+import { NNoveltySocialSecuritySchema, NoveltySocialSecurity } from '../novelty-social-security/entities/novelty-social-security.entity';
 
 
 @Module({
@@ -19,6 +20,7 @@ import { Client, ClientSchema } from '../clients/entities/client.entity';
     MongooseModule.forFeature([{ name: Client.name, schema: ClientSchema }]),
     MongooseModule.forFeature([{ name: Roles.name, schema: RolesSchema }]),
     MongooseModule.forFeature([{ name: NoveltyRetirement.name, schema: NNoveltyRetirementSchema }]),
+    MongooseModule.forFeature([{ name: NoveltySocialSecurity.name, schema: NNoveltySocialSecuritySchema }]),
   ],
   controllers: [NoveltyController],
   providers: [NoveltyService],

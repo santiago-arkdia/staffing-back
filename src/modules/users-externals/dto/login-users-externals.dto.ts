@@ -12,15 +12,3 @@ export class LoginDto {
   @MinLength(6)
   password: string;
 }
-
-
-export class LoginExternalDto {
-  @IsString()
-  @IsNotEmpty()
-  user: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(6)
-  password: string;
-}

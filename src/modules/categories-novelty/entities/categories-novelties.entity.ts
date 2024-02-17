@@ -18,6 +18,9 @@ export class CategoriesNovelty {
 
     @Prop({ type: Object })
     more: Record<string, any>;
+
+    @Prop({type: String})
+    typeNovelty: string;
 }
 
 export const CategoriesNoveltySchema = SchemaFactory.createForClass(CategoriesNovelty);

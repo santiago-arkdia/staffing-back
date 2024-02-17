@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { LoginDto } from 'src/modules/users/dto/loginUser.dto';
+import { LoginDto, LoginExternalDto } from 'src/modules/users/dto/loginUser.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth usuarios')
@@ -24,6 +24,12 @@ export class AuthController {
   signIn(@Body() loginDto: LoginDto) {
     // console.log(loginDto)
     return this.authService.signIn(loginDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login-external')
+  signInExternal(@Body() loginExternalDto: LoginExternalDto) {
+    return this.authService.signInExternal(loginExternalDto);
   }
 
   @UseGuards(AuthGuard)

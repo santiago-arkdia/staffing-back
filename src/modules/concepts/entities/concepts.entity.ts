@@ -6,7 +6,7 @@ import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categor
 @Schema({timestamps: true})
 export class Concept {
 
-    @Prop({type: String, required: true})
+    @Prop({type: String})
     code: string;
 
     @Prop({type: String, required: true})
@@ -27,7 +27,7 @@ export class Concept {
     @Prop({type: String, required: true})
     approves: string;
 
-    @Prop({type: String, required: true})
+    @Prop({type: String})
     measurement: string;
 
     @Prop({type: Number, default: 1})
@@ -38,6 +38,9 @@ export class Concept {
 
     @Prop({ type: Object })
     more: Record<string, any>;
+
+    @Prop({type: String})
+    typeNovelty: string;
 }
 
 export const ConceptSchema = SchemaFactory.createForClass(Concept);

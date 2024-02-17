@@ -56,6 +56,7 @@ import { ConceptsSocialSecurityModule } from './modules/concepts-social-security
 import { NoveltySocialSecurityModule } from './modules/novelty-social-security/novelty-social-security.module';
 import { PayrollsModule } from './modules/payrolls/payrolls.module';
 import { PayrollUserModule } from './modules/payroll-user/payroll-user.module';
+import { UsersExternalsModule } from './modules/users-externals/users-externals.module';
 
 @Module({
     imports: [
@@ -111,7 +112,8 @@ import { PayrollUserModule } from './modules/payroll-user/payroll-user.module';
         CategoriesSocialSecurityModule,
         ConceptsSocialSecurityModule,
         NoveltySocialSecurityModule,
-        PayrollsModule
+        PayrollsModule,
+        UsersExternalsModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],

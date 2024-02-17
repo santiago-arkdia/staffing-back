@@ -45,6 +45,7 @@ export class NoveltyRetirementController {
     return await this.noveltyRetirementService.findOne(id);
   }
 
+
   @Post(':page/:limit/:by/:value')
   @ApiOperation({ summary: 'Filtrar novedades por valor y paginación' })
   @UseGuards(AuthGuard)

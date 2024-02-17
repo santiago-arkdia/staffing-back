@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import {IsString} from 'class-validator';
+import {IsOptional, IsString} from 'class-validator';
 
 @Schema()
 export class CreateCategoriesNoveltiesDto {
@@ -8,8 +8,16 @@ export class CreateCategoriesNoveltiesDto {
   type: string;
 
   @IsString()
+  @IsOptional()
   description: string;
 
   @IsString()
+  @IsOptional()
+  state: number;
+
+  @IsString()
   approves: string;
+
+  @IsString()
+  typeNovelty: 'novelty' | 'retirement' | 'social-security';
 }

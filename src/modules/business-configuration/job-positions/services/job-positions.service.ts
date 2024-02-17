@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
-import {Injectable} from '@nestjs/common';
+import {Injectable, UseGuards} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model, Types} from 'mongoose';
 import {CreateJobPositionsDto} from '../dto/job-positions.dto';
 import {JobPositions} from '../entities/job-positions.entity';
+import { AuthExternalGuard } from 'src/modules/auth/auth-external.guard';
 
 @Injectable()
 export class JobPositionsService {
@@ -100,6 +101,19 @@ export class JobPositionsService {
         jobPositions.data = data;
 
         return jobPositions;
+    }
+
+    
+    async getAll(): Promise<JobPositions[]> {
+
+        const jobPosition = await this.jobPositionsModel
+            .find()
+            .populate('region')
+            .populate('utilityCenter')
+            .populate('centersCosts')
+            .exec();
+
+        return jobPosition;
     }
 
     async delete(id: string): Promise<JobPositions> {

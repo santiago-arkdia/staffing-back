@@ -12,6 +12,7 @@ import { Roles } from 'src/modules/roles/entities/roles.entity';
 import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 import { NoveltyRetirement } from 'src/modules/novelty-retirement/entities/novelty-retirement.entity';
 import { Client } from 'src/modules/clients/entities/client.entity';
+import { NoveltySocialSecurity } from 'src/modules/novelty-social-security/entities/novelty-social-security.entity';
 
 @Injectable()
 export class NoveltyService {
@@ -19,6 +20,7 @@ export class NoveltyService {
         @InjectModel(Novelty.name)
         private readonly noveltyModel: Model<Novelty>,
         @InjectModel(NoveltyRetirement.name) private noveltyRetirementModel: Model<NoveltyRetirement>,
+        @InjectModel(NoveltySocialSecurity.name) private noveltySocialSecurity: Model<NoveltySocialSecurity>,
         @InjectModel(Counter.name) private counterModel: Model<Counter>,
         @InjectModel(Concept.name) private conceptModel: Model<Concept>,
         @InjectModel(Client.name) private readonly clientModel: Model<Client>,
@@ -62,11 +64,11 @@ export class NoveltyService {
         return updateNovelty.toObject();
     }
 
-    async findAllNovelties(page: number, limit: number, year: string, month: string): Promise<any> {
+    async findAllNovelties(page: number, limit: number, year: string, month: string, typeNovelty: string): Promise<any> {
         const validPage = Number(page) > 0 ? Number(page) : 1;
         const validLimit = Number(limit) > 0 ? Number(limit) : 10;
     
-        const query = { state: { $in: [0, 1] } };
+        const query = { typeNovelty: typeNovelty, state: { $in: [0, 1] } };
     
         if (year) {
             let startDate = new Date();
@@ -324,6 +326,95 @@ export class NoveltyService {
         const response = await axios.post(url, data, config);
         return response.data.mensaje;
     }
+
+    async findByClient(page: number, limit: number, typeNovelty: string, idClient): Promise<any> {
+        const validPage = Number(page) > 0 ? Number(page) : 1;
+        const validLimit = Number(limit) > 0 ? Number(limit) : 10;
+    
+        const query = { typeNovelty: typeNovelty, state: { $in: [0, 1] } };
+        // if (year) {
+        //     let startDate = new Date();
+        //     let endDate = new Date();
+    
+        //     // Establecer el año y, si se proporciona, el mes (ajustando por el índice base 0 de los meses en JS)
+        //     startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
+        //     startDate.setHours(0, 0, 0, 0); // Comienzo del día
+    
+        //     endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
+        //     if (month) {
+        //         endDate.setMonth(endDate.getMonth() + 1); // Mover al próximo mes
+        //     } else {
+        //         // Si no se proporciona mes, ajustar para cubrir todo el año
+        //         startDate.setMonth(0); // Comienzo del año
+        //         endDate.setMonth(0); // Comienzo del siguiente año
+        //         endDate.setFullYear(endDate.getFullYear() + 1);
+        //     }
+        //     endDate.setHours(0, 0, 0, -1); // Justo antes de que comience el próximo periodo
+    
+        //     query['createdAt'] = {
+        //         $gte: startDate,
+        //         $lt: endDate
+        //     };
+        // }
+
+    
+        const totalNovelties = await this.noveltyModel.countDocuments(query);
+        const totalNoveltyReiterment = await this.noveltyRetirementModel.countDocuments(query);
+        const totalNoveltySocialSecurity = await this.noveltySocialSecurity.countDocuments(query);
+    
+        const totalPagesNovelties = Math.ceil(totalNovelties / validLimit);
+        const totalPagesNoveltyReiterment = Math.ceil(totalNoveltyReiterment / validLimit);
+        const totalPagesNoveltySocialSecurity = Math.ceil(totalNoveltySocialSecurity / validLimit);
+    
+        let skipAmount = (validPage - 1) * validLimit;
+    
+        const novelties = await this.noveltyModel.find(query)
+            .limit(validLimit)
+            .populate('collaborator')
+            .populate({
+                path: 'concept',
+                populate: {
+                    path: 'categoryNovelty',
+                },
+            })
+            .skip(skipAmount);
+    
+        const noveltyNoveltyReiterment = await this.noveltyRetirementModel.find(query)
+            .limit(validLimit)
+            .populate('collaborator')
+            .populate({
+                path: 'conceptsRetirement',
+                populate: {
+                    path: 'categoriesRetirement',
+                },
+            })
+            .skip(skipAmount);
+
+        const noveltySocialSecurity = await this.noveltySocialSecurity.find(query)
+            .limit(validLimit)
+            .populate('collaborator')
+            .populate({
+                path: 'conceptsRetirement',
+                populate: {
+                    path: 'categoriesRetirement',
+                },
+            })
+            .skip(skipAmount);
+    
+        const combinedData = [...novelties, ...noveltyNoveltyReiterment];
+        const totalRecords =  totalNovelties + totalNoveltyReiterment + totalNoveltySocialSecurity;
+        const totalPages = totalPagesNovelties + totalPagesNoveltyReiterment + totalPagesNoveltySocialSecurity;
+    
+        const response = {
+            total: totalRecords,
+            pages: totalPages,
+            data: combinedData,
+        };
+    
+        return response;
+    }
+    
+    
 
 
     async createNoveltyMaster(novelty: NoveltyMasterTemporappDto,

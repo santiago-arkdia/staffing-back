@@ -1,36 +1,152 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
+import { Type } from 'class-transformer';
 import {IsArray, IsDate, IsNumber, IsOptional, IsString} from 'class-validator';
+
+// @Schema()
+// export class CreateNoveltyDto {
+//   @IsString()
+//   client: string;
+
+//   @IsString()
+//   collaborator: string;
+
+//   @IsString()
+//   concept: string;
+
+//   @IsString()
+//   @IsOptional()
+//   description: string;
+
+//   @IsString()
+//   @IsOptional()
+//   contract: string;
+
+//   @IsNumber()
+//   @IsOptional()
+//   value: number;
+
+//   @IsDate()
+//   @IsOptional()
+//   date: Date;
+  
+//   @IsArray()
+//   @IsOptional()
+//   documents: string[];
+
+// }
+
+
+// import { Type } from 'class-transformer';
+// import {
+//   IsArray,
+//   IsDate,
+//   IsNumber,
+//   IsOptional,
+//   IsString,
+//   ValidateNested,
+// } from 'class-validator';
+
+// class Documents {
+//   // Define los atributos de Documents según necesites
+// }
+
+// class Contract {
+//   // Define los atributos de Contract según necesites
+// }
 
 @Schema()
 export class CreateNoveltyDto {
+  @IsString()
+  typeNovelty: 'novelty' | 'retirement' | 'social-security' | 'vinculations';
+
   @IsString()
   client: string;
 
   @IsString()
   collaborator: string;
 
-  @IsString()
-  concept: string;
-
+  // Campos comunes a Novelty y Retirement
   @IsString()
   @IsOptional()
-  description: string;
+  concept?: string;
 
+  // Campos exclusivos de Novelty
   @IsString()
   @IsOptional()
-  contract: string;
+  description?: string;
 
   @IsNumber()
   @IsOptional()
-  value: number;
+  value?: number;
 
   @IsDate()
   @IsOptional()
-  date: Date;
-  
+  @Type(() => Date)
+  date?: Date;
+
+  // Campos exclusivos de Retirement
+  @IsString()
+  @IsOptional()
+  finishDate?: string;
+
+  @IsString()
+  @IsOptional()
+  endDate?: string;
+
+  @IsString()
+  @IsOptional()
+  note?: string;
+
+  @IsNumber()
+  @IsOptional()
+  state?: number;
+
+  @IsNumber()
+  @IsOptional()
+  signedByApprover?: number;
+
+  @IsNumber()
+  @IsOptional()
+  signedByCollaborator?: number;
+
+  @IsNumber()
+  @IsOptional()
+  signedByManagment?: number;
+
+  @IsNumber()
+  @IsOptional()
+  loadedOnPayroll?: number;
+
+  // Campos exclusivos de SocialSecurity
+  @IsString()
+  @IsOptional()
+  utilityCenter?: string;
+
+  @IsString()
+  @IsOptional()
+  centersCosts?: string;
+
+  @IsString()
+  @IsOptional()
+  startDate?: string;
+
+  @IsString()
+  @IsOptional()
+  previousPeriod?: string;
+
+  @IsString()
+  @IsOptional()
+  observations?: string;
+
+  // Campos comunes a todos
   @IsArray()
   @IsOptional()
-  documents: string[];
+  documents?: any[];
+
+  @IsArray()
+  @IsOptional()
+  comments?: any[]; 
 
 }
+

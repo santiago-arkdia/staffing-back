@@ -34,11 +34,12 @@ export class ConceptsController {
         return await this.conceptService.findOne(id);
     }
 
-    @Get(':by/:value')
+    @Get(':type/:by/:value')
     async findBy(
         @Param('by') by: string,
         @Param('value') value: string,
+        @Param('type') typeNovelty: string
     ): Promise<Concept[]> {
-        return await this.conceptService.findBy(by, value);
+        return await this.conceptService.findBy(by, value, typeNovelty);
     }
 }
