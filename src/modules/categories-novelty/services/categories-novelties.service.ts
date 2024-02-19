@@ -34,6 +34,11 @@ export class CategoriesNewsService {
     return await this.categoriesNewsModel.find().exec();
   }
 
+
+  async findAllForType(type: string): Promise<CategoriesNovelty[]> {
+    return await this.categoriesNewsModel.find({typeNovelty: type}).exec();
+  }
+
   async findOne(id: any): Promise<CategoriesNovelty> {
     return await this.categoriesNewsModel.findById(id).exec();
   }
