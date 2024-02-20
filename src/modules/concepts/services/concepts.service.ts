@@ -33,8 +33,7 @@ export class ConceptsService {
     }
     async findBy(
         by: string,
-        value: string | number,
-        typeNovelty: string
+        value: string | number
     ): Promise<Concept[]> {
         let query = {};
 
@@ -54,15 +53,15 @@ export class ConceptsService {
 
         const total =
             by === 'find' && value === 'all'
-                ? await this.conceptModel.countDocuments({typeNovelty: typeNovelty}).exec()
-                : await this.conceptModel.countDocuments({typeNovelty: typeNovelty}, query).exec();
+                ? await this.conceptModel.countDocuments().exec()
+                : await this.conceptModel.countDocuments(query).exec();
 
         let queryBuilder
 
         if (by === 'find' && value === 'all') {
-            queryBuilder = this.conceptModel.find({typeNovelty: typeNovelty});
+            queryBuilder = this.conceptModel.find();
         }else{
-            queryBuilder = this.conceptModel.find({typeNovelty: typeNovelty}, query);
+            queryBuilder = this.conceptModel.find(query);
         }
 
         queryBuilder = queryBuilder.populate('categoryNovelty');

@@ -29,7 +29,7 @@ export class CategoriesNewsController {
 
 
   @Get("type/:type")
-  @ApiOperation({ summary: 'Lista todas las categorias' })
+  @ApiOperation({ summary: 'Lista todas las categorias por tipo de novedad' })
   async findAllForType(@Param('type') typeNovelty: string): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewsService.findAllForType(typeNovelty);
   }

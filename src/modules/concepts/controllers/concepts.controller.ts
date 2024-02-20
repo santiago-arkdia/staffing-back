@@ -37,9 +37,8 @@ export class ConceptsController {
     @Get(':type/:by/:value')
     async findBy(
         @Param('by') by: string,
-        @Param('value') value: string,
-        @Param('type') typeNovelty: string
+        @Param('value') value: string
     ): Promise<Concept[]> {
-        return await this.conceptService.findBy(by, value, typeNovelty);
+        return await this.conceptService.findBy(by, value);
     }
 }
