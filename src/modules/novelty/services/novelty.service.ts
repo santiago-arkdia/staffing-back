@@ -68,26 +68,96 @@ export class NoveltyService {
         const validPage = Number(page) > 0 ? Number(page) : 1;
         const validLimit = Number(limit) > 0 ? Number(limit) : 10;
     
+        const query = { typeNovelty: typeNovelty };
+    
+        if (year) {
+            let startDate = new Date();
+            let endDate = new Date();
+    
+            startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
+            startDate.setHours(0, 0, 0, 0);
+    
+            endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
+            if (month) {
+                endDate.setMonth(endDate.getMonth() + 1); 
+            } else {
+                startDate.setMonth(0); 
+                endDate.setMonth(0); 
+                endDate.setFullYear(endDate.getFullYear() + 1);
+            }
+            endDate.setHours(0, 0, 0, -1);
+    
+            query['createdAt'] = {
+                $gte: startDate,
+                $lt: endDate
+            };
+        }
+    
+        const totalNovelties = await this.noveltyModel.countDocuments(query);
+        const totalNoveltyTers = await this.noveltyRetirementModel.countDocuments(query);
+    
+        const totalPagesNovelties = Math.ceil(totalNovelties / validLimit);
+        const totalPagesNoveltyTers = Math.ceil(totalNoveltyTers / validLimit);
+    
+        let skipAmount = (validPage - 1) * validLimit;
+    
+        const novelties = await this.noveltyModel.find(query)
+            .limit(validLimit)
+            .populate('collaborator')
+            .populate({
+                path: 'concept',
+                populate: {
+                    path: 'categoryNovelty',
+                },
+            })
+            .skip(skipAmount);
+    
+        const noveltyTers = await this.noveltyRetirementModel.find(query)
+            .limit(validLimit)
+            .populate('collaborator')
+            .populate({
+                path: 'conceptsRetirement',
+                populate: {
+                    path: 'categoriesRetirement',
+                },
+            })
+            .skip(skipAmount);
+    
+        const combinedData = [...novelties, ...noveltyTers];
+        const totalRecords = totalNovelties + totalNoveltyTers;
+        const totalPages = Math.max(totalPagesNovelties, totalPagesNoveltyTers);
+    
+        const response = {
+            total: totalRecords,
+            pages: totalPages,
+            data: combinedData,
+        };
+    
+        return response;
+    }
+
+    async findAllNoveltiesFilter(page: number, limit: number, year: string, month: string, typeNovelty: string): Promise<any> {
+        const validPage = Number(page) > 0 ? Number(page) : 1;
+        const validLimit = Number(limit) > 0 ? Number(limit) : 10;
+    
         const query = { typeNovelty: typeNovelty, state: { $in: [0, 1] } };
     
         if (year) {
             let startDate = new Date();
             let endDate = new Date();
     
-            // Establecer el año y, si se proporciona, el mes (ajustando por el índice base 0 de los meses en JS)
             startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
-            startDate.setHours(0, 0, 0, 0); // Comienzo del día
+            startDate.setHours(0, 0, 0, 0);
     
             endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
             if (month) {
-                endDate.setMonth(endDate.getMonth() + 1); // Mover al próximo mes
+                endDate.setMonth(endDate.getMonth() + 1); 
             } else {
-                // Si no se proporciona mes, ajustar para cubrir todo el año
-                startDate.setMonth(0); // Comienzo del año
-                endDate.setMonth(0); // Comienzo del siguiente año
+                startDate.setMonth(0); 
+                endDate.setMonth(0); 
                 endDate.setFullYear(endDate.getFullYear() + 1);
             }
-            endDate.setHours(0, 0, 0, -1); // Justo antes de que comience el próximo periodo
+            endDate.setHours(0, 0, 0, -1);
     
             query['createdAt'] = {
                 $gte: startDate,
