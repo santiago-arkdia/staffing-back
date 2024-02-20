@@ -34,7 +34,7 @@ export class ConceptsController {
         return await this.conceptService.findOne(id);
     }
 
-    @Get(':type/:by/:value')
+    @Get(':by/:value')
     async findBy(
         @Param('by') by: string,
         @Param('value') value: string
