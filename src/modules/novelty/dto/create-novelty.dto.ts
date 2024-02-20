@@ -71,6 +71,10 @@ export class CreateNoveltyDto {
   @IsOptional()
   concept?: string;
 
+  @IsString()
+  @IsOptional()
+  contract: string;
+
   // Campos exclusivos de Novelty
   @IsString()
   @IsOptional()
