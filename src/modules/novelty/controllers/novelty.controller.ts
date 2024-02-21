@@ -71,7 +71,7 @@ export class NoveltyController {
   }
 
 
-  @Post(':page/:limit/:by/:value')
+  @Post(':page/:limit/:by/:value/:type')
   @ApiOperation({ summary: 'Filtrar novedades por valor y paginación' })
   @UseGuards(AuthGuard)
   async findBy(
@@ -79,12 +79,13 @@ export class NoveltyController {
     @Param('limit') limit: number,
     @Param('by') by: string,
     @Param('value') value: string,
+    @Param('type') typeNovelty: string,
     @Body() requestBody: Record<string, any>,
     @Req() request: Request
   ): Promise<Novelty[]> {
     const { roleKey } = request['user'];
     // console.log(request['user']);
-    return await this.noveltyService.findBy(page, limit, by, value, requestBody, roleKey, request['user'].userAdmin);
+    return await this.noveltyService.findBy(page, limit, by, value, requestBody, roleKey, request['user'].userAdmin, typeNovelty);
   }
 
   @Post('ws/find')

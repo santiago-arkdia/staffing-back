@@ -91,7 +91,7 @@ export class NoveltyService {
                 $gte: startDate,
                 $lt: endDate
             };
-        }
+        }  
     
         const totalNovelties = await this.noveltyModel.countDocuments(query);
         const totalNoveltyTers = await this.noveltyRetirementModel.countDocuments(query);
@@ -229,7 +229,8 @@ export class NoveltyService {
         value: string | number,
         requestBodyFilters: Record<string, any> = {},
         roleKey: string,
-        userId: string
+        userId: string, 
+        typeNovelty: string
     ): Promise<Novelty[]> {
         let query = {};
         let queryBody = {};
@@ -282,24 +283,31 @@ export class NoveltyService {
 
         
 
-        let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: roleKey }).exec();
-        const queryConcept = {}
-         if (roleKeys.length !== 0) {
-            queryConcept['approves'] = { '$in': roleKeys.map(role => role.role_key) };
-        } else if (roleKey !== "client") {
-            queryConcept["approves"] = roleKey;
+        // let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: roleKey }).exec();
+        // const queryConcept = {}
+        //  if (roleKeys.length !== 0) {
+        //     queryConcept['approves'] = { '$in': roleKeys.map(role => role.role_key) };
+        // } else if (roleKey !== "client") {
+        //     queryConcept["approves"] = roleKey;
+        // }
+
+        // let concepts = await this.conceptModel.find(queryConcept).exec();
+        // const queryNovelty = by === 'category' ? { concept: { $in: conceptList } } : combinedQuery;
+        // queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
+
+        const queryNovelty = {}
+
+        if(typeNovelty != "all"){
+            queryNovelty["typeNovelty"] = typeNovelty;
         }
-
-        let concepts = await this.conceptModel.find(queryConcept).exec();
-        const queryNovelty = by === 'category' ? { concept: { $in: conceptList } } : combinedQuery;
-        queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
-
 
         if (by === 'documents'){
             queryNovelty['documents'] = { $size: 0 };
         }
        
-        queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+        //queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+
+        console.log(queryNovelty);
 
         search = await this.noveltyModel
             .find(queryNovelty)
