@@ -1,46 +1,59 @@
-/* eslint-disable prettier/prettier */
-import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
-import mongoose from 'mongoose';
-import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 
-@Schema({timestamps: true})
+@Schema({ timestamps: true })
 export class Contract {
 
-    @Prop({type: String})
-    code: string;
+    @Prop({ type: Number })
+    id: number;
 
-    @Prop({type: String, required: true})
-    name: string;
+    @Prop({ type: String })
+    contractCode: string;
 
-    @Prop({type: Boolean})
-    benefit: boolean;
+    @Prop({ type: String })
+    contractType: string;
 
-    @Prop({type: String})
-    reportType: string;
+    @Prop({ type: String })
+    settlementType: string;
 
-    @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'CategoriesNovelty'}]})
-    categoryNovelty: CategoriesNovelty;
+    @Prop({ type: String })
+    paymentFrequency: string;
 
-    @Prop({type: String, required: true})
-    manages: string;
+    @Prop({ type: String })
+    client: string;
 
-    @Prop({type: String, required: true})
-    approves: string;
+    @Prop({ type: String })
+    pensionFund: string;
 
-    @Prop({type: String})
-    measurement: string;
+    @Prop({ type: String })
+    epsEntity: string;
 
-    @Prop({type: Number, default: 1})
-    state: number;
+    @Prop({ type: String })
+    severanceFund: string;
 
-    @Prop({type: Boolean, default: false})
-    applyDate: boolean;
+    @Prop({ type: String })
+    compensationFund: string;
 
-    @Prop({ type: Object })
-    more: Record<string, any>;
+    @Prop({ type: String })
+    workCity: string;
 
-    @Prop({type: String})
-    typeNovelty: string;
+    @Prop({ type: String })
+    riskGrade: string;
+
+    @Prop({ type: String })
+    transportationAssistance: string;
+
+    @Prop({ type: Date })
+    contractStartDate: Date;
+
+    @Prop({ type: Date })
+    probableRetirementDate: Date;
+
+    @Prop({ type: Date })
+    contractEndDate: Date;
+
+    @Prop({ type: String, default: null })
+    arl: string;
 }
 
 export const ContractSchema = SchemaFactory.createForClass(Contract);
