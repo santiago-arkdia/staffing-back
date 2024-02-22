@@ -235,8 +235,8 @@ export class NoveltyService {
         let query = {};
         let queryBody = {};
         let conceptList= []
-        
-        let clients = await this.clientModel.find({analysts: { $in: userId }}).exec();
+       
+       
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
@@ -271,12 +271,33 @@ export class NoveltyService {
             });
         }
 
-        const combinedQuery = {...query, ...queryBody};
-        combinedQuery['client'] = { '$in': clients.map(client => client._id) };
+        const queryNovelty = {}
+
+        if(typeNovelty != "all"){
+            queryNovelty["typeNovelty"] = typeNovelty;
+        }
+
+        if (by === 'documents'){
+            queryNovelty['documents'] = { $size: 0 };
+        }
+
+        if (by === 'state'){
+            queryNovelty['state'] = value
+        }
+       
+        if (roleKey != "collaborator" ){
+            let clients = await this.clientModel.find({analysts: { $in: userId }}).exec();
+            queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+        }else{
+            queryNovelty['collaborator'] = userId;
+        }
+
+        // const combinedQuery = {...query, ...queryBody};
+        // combinedQuery['client'] = { '$in': clients.map(client => client._id) };
         
         const total = by === 'find' && value === 'all'
-            ? await this.noveltyModel.countDocuments(combinedQuery).exec()
-            : await this.noveltyModel.countDocuments(combinedQuery).exec();
+            ? await this.noveltyModel.countDocuments(queryNovelty).exec()
+            : await this.noveltyModel.countDocuments(queryNovelty).exec();
         const totalPages = Math.ceil(total / limit);
 
         let search;
@@ -295,21 +316,7 @@ export class NoveltyService {
         // const queryNovelty = by === 'category' ? { concept: { $in: conceptList } } : combinedQuery;
         // queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
 
-        const queryNovelty = {}
-
-        if(typeNovelty != "all"){
-            queryNovelty["typeNovelty"] = typeNovelty;
-        }
-
-        if (by === 'documents'){
-            queryNovelty['documents'] = { $size: 0 };
-        }
-
-        if (by === 'state'){
-            queryNovelty['state'] = value
-        }
-       
-        queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+      
 
         search = await this.noveltyModel
             .find(queryNovelty)
