@@ -3,14 +3,14 @@ import { CollaboratorsService } from './services/collaborators.service';
 import { CollaboratorsController } from './controllers/collaborators.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Collaborator, CollaboratorSchema } from 'src/modules/collaborators/entities/collaborators.entity';
-import { ContractsModule } from '../contracts/contracts.module';
+import { ContractsTriModule } from '../contracts/contracts.module';
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             {name: Collaborator.name, schema: CollaboratorSchema},
         ]),
-        ContractsModule
+        ContractsTriModule
     ],
     controllers: [CollaboratorsController],
     providers: [CollaboratorsService]

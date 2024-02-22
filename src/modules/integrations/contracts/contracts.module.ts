@@ -17,5 +17,5 @@ import { Client, ClientSchema } from 'src/modules/clients/entities/client.entity
     exports: [ContractsService]
 
 })
-export class ContractsModule {
+export class ContractsTriModule {
 }

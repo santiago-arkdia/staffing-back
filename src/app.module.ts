@@ -37,7 +37,7 @@ import * as firebaseAdmin from 'firebase-admin';
 import * as serviceAccount from './config/serviceAccountKey.json'
 import {AffiliationModule} from "./modules/integrations/affiliation/affiliation.module";
 import {ClientsTriModule} from "./modules/integrations/clients/clients.module";
-import {ContractsModule} from "./modules/integrations/contracts/contracts.module";
+import {ContractsTriModule} from "./modules/integrations/contracts/contracts.module";
 import {ExperiencesModule} from "./modules/integrations/experiences/experiences.module";
 import {FamilyModule} from "./modules/integrations/family/family.module";
 import {JobCenterModule} from "./modules/integrations/job-center/job-center.module";
@@ -57,6 +57,7 @@ import { NoveltySocialSecurityModule } from './modules/novelty-social-security/n
 import { PayrollsModule } from './modules/payrolls/payrolls.module';
 import { PayrollUserModule } from './modules/payroll-user/payroll-user.module';
 import { UsersExternalsModule } from './modules/users-externals/users-externals.module';
+import { ContractsModule } from './modules/contracts/contracts.module';
 
 @Module({
     imports: [
@@ -95,7 +96,7 @@ import { UsersExternalsModule } from './modules/users-externals/users-externals.
         UploadsModule,
         AffiliationModule,
         ClientsTriModule,
-        ContractsModule,
+        ContractsTriModule,
         ExperiencesModule,
         FamilyModule,
         JobCenterModule,
