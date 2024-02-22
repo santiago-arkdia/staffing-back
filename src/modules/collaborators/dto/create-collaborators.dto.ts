@@ -31,4 +31,8 @@ export class CreateCollaboratorDto {
   @IsOptional()
   @IsString()
   jobPosition: string;
+
+  @IsOptional()
+  @IsString()
+  user: string;
 }
