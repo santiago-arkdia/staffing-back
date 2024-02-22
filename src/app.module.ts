@@ -113,7 +113,8 @@ import { UsersExternalsModule } from './modules/users-externals/users-externals.
         ConceptsSocialSecurityModule,
         NoveltySocialSecurityModule,
         PayrollsModule,
-        UsersExternalsModule
+        UsersExternalsModule,
+        ContractsModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],
