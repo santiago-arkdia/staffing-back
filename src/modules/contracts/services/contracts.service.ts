@@ -8,16 +8,16 @@ import {Contract} from '../entities/contracts.entity';
 export class ContractsService {
     constructor(
         @InjectModel(Contract.name)
-        private readonly conceptModel: Model<Contract>,
+        private readonly contractModel: Model<Contract>,
     ) {
     }
     
     async findAll(): Promise<Contract[]> {
-        return await this.conceptModel.find().exec();
+        return await this.contractModel.find().exec();
     }
 
     async findOne(id: string): Promise<Contract> {
-        return await this.conceptModel.findById(id).exec();
+        return await this.contractModel.findById(id).exec();
     }
     async findBy(
         by: string,
@@ -41,18 +41,18 @@ export class ContractsService {
 
         const total =
             by === 'find' && value === 'all'
-                ? await this.conceptModel.countDocuments().exec()
-                : await this.conceptModel.countDocuments(query).exec();
+                ? await this.contractModel.countDocuments().exec()
+                : await this.contractModel.countDocuments(query).exec();
 
         let queryBuilder
 
         if (by === 'find' && value === 'all') {
-            queryBuilder = this.conceptModel.find();
+            queryBuilder = this.contractModel.find();
         }else{
-            queryBuilder = this.conceptModel.find(query);
+            queryBuilder = this.contractModel.find(query);
         }
 
-        queryBuilder = queryBuilder.populate('categoryNovelty');
+        queryBuilder = queryBuilder.populate('client').populate('collaborator');
         const data = await queryBuilder.exec();
 
         const contracts: any = {};
