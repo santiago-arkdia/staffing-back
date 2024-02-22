@@ -304,10 +304,12 @@ export class NoveltyService {
         if (by === 'documents'){
             queryNovelty['documents'] = { $size: 0 };
         }
-       
-        //queryNovelty['client'] = { '$in': clients.map(client => client._id) };
 
-        console.log(queryNovelty);
+        if (by === 'state'){
+            queryNovelty['state'] = value
+        }
+       
+        queryNovelty['client'] = { '$in': clients.map(client => client._id) };
 
         search = await this.noveltyModel
             .find(queryNovelty)

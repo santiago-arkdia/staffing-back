@@ -9,11 +9,13 @@ import {RolessModule} from "../roles/roles.module";
 import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminSchema } from '../admin/entities/admin.entity';
 import { UsersExternalsModule } from '../users-externals/users-externals.module';
+import { Collaborator, CollaboratorSchema } from '../collaborators/entities/collaborators.entity';
 
 // import { AdminGuard } from './admin.guard';
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: Admin.name, schema: AdminSchema }]),
+        MongooseModule.forFeature([{ name: Collaborator.name, schema: CollaboratorSchema }]),
         UsersModule,
         UsersExternalsModule,
         RolessModule,

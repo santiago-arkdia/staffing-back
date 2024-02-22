@@ -3,12 +3,12 @@ import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {NoveltyService} from '../services/novelty.service';
 import {Body, Controller, Get, Headers, Param, Post, Put, Query, Req, UseGuards} from '@nestjs/common';
 import {CreateNoveltyDto} from '../dto/create-novelty.dto';
-import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
 import {Novelty} from '../entities/novelty.entity';
 import {AuthGuard} from "../../auth/auth.guard";
 import { Request } from 'express';
 import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 import { AxiosResponse } from 'axios';
+import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
 
 @ApiTags('Novelty')
 @Controller('api/novelty')
@@ -85,6 +85,7 @@ export class NoveltyController {
   ): Promise<Novelty[]> {
     const { roleKey } = request['user'];
     // console.log(request['user']);
+    console.log(request['user']);
     return await this.noveltyService.findBy(page, limit, by, value, requestBody, roleKey, request['user'].userAdmin, typeNovelty);
   }
 
@@ -99,7 +100,7 @@ export class NoveltyController {
         finalDate: { type: 'string' },
         type: { type: 'string' },
         token: { type: 'string' },
-      },
+      }, 
     },
   })
   async getNoveltyByDocument(

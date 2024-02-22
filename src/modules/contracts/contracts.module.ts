@@ -8,6 +8,7 @@ import { ContractsController } from './controllers/contracts.controller';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Contract.name, schema: ContractSchema }]),
+    
   ],
   controllers: [ContractsController],
   providers: [ContractsService],

@@ -5,10 +5,13 @@ import axios, {AxiosResponse} from "axios";
 import { Model } from 'mongoose';
 import { CreateCollaboratorTriDto } from 'src/modules/collaborators/dto/create-collaborators-tri.dto';
 import { Collaborator } from 'src/modules/collaborators/entities/collaborators.entity';
+import { ContractsService } from '../../contracts/services/contracts.service';
 
 @Injectable()
 export class CollaboratorsService {
-    constructor(@InjectModel(Collaborator.name) private collaboratorModel: Model<Collaborator>) {}
+    constructor(@InjectModel(Collaborator.name) private collaboratorModel: Model<Collaborator>,
+        private contractsService: ContractsService
+    ) {}
 
     async get(
         instance: string, //instancia
@@ -31,7 +34,7 @@ export class CollaboratorsService {
 
         try {
             const response = await axios.get(`${url}?instancia=${instance}&date_start=${dateStart}&date_end=${dateEnd}`, config);
-            this.syncUsers(response.data.users)
+            this.syncUsers(response.data.users, instance, dateStart, dateEnd, token);
             return response.data;
         } catch (error) {
             if (error.response) {
@@ -50,9 +53,11 @@ export class CollaboratorsService {
         }
     }
 
-    async syncUsers(users: any[]): Promise<void> {
+    async syncUsers(users: any[], instance: string, dateStart: string, dateEnd: string, token: string): Promise<void> {
         for (const user of users) {
           const existingCollaborator = await this.collaboratorModel.findOne({ idTri: user.id }).exec();
+
+          
 
           const collaboratorData: CreateCollaboratorTriDto = {
             name: user.nombres+" "+user.primer_apellido+" "+user.segundo_apellido,
@@ -62,14 +67,17 @@ export class CollaboratorsService {
             idTri: user.id
           };
 
+
           if (existingCollaborator) {
             let update = await this.collaboratorModel.updateOne({ idTri: user.id }, collaboratorData).exec();
+            // this.contractsService.contractInstance(user.numero_documento, instance, token, update.)
           } else {
             const newCollaborator = new this.collaboratorModel({
               ...collaboratorData,
               idTri: user.id,
             });
             let save = await newCollaborator.save();
+            this.contractsService.contractInstance(user.numero_documento, instance, token, save.id)
           }
         }
       }

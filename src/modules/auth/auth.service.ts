@@ -10,11 +10,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Admin } from '../admin/entities/admin.entity';
 import { UsersExternalService } from '../users-externals/services/users-externals.service';
+import { Collaborator } from '../collaborators/entities/collaborators.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(Admin.name) private readonly adminModel: Model<Admin>,
+    @InjectModel(Collaborator.name) private readonly collaboratorModel: Model<Collaborator>,
     private usersService: UsersService,
     private usersExternalService: UsersExternalService,
     private rolesService: RolesService,
@@ -31,7 +33,13 @@ export class AuthService {
         role = await this.rolesService.findOne(user.role);
       }
 
-      let userAdmin = await this.adminModel.findOne({user : user._id}).exec();
+      let userAdmin;
+
+      if(role.role_key === 'collaborator') {
+        userAdmin = await this.collaboratorModel.findOne({user : user._id}).exec();
+      }else {
+         userAdmin = await this.adminModel.findOne({user : user._id}).exec();
+      }
  
       const payload = { id: user._id, email: user.email, role: user.role ? user.role : '', roleKey: role ? role.role_key : '', userAdmin: userAdmin ? userAdmin._id : ''};
       return {

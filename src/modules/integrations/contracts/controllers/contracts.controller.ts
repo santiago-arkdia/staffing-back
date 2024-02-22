@@ -29,6 +29,6 @@ export class ContractsController {
         @Body('instance') instance: string,
         @Headers('x-api-key') token
     ): Promise<AxiosResponse<any>> {
-        return await this.contractsService.contractInstance(document, instance, token);
+        return await this.contractsService.contractInstance(document, instance, token, null);
     }
 }
