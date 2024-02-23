@@ -10,12 +10,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminSchema } from '../admin/entities/admin.entity';
 import { UsersExternalsModule } from '../users-externals/users-externals.module';
 import { Collaborator, CollaboratorSchema } from '../collaborators/entities/collaborators.entity';
+import { Client, ClientSchema } from '../clients/entities/client.entity';
+import { Payroll, PayrollSchema } from '../payroll-user/entities/payroll-user.entity';
 
 // import { AdminGuard } from './admin.guard';
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: Admin.name, schema: AdminSchema }]),
         MongooseModule.forFeature([{ name: Collaborator.name, schema: CollaboratorSchema }]),
+        MongooseModule.forFeature([{ name: Client.name, schema: ClientSchema }]),
+        MongooseModule.forFeature([{ name: Payroll.name, schema: PayrollSchema }]),
         UsersModule,
         UsersExternalsModule,
         RolessModule,

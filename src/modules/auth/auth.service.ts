@@ -11,12 +11,16 @@ import { Model } from 'mongoose';
 import { Admin } from '../admin/entities/admin.entity';
 import { UsersExternalService } from '../users-externals/services/users-externals.service';
 import { Collaborator } from '../collaborators/entities/collaborators.entity';
+import { Client } from '../clients/entities/client.entity';
+import { Payroll } from '../payroll-user/entities/payroll-user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(Admin.name) private readonly adminModel: Model<Admin>,
     @InjectModel(Collaborator.name) private readonly collaboratorModel: Model<Collaborator>,
+    @InjectModel(Client.name) private readonly clientModel: Model<Client>,
+    @InjectModel(Payroll.name) private readonly payrollModel: Model<Payroll>,
     private usersService: UsersService,
     private usersExternalService: UsersExternalService,
     private rolesService: RolesService,
@@ -33,15 +37,61 @@ export class AuthService {
         role = await this.rolesService.findOne(user.role);
       }
 
-      let userAdmin;
+      let userEntity;
 
-      if(role.role_key === 'collaborator') {
-        userAdmin = await this.collaboratorModel.findOne({user : user._id}).exec();
-      }else {
-         userAdmin = await this.adminModel.findOne({user : user._id}).exec();
+      switch (role.role_key) {
+        case 'admin_payroll':
+          userEntity = await this.payrollModel.findOne({user : user._id}).exec();
+        break;
+        case 'terminations':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'terminations_analyst':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'linkage':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'linkage_analyst':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'linking_assistant':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'social_security':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'social_security_analyst':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'legal':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'legal_analyst':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'client':
+          userEntity = await this.clientModel.findOne({user : user._id}).exec();
+        break;
+        case 'payroll_analyst':
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
+        break;
+        case 'collaborator':
+          userEntity = await this.collaboratorModel.findOne({user : user._id}).exec();
+        break;
       }
+
+      // if(role.role_key === 'collaborator') {
+      //   userEntity = await this.collaboratorModel.findOne({user : user._id}).exec();
+      // }else {
+      //   if(role.role_key === 'client') {
+      //     userEntity = await this.adminModel.findOne({user : user._id}).exec();
+      //   }else{
+      //     userEntity = await this.adminModel.findOne({user : user._id}).exec();
+      //   }
+      // }
  
-      const payload = { id: user._id, email: user.email, role: user.role ? user.role : '', roleKey: role ? role.role_key : '', userAdmin: userAdmin ? userAdmin._id : ''};
+      const payload = { id: user._id, email: user.email, role: user.role ? user.role : '', roleKey: role ? role.role_key : '', userEntity: userEntity ? userEntity._id : ''};
       return {
         access_token: await this.jwtService.signAsync(payload),
       };

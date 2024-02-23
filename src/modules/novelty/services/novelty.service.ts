@@ -288,17 +288,18 @@ export class NoveltyService {
         if (by === 'state'){
             queryNovelty['state'] = value
         }
+
        
-        // if (request['user'].roleKey != "collaborator" ){
-        //     if(request['user'].roleKey == "client" ){
-        //         queryNovelty['client'] = request['user'].id;
-        //     }else{
-        //         let clients = await this.clientModel.find({analysts: { $in: request['user'].userAdmin }}).exec();
-        //         queryNovelty['client'] = { '$in': clients.map(client => client._id) };
-        //     }
-        // }else{
-        //     queryNovelty['collaborator'] = request['user'].userAdmin;
-        // }
+        if (request['user'].roleKey != "collaborator" ){
+            if(request['user'].roleKey == "client" ){
+                queryNovelty['client'] =  request['user'].userEntity;
+            }else{
+                let clients = await this.clientModel.find({analysts: { $in: request['user'].userEntity }}).exec();
+                queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+            }
+        }else{
+            queryNovelty['collaborator'] = request['user'].userEntity;
+        }
 
         // const combinedQuery = {...query, ...queryBody};
         // combinedQuery['client'] = { '$in': clients.map(client => client._id) };
