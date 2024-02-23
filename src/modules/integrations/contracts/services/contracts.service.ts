@@ -4,13 +4,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import axios, {AxiosResponse} from "axios";
 import { Model } from 'mongoose';
 import { Client } from 'src/modules/clients/entities/client.entity';
+import { Collaborator } from 'src/modules/collaborators/entities/collaborators.entity';
 import { CreateContractDto } from 'src/modules/contracts/dto/create-contracts.dto';
 import { Contract } from 'src/shared/models/contract';
 
 @Injectable()
 export class ContractsService {
     constructor(@InjectModel(Contract.name) private contractModel: Model<Contract>,
-                @InjectModel(Client.name) private clientModel: Model<Client>) {}
+                @InjectModel(Client.name) private clientModel: Model<Client>,
+                @InjectModel(Collaborator.name) private collaboratorModel: Model<Collaborator>) {}
 
     async instanceList(
         instance: string, //instancia_asignada
@@ -68,6 +70,8 @@ export class ContractsService {
     async syncContracts(contract: any, collaborator: string): Promise<void> {
           const existingContract = await this.contractModel.findOne({ idTri: contract.id }).exec();
           const client = await this.clientModel.findOne({ nit: contract.cliente }).exec();
+          const collaboratorUpdate = await this.collaboratorModel.updateOne({_id: collaborator},{ client: client.id }).exec();
+
 
           const contractData: CreateContractDto = {
             contractCode: contract.codigo_contrato,

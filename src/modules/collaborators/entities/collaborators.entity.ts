@@ -5,6 +5,7 @@ import {UtilityCenters} from "../../business-configuration/utility-center/entiti
 import {JobPositions} from "../../business-configuration/job-positions/entities/job-positions.entity";
 import {CostCenters} from "../../business-configuration/centers-costs/entities/centers-costs.entity";
 import { UserEntity } from 'src/modules/users/entities/user.entity';
+import { Client } from 'src/modules/clients/entities/client.entity';
 
 @Schema({timestamps: true})
 export class Collaborator {
@@ -37,6 +38,9 @@ export class Collaborator {
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'JobPositions'})
     jobPosition: JobPositions;
+
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Client'})
+    client: Client;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User'})
     user: UserEntity;

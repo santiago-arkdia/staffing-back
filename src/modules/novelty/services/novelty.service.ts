@@ -212,6 +212,7 @@ export class NoveltyService {
 
     async findOne(id: string): Promise<Novelty> {
         return await this.noveltyModel.findById(id)
+            .populate('contract')
             .populate('collaborator')
             .populate({
                 path: 'concept',
