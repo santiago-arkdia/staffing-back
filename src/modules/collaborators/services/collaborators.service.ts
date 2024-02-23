@@ -121,9 +121,9 @@ export class CollaboratorService {
             }
         }
 
-        if (request['user'].roleKey == "client"){
-            querAsigned["client"] = request['user'].userEntity;
-        }
+        // if (request['user'].roleKey == "client"){
+        //     querAsigned["client"] = request['user'].userEntity;
+        // }
 
         if ( asigned != null) {
             if (asigned == "asigned"){
