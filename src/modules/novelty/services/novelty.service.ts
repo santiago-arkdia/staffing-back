@@ -281,48 +281,47 @@ export class NoveltyService {
             queryNovelty['documents'] = { $size: 0 };
         }
 
+        if (by === 'concept'){
+            queryNovelty['concept'] = value
+        }
+
         if (by === 'state'){
             queryNovelty['state'] = value
         }
        
-        if (request['user'].roleKey != "collaborator" ){
-            if(request['user'].roleKey == "client" ){
-                queryNovelty['client'] = request['user'].id;
-            }else{
-                let clients = await this.clientModel.find({analysts: { $in: request['user'].userAdmin }}).exec();
-                queryNovelty['client'] = { '$in': clients.map(client => client._id) };
-            }
-        }else{
-            queryNovelty['collaborator'] = request['user'].userAdmin;
-        }
+        // if (request['user'].roleKey != "collaborator" ){
+        //     if(request['user'].roleKey == "client" ){
+        //         queryNovelty['client'] = request['user'].id;
+        //     }else{
+        //         let clients = await this.clientModel.find({analysts: { $in: request['user'].userAdmin }}).exec();
+        //         queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+        //     }
+        // }else{
+        //     queryNovelty['collaborator'] = request['user'].userAdmin;
+        // }
 
         // const combinedQuery = {...query, ...queryBody};
         // combinedQuery['client'] = { '$in': clients.map(client => client._id) };
-        
-        const total = by === 'find' && value === 'all'
-            ? await this.noveltyModel.countDocuments(queryNovelty).exec()
-            : await this.noveltyModel.countDocuments(queryNovelty).exec();
-        const totalPages = Math.ceil(total / limit);
 
-        let search;
-
-        
-
-        // let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: roleKey }).exec();
+        // let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: request['user'].roleKey }).exec();
         // const queryConcept = {}
         //  if (roleKeys.length !== 0) {
         //     queryConcept['approves'] = { '$in': roleKeys.map(role => role.role_key) };
-        // } else if (roleKey !== "client") {
-        //     queryConcept["approves"] = roleKey;
+        // } else if (request['user'].roleKey !== "client") {
+        //     queryConcept["approves"] = request['user'].roleKey;
         // }
 
         // let concepts = await this.conceptModel.find(queryConcept).exec();
         // const queryNovelty = by === 'category' ? { concept: { $in: conceptList } } : combinedQuery;
         // queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
 
-      
 
-        search = await this.noveltyModel
+        const total = by === 'find' && value === 'all'
+            ? await this.noveltyModel.countDocuments(queryNovelty).exec()
+            : await this.noveltyModel.countDocuments(queryNovelty).exec();
+        const totalPages = Math.ceil(total / limit);
+
+        let  search = await this.noveltyModel
             .find(queryNovelty)
             .skip((page - 1) * limit)
             .populate('collaborator')
