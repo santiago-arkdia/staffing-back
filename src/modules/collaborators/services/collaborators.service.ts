@@ -121,9 +121,8 @@ export class CollaboratorService {
             }
         }
 
-        // if (request['user'].roleKey == "client"){
-        //     querAsigned["client"] = request['user'].userEntity;
-        // }
+        console.log(request['user'].roleKey);
+     
 
         if ( asigned != null) {
             if (asigned == "asigned"){
@@ -145,6 +144,10 @@ export class CollaboratorService {
             }
         }
 
+        if (request['user'].roleKey == "client"){
+            querAsigned["client"] = request['user'].userEntity;
+        }
+
         const total = by === 'find' && value === 'all'
             ? await this.collaboratorModel.countDocuments(querAsigned).exec()
             : await this.collaboratorModel.countDocuments(query, querAsigned).exec();
@@ -157,7 +160,10 @@ export class CollaboratorService {
             queryBuilder = this.collaboratorModel.find(query, querAsigned);
         }
 
+
         queryBuilder = queryBuilder.populate('utilityCenter').populate('centersCosts').populate('jobPosition');
+        queryBuilder = queryBuilder.select('name document documentType status centersCosts jobPosition client createdAt updatedAt');
+
         
         if (page > 0 && limit > 0) {
             queryBuilder = queryBuilder.skip((page - 1) * limit).limit(limit);
