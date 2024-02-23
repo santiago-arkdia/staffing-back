@@ -128,18 +128,18 @@ export class CollaboratorService {
         if ( asigned != null) {
             if (asigned == "asigned"){
                 querAsigned["$and"] = [
-                    { jobPosition: { $exists: false } },
-                    { $or: [
-                        { centersCosts: { $exists: false } },
-                        { utilityCenter: { $exists: false } }
-                    ]}
-                ];
-            }else{
-                querAsigned["$and"] = [
                     { jobPosition: { $exists: true } },
                     { $or: [
                         { centersCosts: { $exists: true } },
                         { utilityCenter: { $exists: true } }
+                    ]}
+                ];
+            }else{
+                querAsigned["$and"] = [
+                    { jobPosition: { $exists: false } },
+                    { $or: [
+                        { centersCosts: { $exists: false } },
+                        { utilityCenter: { $exists: false } }
                     ]}
                 ];
             }
