@@ -228,16 +228,14 @@ export class NoveltyService {
         by: string,
         value: string | number,
         requestBodyFilters: Record<string, any> = {},
-        roleKey: string,
-        userId: string, 
         typeNovelty: string,
-        id: string
+        request: Record<string, any>
     ): Promise<Novelty[]> {
         let query = {};
         let queryBody = {};
         let conceptList= []
-       
-       
+        
+        console.log(request['user']);
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
@@ -286,15 +284,15 @@ export class NoveltyService {
             queryNovelty['state'] = value
         }
        
-        if (roleKey != "collaborator" ){
-            if(roleKey == "client" ){
-                queryNovelty['client'] = id;
+        if (request['user'].roleKey != "collaborator" ){
+            if(request['user'].roleKey == "client" ){
+                queryNovelty['client'] = request['user'].id;
             }else{
-                let clients = await this.clientModel.find({analysts: { $in: userId }}).exec();
+                let clients = await this.clientModel.find({analysts: { $in: request['user'].userAdmin }}).exec();
                 queryNovelty['client'] = { '$in': clients.map(client => client._id) };
             }
         }else{
-            queryNovelty['collaborator'] = userId;
+            queryNovelty['collaborator'] = request['user'].userAdmin;
         }
 
         // const combinedQuery = {...query, ...queryBody};
@@ -355,7 +353,7 @@ export class NoveltyService {
         const novelties: any = {};
         //novelties.total = data.length;
         novelties.pages = totalPages;
-        novelties.roleKey = roleKey;
+        novelties.roleKey = request['user'].roleKey;
         novelties.data = data;
 
         return novelties;
