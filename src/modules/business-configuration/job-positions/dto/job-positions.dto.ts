@@ -19,6 +19,10 @@ export class CreateJobPositionsDto {
 
     @IsString()
     @IsOptional()
+    hourlyMeshes: string;
+
+    @IsString()
+    @IsOptional()
     name: string;
 
     @IsString()

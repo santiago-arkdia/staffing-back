@@ -5,6 +5,7 @@ import {Model, Types} from 'mongoose';
 import {CreateJobPositionsDto} from '../dto/job-positions.dto';
 import {JobPositions} from '../entities/job-positions.entity';
 import { AuthExternalGuard } from 'src/modules/auth/auth-external.guard';
+import { UpdateJobPositionsDto } from '../dto/update-job-positions.dto';
 
 @Injectable()
 export class JobPositionsService {
@@ -19,7 +20,7 @@ export class JobPositionsService {
         return await createdJobPositions.save();
     }
 
-    async update(id: string, jobPositions: CreateJobPositionsDto): Promise<JobPositions> {
+    async update(id: string, jobPositions: UpdateJobPositionsDto): Promise<JobPositions> {
         return this.jobPositionsModel.findByIdAndUpdate(id, jobPositions, {
             new: true,
         });

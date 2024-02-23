@@ -8,10 +8,6 @@ export class CreateHourlyMeshesDto{
   @IsString()
   name: string;
 
-  @IsString()
-  @IsOptional()
-  jobPositions: string;
-
   @IsArray()
   @IsOptional()
   schedules: Schedules[];

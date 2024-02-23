@@ -43,54 +43,16 @@ export class AuthService {
         case 'admin_payroll':
           userEntity = await this.payrollModel.findOne({user : user._id}).exec();
         break;
-        case 'terminations':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
-        break;
-        case 'terminations_analyst':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
-        break;
-        case 'linkage':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
-        break;
-        case 'linkage_analyst':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
-        break;
-        case 'linking_assistant':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
-        break;
-        case 'social_security':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
-        break;
-        case 'social_security_analyst':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
-        break;
-        case 'legal':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
-        break;
-        case 'legal_analyst':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
-        break;
         case 'client':
           userEntity = await this.clientModel.findOne({user : user._id}).exec();
-        break;
-        case 'payroll_analyst':
-          userEntity = await this.adminModel.findOne({user : user._id}).exec();
         break;
         case 'collaborator':
           userEntity = await this.collaboratorModel.findOne({user : user._id}).exec();
         break;
+        default:
+          userEntity = await this.adminModel.findOne({user : user._id}).exec();
       }
 
-      // if(role.role_key === 'collaborator') {
-      //   userEntity = await this.collaboratorModel.findOne({user : user._id}).exec();
-      // }else {
-      //   if(role.role_key === 'client') {
-      //     userEntity = await this.adminModel.findOne({user : user._id}).exec();
-      //   }else{
-      //     userEntity = await this.adminModel.findOne({user : user._id}).exec();
-      //   }
-      // }
- 
       const payload = { id: user._id, email: user.email, role: user.role ? user.role : '', roleKey: role ? role.role_key : '', userEntity: userEntity ? userEntity._id : ''};
       return {
         access_token: await this.jwtService.signAsync(payload),

@@ -10,9 +10,6 @@ export class HourlyMeshes {
     @Prop({type: String, required: true})
     name: string;
 
-    @Prop({type: mongoose.Schema.Types.Array, ref: 'JobPositions'})
-    jobPositions: JobPositions[];
-
     @Prop({type: mongoose.Schema.Types.Array, ref: 'Schedules'})
     schedules: Schedules[];
 

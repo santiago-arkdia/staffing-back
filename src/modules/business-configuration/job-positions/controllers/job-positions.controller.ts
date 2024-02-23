@@ -5,6 +5,7 @@ import {JobPositionsService} from '../services/job-positions.service';
 import {ApiTags} from '@nestjs/swagger';
 import {CreateJobPositionsDto} from '../dto/job-positions.dto';
 import { AuthExternalGuard } from 'src/modules/auth/auth-external.guard';
+import { UpdateJobPositionsDto } from '../dto/update-job-positions.dto';
 
 @ApiTags('Job Positions')
 @Controller('api/job-positions')
@@ -21,7 +22,7 @@ export class JobPositionsController {
     @Put(':id')
     async update(
         @Param('id') id: string,
-        @Body() jobPositions: CreateJobPositionsDto,
+        @Body() jobPositions: UpdateJobPositionsDto,
     ): Promise<JobPositions> {
         return await this.jobPositionsService.update(id, jobPositions);
     }

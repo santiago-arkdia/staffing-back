@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import {Region} from '../../regions/entities/region.entity';
 import {UtilityCenters} from '../../utility-center/entities/utility-center.entity';
 import {CostCenters} from '../../centers-costs/entities/centers-costs.entity';
+import { HourlyMeshes } from 'src/modules/hourly-meshes/entities/hourly-meshes.entity';
 
 @Schema({collection: 'job-positions', timestamps: true})
 export class JobPositions {
@@ -15,6 +16,9 @@ export class JobPositions {
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CostCenters'})
     centersCosts: CostCenters;
+
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'HourlyMeshes'})
+    hourlyMeshes: HourlyMeshes;
 
     @Prop({type: String, required: true})
     name: string;
@@ -33,7 +37,7 @@ export class JobPositions {
 
     @Prop()
     state: number;
-
+    
     @Prop({ type: Object })
     more: Record<string, any>;
 }
