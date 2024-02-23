@@ -44,7 +44,12 @@ export class JobPositionsService {
     }
 
     async findOne(id: string): Promise<JobPositions> {
-        return await this.jobPositionsModel.findById(id).exec();
+        return await this.jobPositionsModel.findById(id)
+                .populate('region')
+                .populate('utilityCenter')
+                .populate('centersCosts')
+                .populate('hourlyMeshes')
+                .exec();
     }
 
     async findBy(
