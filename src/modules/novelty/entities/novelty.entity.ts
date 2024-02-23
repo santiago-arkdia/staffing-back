@@ -104,6 +104,9 @@ export class Novelty {
     @Prop({type: String})
     typeNovelty: string;
 
+    @Prop({type: Number})
+    withSupportFile?: number;
+
 }
 
 export const NoveltySchema = SchemaFactory.createForClass(Novelty);

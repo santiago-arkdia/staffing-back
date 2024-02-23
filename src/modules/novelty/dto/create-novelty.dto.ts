@@ -152,5 +152,9 @@ export class CreateNoveltyDto {
   @IsOptional()
   comments?: any[]; 
 
+  @IsNumber()
+  @IsOptional()
+  withSupportFile?: number;
+
 }
 
