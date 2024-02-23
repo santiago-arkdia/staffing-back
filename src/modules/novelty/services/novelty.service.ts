@@ -230,7 +230,8 @@ export class NoveltyService {
         requestBodyFilters: Record<string, any> = {},
         roleKey: string,
         userId: string, 
-        typeNovelty: string
+        typeNovelty: string,
+        id: string
     ): Promise<Novelty[]> {
         let query = {};
         let queryBody = {};
@@ -286,8 +287,12 @@ export class NoveltyService {
         }
        
         if (roleKey != "collaborator" ){
-            let clients = await this.clientModel.find({analysts: { $in: userId }}).exec();
-            queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+            if(roleKey != "collaborator" ){
+                queryNovelty['client'] = id;
+            }else{
+                let clients = await this.clientModel.find({analysts: { $in: userId }}).exec();
+                queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+            }
         }else{
             queryNovelty['collaborator'] = userId;
         }
