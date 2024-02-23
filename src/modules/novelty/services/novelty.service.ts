@@ -287,7 +287,7 @@ export class NoveltyService {
         }
        
         if (roleKey != "collaborator" ){
-            if(roleKey != "collaborator" ){
+            if(roleKey == "client" ){
                 queryNovelty['client'] = id;
             }else{
                 let clients = await this.clientModel.find({analysts: { $in: userId }}).exec();
