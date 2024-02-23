@@ -102,6 +102,7 @@ export class CollaboratorService {
         by: string,
         value: string | number,
         asigned: string | number,
+        request: Record<string, any>
     ): Promise<Collaborator[]> {
         let query = {};
         let querAsigned = {};
@@ -120,6 +121,9 @@ export class CollaboratorService {
             }
         }
 
+        if (request['user'].roleKey == "client"){
+            querAsigned["client"] = request['user'].userEntity;
+        }
 
         if ( asigned != null) {
             if (asigned == "asigned"){
@@ -140,8 +144,6 @@ export class CollaboratorService {
                 ];
             }
         }
-
-
 
         const total = by === 'find' && value === 'all'
             ? await this.collaboratorModel.countDocuments(querAsigned).exec()

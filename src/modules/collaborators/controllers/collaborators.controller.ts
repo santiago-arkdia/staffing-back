@@ -1,10 +1,11 @@
 /* eslint-disable prettier/prettier */
-import {Controller, Post, Put, Get, Param, Body} from '@nestjs/common';
+import {Controller, Post, Put, Get, Param, Body, Req, UseGuards} from '@nestjs/common';
 import {CollaboratorService} from '../services/collaborators.service';
 import {CreateCollaboratorDto} from '../dto/create-collaborators.dto';
 import {Collaborator} from '../entities/collaborators.entity';
 import {ApiTags} from '@nestjs/swagger';
 import {UpdateCollaboratorDto} from '../dto/update-collaborators.dto';
+import { AuthGuard } from 'src/modules/auth/auth.guard';
 
 @ApiTags('Collaborator')
 @Controller('api/collaborator')
@@ -38,23 +39,28 @@ export class CollaboratorController {
     }
 
     @Get(':page/:limit/:by/:value')
+    @UseGuards(AuthGuard)
     async findBy(
         @Param('page') page: number,
         @Param('limit') limit: number,
         @Param('by') by: string,
         @Param('value') value: string,
+        @Req() request: Request
     ): Promise<Collaborator[]> {
-        return await this.collaboratorService.findBy(page, limit, by, value, null);
+        return await this.collaboratorService.findBy(page, limit, by, value, null, request);
     }
 
     @Get(':page/:limit/:by/:value/:asigned')
+    @UseGuards(AuthGuard)
     async findByAsigned(
         @Param('page') page: number,
         @Param('limit') limit: number,
         @Param('by') by: string,
         @Param('value') value: string,
         @Param('asigned') asigned: string,
+        @Req() request: Request
     ): Promise<Collaborator[]> {
-        return await this.collaboratorService.findBy(page, limit, by, value, asigned);
+        console.log(request["user"]);
+        return await this.collaboratorService.findBy(page, limit, by, value, asigned, request);
     }
 }
