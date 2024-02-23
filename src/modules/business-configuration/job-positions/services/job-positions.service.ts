@@ -34,6 +34,7 @@ export class JobPositionsService {
             .populate('region')
             .populate('utilityCenter')
             .populate('centersCosts')
+            .populate('hourlyMeshes')
             .exec();
 
         const jobPositions: any = {};
@@ -82,6 +83,7 @@ export class JobPositionsService {
                 .populate('region')
                 .populate('utilityCenter')
                 .populate('centersCosts')
+                .populate('hourlyMeshes')
                 .limit(limit)
                 .exec();
         } else {
@@ -91,6 +93,7 @@ export class JobPositionsService {
                 .populate('region')
                 .populate('utilityCenter')
                 .populate('centersCosts')
+                .populate('hourlyMeshes')
                 .limit(limit)
                 .exec();
         }
@@ -112,6 +115,7 @@ export class JobPositionsService {
             .populate('region')
             .populate('utilityCenter')
             .populate('centersCosts')
+            .populate('hourlyMeshes')
             .exec();
 
         return jobPosition;

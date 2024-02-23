@@ -289,7 +289,11 @@ export class NoveltyService {
             queryNovelty['state'] = value
         }
 
-       
+        if (by === 'categoryNovelty'){
+            let concepts = await this.conceptModel.find({categoryNovelty: value}).exec();
+            queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
+        }
+
         if (request['user'].roleKey != "collaborator" ){
             if(request['user'].roleKey == "client" ){
                 queryNovelty['client'] =  request['user'].userEntity;
@@ -300,6 +304,8 @@ export class NoveltyService {
         }else{
             queryNovelty['collaborator'] = request['user'].userEntity;
         }
+
+
 
         // const combinedQuery = {...query, ...queryBody};
         // combinedQuery['client'] = { '$in': clients.map(client => client._id) };
@@ -322,7 +328,7 @@ export class NoveltyService {
             : await this.noveltyModel.countDocuments(queryNovelty).exec();
         const totalPages = Math.ceil(total / limit);
 
-        let  search = await this.noveltyModel
+        let search = await this.noveltyModel
             .find(queryNovelty)
             .skip((page - 1) * limit)
             .populate('collaborator')
@@ -339,7 +345,6 @@ export class NoveltyService {
 // estadoo
 // documentos en vacio 
 
-        let data = search;
 
         // if (roleKeys.length != 0){
         //     data = search.filter(novelty => {
@@ -352,10 +357,10 @@ export class NoveltyService {
         // }
 
         const novelties: any = {};
-        //novelties.total = data.length;
+        novelties.total = total;
         novelties.pages = totalPages;
         novelties.roleKey = request['user'].roleKey;
-        novelties.data = data;
+        novelties.data = search;
 
         return novelties;
     }
