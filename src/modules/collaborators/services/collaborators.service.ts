@@ -101,8 +101,10 @@ export class CollaboratorService {
         limit: number,
         by: string,
         value: string | number,
+        asigned: string | number,
     ): Promise<Collaborator[]> {
         let query = {};
+        let querAsigned = {};
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
@@ -118,16 +120,39 @@ export class CollaboratorService {
             }
         }
 
+
+        if ( asigned != null) {
+            if (asigned == "asigned"){
+                querAsigned["$and"] = [
+                    { jobPosition: { $exists: false } },
+                    { $or: [
+                        { centersCosts: { $exists: false } },
+                        { utilityCenter: { $exists: false } }
+                    ]}
+                ];
+            }else{
+                querAsigned["$and"] = [
+                    { jobPosition: { $exists: true } },
+                    { $or: [
+                        { centersCosts: { $exists: true } },
+                        { utilityCenter: { $exists: true } }
+                    ]}
+                ];
+            }
+        }
+
+
+
         const total = by === 'find' && value === 'all'
-            ? await this.collaboratorModel.countDocuments().exec()
-            : await this.collaboratorModel.countDocuments(query).exec();
+            ? await this.collaboratorModel.countDocuments(querAsigned).exec()
+            : await this.collaboratorModel.countDocuments(query, querAsigned).exec();
         const totalPages = Math.ceil(total / limit);
 
         let queryBuilder;
         if (by === 'find' && value === 'all') {
-            queryBuilder = this.collaboratorModel.find();
+            queryBuilder = this.collaboratorModel.find(querAsigned);
         }else{
-            queryBuilder = this.collaboratorModel.find(query);
+            queryBuilder = this.collaboratorModel.find(query, querAsigned);
         }
 
         queryBuilder = queryBuilder.populate('utilityCenter').populate('centersCosts').populate('jobPosition');

@@ -44,6 +44,17 @@ export class CollaboratorController {
         @Param('by') by: string,
         @Param('value') value: string,
     ): Promise<Collaborator[]> {
-        return await this.collaboratorService.findBy(page, limit, by, value);
+        return await this.collaboratorService.findBy(page, limit, by, value, null);
+    }
+
+    @Get(':page/:limit/:by/:value/:asigned')
+    async findByAsigned(
+        @Param('page') page: number,
+        @Param('limit') limit: number,
+        @Param('by') by: string,
+        @Param('value') value: string,
+        @Param('asigned') asigned: string,
+    ): Promise<Collaborator[]> {
+        return await this.collaboratorService.findBy(page, limit, by, value, asigned);
     }
 }
