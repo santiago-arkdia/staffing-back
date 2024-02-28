@@ -2,7 +2,7 @@
 import { Schema } from '@nestjs/mongoose';
 import { PartialType } from '@nestjs/swagger';
 import { PayrollsDto } from './payrolls.dto';
-import { IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 @Schema()
 export class UpdatPayrollDto extends PartialType(PayrollsDto) {
@@ -17,16 +17,16 @@ export class UpdatPayrollDto extends PartialType(PayrollsDto) {
   @IsString()
   @IsOptional()
   dateApproved: string;
-  
+
   @IsString()
   @IsOptional()
   state: number;
 
-  @IsString()
+  @IsArray()
   @IsOptional()
   comments: string[];
 
-  @IsString()
+  @IsArray()
   @IsOptional()
   documents: string[];
 }

@@ -35,7 +35,13 @@ export class PayrollsService {
           client: payrollsDto.client
         }).sort({consecutive: -1}).limit(1);
 
-        const newConsecutive = maxConsecutive ? maxConsecutive.consecutive + 1 : 1;
+        let newConsecutive = 1;
+
+        if (maxConsecutive.consecutive != null){
+          
+          newConsecutive = maxConsecutive ? maxConsecutive.consecutive + 1 : 1;
+
+        }
     
         const newPayroll = new this.payrollModel({
           novelties: novelties,
@@ -50,11 +56,11 @@ export class PayrollsService {
     }
 
     async update(id: string, updatPayrollDto: UpdatPayrollDto): Promise<UpdatPayrollDto> {
-      const noveltyToUpdate = await this.noveltySocialSecurityModel.findById(id);
+      const noveltyToUpdate = await this.payrollModel.findById(id);
       if (!noveltyToUpdate) {
           throw new NotFoundException('Nomina no encontrada');
       }
-      const updateNovelty = await this.noveltySocialSecurityModel.findByIdAndUpdate(
+      const updateNovelty = await this.payrollModel.findByIdAndUpdate(
           id,
           updatPayrollDto,
           {
@@ -75,8 +81,6 @@ export class PayrollsService {
                 .find(requestBodyFilters)
                 .skip((page - 1) * limit)
                 .populate('novelties')
-                .populate('noveltiesRetirement')
-                .populate('noveltiesSocialSecurity')
                 .populate('client')
                 .limit(limit)
                 .exec();
