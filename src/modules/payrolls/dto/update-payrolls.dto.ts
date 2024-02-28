@@ -26,7 +26,7 @@ export class UpdatPayrollDto extends PartialType(PayrollsDto) {
   @IsOptional()
   comments: string[];
 
-  @IsArray()
+  @IsString()
   @IsOptional()
-  documents: string[];
+  document: string;
 }

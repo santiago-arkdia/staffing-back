@@ -41,8 +41,8 @@ export class Payrolls {
     @Prop([Comment])
     comments: Comment[];
 
-    @Prop([Documents])
-    documents: Documents[];
+    @Prop({type: String})
+    document: string;
 
 }
 
