@@ -292,11 +292,6 @@ export class NoveltyService {
                 queryNovelty['state'] = value
             }
 
-            if (by === 'categoryNovelty'){
-                let concepts = await this.conceptModel.find({categoryNovelty: value}).exec();
-                queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
-            }
-
             if (request['user'].roleKey != "collaborator" ){
                 if(request['user'].roleKey == "client" ){
                     queryNovelty['client'] =  request['user'].userEntity;
@@ -309,7 +304,10 @@ export class NoveltyService {
             }
         }
 
-
+        if (by === 'categoryNovelty'){
+            let concepts = await this.conceptModel.find({categoryNovelty: value}).exec();
+            queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
+        }
 
         // const combinedQuery = {...query, ...queryBody};
         // combinedQuery['client'] = { '$in': clients.map(client => client._id) };
