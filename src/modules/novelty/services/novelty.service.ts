@@ -237,6 +237,7 @@ export class NoveltyService {
         let conceptList= []
         
         console.log(request['user']);
+        console.log("object");
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
@@ -273,36 +274,39 @@ export class NoveltyService {
 
         const queryNovelty = {}
 
-        if(typeNovelty != "all"){
-            queryNovelty["typeNovelty"] = typeNovelty;
-        }
+        if (request['user'].roleKey != "admin_payroll"){
 
-        if (by === 'documents'){
-            queryNovelty['documents'] = { $size: 0 };
-        }
-
-        if (by === 'concept'){
-            queryNovelty['concept'] = value
-        }
-
-        if (by === 'state'){
-            queryNovelty['state'] = value
-        }
-
-        if (by === 'categoryNovelty'){
-            let concepts = await this.conceptModel.find({categoryNovelty: value}).exec();
-            queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
-        }
-
-        if (request['user'].roleKey != "collaborator" ){
-            if(request['user'].roleKey == "client" ){
-                queryNovelty['client'] =  request['user'].userEntity;
-            }else{
-                let clients = await this.clientModel.find({analysts: { $in: request['user'].userEntity }}).exec();
-                queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+            if(typeNovelty != "all"){
+                queryNovelty["typeNovelty"] = typeNovelty;
             }
-        }else{
-            queryNovelty['collaborator'] = request['user'].userEntity;
+
+            if (by === 'documents'){
+                queryNovelty['documents'] = { $size: 0 };
+            }
+
+            if (by === 'concept'){
+                queryNovelty['concept'] = value
+            }
+
+            if (by === 'state'){
+                queryNovelty['state'] = value
+            }
+
+            if (by === 'categoryNovelty'){
+                let concepts = await this.conceptModel.find({categoryNovelty: value}).exec();
+                queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
+            }
+
+            if (request['user'].roleKey != "collaborator" ){
+                if(request['user'].roleKey == "client" ){
+                    queryNovelty['client'] =  request['user'].userEntity;
+                }else{
+                    let clients = await this.clientModel.find({analysts: { $in: request['user'].userEntity }}).exec();
+                    queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+                }
+            }else{
+                queryNovelty['collaborator'] = request['user'].userEntity;
+            }
         }
 
 

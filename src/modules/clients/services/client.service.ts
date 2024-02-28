@@ -77,40 +77,40 @@ export class ClientService {
     }
 
     if (by === 'find' && value === 'all') {
-      search = await this.clientModel
-          .find()
-          .skip((page - 1) * limit)
-          .limit(limit)
-          .populate({
-            path: 'user',
-            populate: {
-              path: 'role',
-            },
-          })
-          .exec();
+      search = this.clientModel
+          .find();
     } else {
-      console.log("object");
-      search = await this.clientModel
-          .find(query)
-          .skip((page - 1) * limit)
-          .limit(limit)
-          .populate({
-            path: 'user',
-            populate: {
-              path: 'role',
-            },
-          })
-          .exec();
+      search = this.clientModel
+          .find(query);
     }
 
-    const data = search;
-    const clients: any = {};
-    clients.total = total;
-    clients.pages = totalPages;
-    clients.data = data;
+    if(page != 0){
+      search = search
+        .skip((page - 1) * limit)
+    }
 
-    return clients;
+    if(limit != 0){
+      search = search
+        .limit(limit)
+    }
+
+    let clients = await search
+            .populate({
+              path: 'user',
+              populate: {
+                path: 'role',
+              },
+            })
+            .exec();
+
+    const data: any = {};
+    data.total = total;
+    data.pages = totalPages;
+    data.data = clients;
+
+    return data;
   }
+  
 
   async getClientByIdentification(identification: number, initialDate: string, finalDate: string, token: string): Promise<AxiosResponse<any>> {
     const url = 'http://34.214.124.124:9896/ws/clientes/consultar_cliente_documento';

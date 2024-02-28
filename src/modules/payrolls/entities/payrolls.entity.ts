@@ -11,14 +11,11 @@ import { Client } from 'src/modules/clients/entities/client.entity';
 @Schema({timestamps: true})
 export class Payrolls {
 
+    @Prop({type: Number})
+    consecutive: number;
+
     @Prop([{type: mongoose.Schema.Types.ObjectId, ref: 'Novelty'}])
     novelties: Novelty[];
-
-    @Prop([{type: mongoose.Schema.Types.ObjectId, ref: 'NoveltyRetirement'}])
-    noveltiesRetirement: NoveltyRetirement[];
-
-    @Prop([{type: mongoose.Schema.Types.ObjectId, ref: 'NoveltySocialSecurity'}])
-    noveltiesSocialSecurity: NoveltySocialSecurity[];
 
     @Prop({type: String})
     month: string;
@@ -33,9 +30,12 @@ export class Payrolls {
     approvedByClient: Date;
 
     @Prop()
-    sendtobeApproved: Date;
+    sendToApproved: Date;
 
-    @Prop({type: Number, default: 0})
+    @Prop()
+    dateApproved: Date;
+
+    @Prop({type: Number})
     state: number;
 
     @Prop([Comment])
@@ -43,6 +43,7 @@ export class Payrolls {
 
     @Prop([Documents])
     documents: Documents[];
+
 }
 
 export const PayrollsSchema = SchemaFactory.createForClass(Payrolls);

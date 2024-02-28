@@ -12,8 +12,12 @@ export class UpdatPayrollDto extends PartialType(PayrollsDto) {
 
   @IsString()
   @IsOptional()
-  sendtobeApproved: string;
+  sendToApproved: string;
 
+  @IsString()
+  @IsOptional()
+  dateApproved: string;
+  
   @IsString()
   @IsOptional()
   state: number;

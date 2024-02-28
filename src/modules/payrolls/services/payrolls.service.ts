@@ -25,60 +25,45 @@ export class PayrollsService {
         const startDate = new Date(`${year}-${month}-01T00:00:00.000Z`);
         const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 2, 0);
 
-
-        const noveltiesIds = await this.noveltyModel.find({
+        const novelties = await this.noveltyModel.find({
             createdAt: { $gte: startDate, $lt: endDate },
             client: payrollsDto.client,
             outDate: 0
           }).select("_id").exec();
 
-          console.log(noveltiesIds);
+        const maxConsecutive = await this.payrollModel.findOne({
+          client: payrollsDto.client
+        }).sort({consecutive: -1}).limit(1);
 
-        const noveltiesRetirementIds = await this.noveltyRetirementModel.find({
-            createdAt: { $gte: startDate, $lt: endDate },
-            client: payrollsDto.client,
-            outDate: 0
-          }).select("_id").exec();
-
-        console.log(noveltiesRetirementIds);  
-
-
-        const noveltiesSocialSecurityIds = await this.noveltySocialSecurityModel.find({
-            createdAt: { $gte: startDate, $lt: endDate },
-            client: payrollsDto.client,
-            outDate: 0
-          }).select("_id").exec();
-
-        console.log(noveltiesSocialSecurityIds);  
-
+        const newConsecutive = maxConsecutive ? maxConsecutive.consecutive + 1 : 1;
     
         const newPayroll = new this.payrollModel({
-          novelties: noveltiesIds,
-          noveltiesRetirement: noveltiesRetirementIds,
-          noveltiesSocialSecurity: noveltiesSocialSecurityIds,
+          novelties: novelties,
           client: payrollsDto.client,
           year: year,
-          month: month
+          month: month,
+          state: 2,
+          consecutive: newConsecutive 
         });
     
         return newPayroll.save();
+    }
+
+    async update(id: string, updatPayrollDto: UpdatPayrollDto): Promise<UpdatPayrollDto> {
+      const noveltyToUpdate = await this.noveltySocialSecurityModel.findById(id);
+      if (!noveltyToUpdate) {
+          throw new NotFoundException('Nomina no encontrada');
       }
+      const updateNovelty = await this.noveltySocialSecurityModel.findByIdAndUpdate(
+          id,
+          updatPayrollDto,
+          {
+              new: true,
+              useFindAndModify: false
+          },
+      );
 
-      async update(id: string, updatPayrollDto: UpdatPayrollDto): Promise<UpdatPayrollDto> {
-        const noveltyToUpdate = await this.noveltySocialSecurityModel.findById(id);
-        if (!noveltyToUpdate) {
-            throw new NotFoundException('Nomina no encontrada');
-        }
-        const updateNovelty = await this.noveltySocialSecurityModel.findByIdAndUpdate(
-            id,
-            updatPayrollDto,
-            {
-                new: true,
-                useFindAndModify: false
-            },
-        );
-
-        return updateNovelty.toObject();
+      return updateNovelty.toObject();
     }
 
     async findBy( page: number, limit: number, requestBodyFilters: Record<string, any> = {} ): Promise<Payrolls[]> {
