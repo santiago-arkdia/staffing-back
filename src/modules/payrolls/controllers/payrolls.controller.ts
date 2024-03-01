@@ -17,9 +17,9 @@ export class PayrollsController {
         return await this.payrollService.generatePayroll(year, month, payrollsDto);
     }
 
-    @Post("donwload-payroll/:year/:month")
-    async donwloadPayroll(@Param('year') year: string, @Param('month') month: string,  @Body() payrollsDto: PayrollsDto): Promise<Payrolls[]> {
-        return await this.payrollService.donwloadPayroll(year, month);
+    @Post("donwload-payroll/:payroll")
+    async donwloadPayroll(@Param('payroll') payroll: string): Promise<any> {
+        return await this.payrollService.downloadPayroll(payroll);
     }
 
     @Put(':id')

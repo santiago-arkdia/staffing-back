@@ -11,6 +11,7 @@ import { NoveltyRetirement } from 'src/modules/novelty-retirement/entities/novel
 import { NoveltySocialSecurity } from 'src/modules/novelty-social-security/entities/novelty-social-security.entity';
 import { UpdatPayrollDto } from '../dto/update-payrolls.dto';
 import * as XLSX from 'xlsx';
+import { UploadsService } from 'src/modules/uploads/services/uploads.service';
 
 
 @Injectable()
@@ -18,10 +19,7 @@ export class PayrollsService {
   constructor(
     @InjectModel(Payrolls.name) private readonly payrollModel: Model<Payrolls>,
     @InjectModel(Novelty.name) private readonly noveltyModel: Model<Novelty>,
-    @InjectModel(NoveltyRetirement.name)
-    private readonly noveltyRetirementModel: Model<NoveltyRetirement>,
-    @InjectModel(NoveltySocialSecurity.name)
-    private readonly noveltySocialSecurityModel: Model<NoveltySocialSecurity>,
+    private uploadsService: UploadsService
   ) {}
 
   async generatePayroll(
@@ -70,36 +68,113 @@ export class PayrollsService {
     return newPayroll.save();
   }
 
-  async donwloadPayroll(
-    year: string,
-    month: string,
-  ): Promise<Payrolls[]> {
-    const startDate = new Date(`${year}-${month}-01T00:00:00.000Z`);
-    const endDate = new Date(
-      startDate.getFullYear(),
-      startDate.getMonth() + 2,
-      0,
-    );
-
+  async downloadPayroll(
+    payroll: string
+  ): Promise<any> {
+    
     let search = await this.payrollModel
-      .find({createdAt: { $gte: startDate, $lt: endDate },})
+      .find({
+        _id: payroll,
+        // createdAt: { $gte: startDate, $lt: endDate }
+      })
       .populate('novelties')
+      .populate({
+        path: 'novelties',
+        populate: {
+            path: 'collaborator',
+            populate: {
+              path: 'utilityCenter',
+            }
+        },
+        
+      })
+      .populate({
+        path: 'novelties',
+        populate: {
+            path: 'collaborator',
+            populate: {
+              path: 'centersCosts',
+            }
+        },
+        
+      })
+      .populate({
+        path: 'novelties',
+        populate: {
+            path: 'collaborator',
+            populate: {
+              path: 'jobPosition',
+            }
+        },
+      })
+      .populate({
+        path: 'novelties',
+        populate: {
+            path: 'concept',
+            populate: {
+              path: 'categoryNovelty',
+            }
+        },
+      })
+      .populate({
+        path: 'novelties',
+        populate: {
+            path: 'centersCosts',
+        },
+      })
       .populate('client')
       .exec();
 
-    const dataForXLSX = search.map((payroll) => ({
-      ClientName: payroll.client
-      // PayrollDate: payroll.createdAt,
-    }));
+      const dataForXLSX = search.flatMap((item) =>
+      item.novelties.map((novelty) => ({
+        "Cliente": item.client?.name,
+        "Nit": item.client.nit,
+        "Nombre colaborador": novelty.collaborator?.name,
+        "Documento": novelty.collaborator.document,
+        "Cargo": novelty.collaborator.jobPosition?.name,
+        "Centro de costo": novelty.centersCosts?.name,
+        "Centro de utilidad": novelty.utilityCenter?.name,
+        "Codigo Concepto": novelty.concept?.code,
+        "Concepto": novelty.concept?.name,
+        "Categoria": novelty.concept?.categoryNovelty?.typeNovelty,
+        "Observaciones": novelty.observations,
+        "Fecha Reporte": novelty["createdAt"],
+      }))
+    );
 
     
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(dataForXLSX);
     XLSX.utils.book_append_sheet(workbook, worksheet, "Payrolls");
+    const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
-    XLSX.writeFile(workbook, "Payrolls.xlsx");
+    // const simulatedFile = {
+    //   originalname: 'Payrolls.xlsx',
+    //   buffer: buffer,
+    // };
 
-    return search;
+    const datePrefix = new Date().toISOString().slice(0, 10); // Formato 'YYYY-MM-DD'
+    const fileName = `${datePrefix}-payrolls.xlsx`;
+
+    const simulatedFile: Express.Multer.File = {
+      buffer: buffer,
+      originalname: fileName,
+      mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      size: buffer.length,
+      fieldname: 'file', 
+      encoding: '7bit', 
+      destination: '',
+      filename: '',
+      path: '',
+      stream: null,
+    };
+
+    try {
+      const result = await this.uploadsService.uploadToFirebase(simulatedFile); 
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(

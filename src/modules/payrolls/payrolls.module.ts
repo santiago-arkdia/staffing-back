@@ -7,6 +7,7 @@ import { UsersService } from '../users/services/users.service';
 import { Novelty, NoveltySchema } from '../novelty/entities/novelty.entity';
 import { NNoveltyRetirementSchema, NoveltyRetirement } from '../novelty-retirement/entities/novelty-retirement.entity';
 import { NNoveltySocialSecuritySchema, NoveltySocialSecurity } from '../novelty-social-security/entities/novelty-social-security.entity';
+import { UploadsService } from '../uploads/services/uploads.service';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { NNoveltySocialSecuritySchema, NoveltySocialSecurity } from '../novelty-
     ]),
   ],
   controllers: [PayrollsController],
-  providers: [PayrollsService],
+  providers: [PayrollsService, UploadsService],
 })
 export class PayrollsModule {}
