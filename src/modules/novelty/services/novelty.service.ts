@@ -526,6 +526,18 @@ export class NoveltyService {
             }
         };
 
+        // const novelties = await this.noveltyModel.findOne(id)
+        //     .limit(validLimit)
+        //     .populate('collaborator')
+        //     .populate({
+        //         path: 'concept',
+        //         populate: {
+        //             path: 'categoryNovelty',
+        //         },
+        //     })
+        //     .skip(skipAmount);
+
+
         const response = await axios.post(url, novelty, config);
         return response.data.mensaje;
     }
