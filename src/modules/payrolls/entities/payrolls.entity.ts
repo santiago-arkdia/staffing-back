@@ -44,6 +44,9 @@ export class Payrolls {
     @Prop({type: String})
     document: string;
 
+    @Prop({type: String})
+    pathPayroll: string;
+
 }
 
 export const PayrollsSchema = SchemaFactory.createForClass(Payrolls);
