@@ -5,7 +5,7 @@ import mongoose, {Model, Types} from 'mongoose';
 import {Novelty} from '../entities/novelty.entity';
 import {CreateNoveltyDto} from '../dto/create-novelty.dto';
 import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 import {Counter} from "../entities/counter.entity";
 import {Concept} from "../../concepts/entities/concepts.entity";
 import { Roles } from 'src/modules/roles/entities/roles.entity';
@@ -67,16 +67,16 @@ export class NoveltyService {
     async findAllNovelties(page: number, limit: number, year: string, month: string, typeNovelty: string): Promise<any> {
         const validPage = Number(page) > 0 ? Number(page) : 1;
         const validLimit = Number(limit) > 0 ? Number(limit) : 10;
-    
+
         const query = { typeNovelty: typeNovelty };
-    
+
         if (year) {
             let startDate = new Date();
             let endDate = new Date();
-    
+
             startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
             startDate.setHours(0, 0, 0, 0);
-    
+
             endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
             if (month) {
                 endDate.setMonth(endDate.getMonth() + 1); 
@@ -86,21 +86,21 @@ export class NoveltyService {
                 endDate.setFullYear(endDate.getFullYear() + 1);
             }
             endDate.setHours(0, 0, 0, -1);
-    
+
             query['createdAt'] = {
                 $gte: startDate,
                 $lt: endDate
             };
-        }  
-    
+        }
+
         const totalNovelties = await this.noveltyModel.countDocuments(query);
         const totalNoveltyTers = await this.noveltyRetirementModel.countDocuments(query);
-    
+
         const totalPagesNovelties = Math.ceil(totalNovelties / validLimit);
         const totalPagesNoveltyTers = Math.ceil(totalNoveltyTers / validLimit);
-    
+
         let skipAmount = (validPage - 1) * validLimit;
-    
+
         const novelties = await this.noveltyModel.find(query)
             .limit(validLimit)
             .populate('collaborator')
@@ -111,7 +111,7 @@ export class NoveltyService {
                 },
             })
             .skip(skipAmount);
-    
+
         const noveltyTers = await this.noveltyRetirementModel.find(query)
             .limit(validLimit)
             .populate('collaborator')
@@ -122,33 +122,33 @@ export class NoveltyService {
                 },
             })
             .skip(skipAmount);
-    
+
         const combinedData = [...novelties, ...noveltyTers];
         const totalRecords = totalNovelties + totalNoveltyTers;
         const totalPages = Math.max(totalPagesNovelties, totalPagesNoveltyTers);
-    
+
         const response = {
             total: totalRecords,
             pages: totalPages,
             data: combinedData,
         };
-    
+
         return response;
     }
 
     async findAllNoveltiesFilter(page: number, limit: number, year: string, month: string, typeNovelty: string): Promise<any> {
         const validPage = Number(page) > 0 ? Number(page) : 1;
         const validLimit = Number(limit) > 0 ? Number(limit) : 10;
-    
+
         const query = { typeNovelty: typeNovelty, state: { $in: [0, 1] } };
-    
+
         if (year) {
             let startDate = new Date();
             let endDate = new Date();
-    
+
             startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
             startDate.setHours(0, 0, 0, 0);
-    
+
             endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
             if (month) {
                 endDate.setMonth(endDate.getMonth() + 1); 
@@ -158,21 +158,21 @@ export class NoveltyService {
                 endDate.setFullYear(endDate.getFullYear() + 1);
             }
             endDate.setHours(0, 0, 0, -1);
-    
+
             query['createdAt'] = {
                 $gte: startDate,
                 $lt: endDate
             };
         }
-    
+
         const totalNovelties = await this.noveltyModel.countDocuments(query);
         const totalNoveltyTers = await this.noveltyRetirementModel.countDocuments(query);
-    
+
         const totalPagesNovelties = Math.ceil(totalNovelties / validLimit);
         const totalPagesNoveltyTers = Math.ceil(totalNoveltyTers / validLimit);
-    
+
         let skipAmount = (validPage - 1) * validLimit;
-    
+
         const novelties = await this.noveltyModel.find(query)
             .limit(validLimit)
             .populate('collaborator')
@@ -183,7 +183,7 @@ export class NoveltyService {
                 },
             })
             .skip(skipAmount);
-    
+
         const noveltyTers = await this.noveltyRetirementModel.find(query)
             .limit(validLimit)
             .populate('collaborator')
@@ -194,21 +194,20 @@ export class NoveltyService {
                 },
             })
             .skip(skipAmount);
-    
+
         const combinedData = [...novelties, ...noveltyTers];
         const totalRecords = totalNovelties + totalNoveltyTers;
         const totalPages = Math.max(totalPagesNovelties, totalPagesNoveltyTers);
-    
+
         const response = {
             total: totalRecords,
             pages: totalPages,
             data: combinedData,
         };
-    
+
         return response;
     }
-    
-    
+
 
     async findOne(id: string): Promise<Novelty> {
         return await this.noveltyModel.findById(id)
@@ -235,7 +234,7 @@ export class NoveltyService {
         let query = {};
         let queryBody = {};
         let conceptList= []
-        
+
         console.log(request['user']);
         console.log("object");
 
@@ -506,29 +505,34 @@ export class NoveltyService {
         const combinedData = [...novelties, ...noveltyNoveltyReiterment];
         const totalRecords =  totalNovelties + totalNoveltyReiterment + totalNoveltySocialSecurity;
         const totalPages = totalPagesNovelties + totalPagesNoveltyReiterment + totalPagesNoveltySocialSecurity;
-    
+
         const response = {
             total: totalRecords,
             pages: totalPages,
             data: combinedData,
         };
-    
+
         return response;
     }
-    
-    
+
+
 
 
     async createNoveltyMaster(novelty: NoveltyMasterTemporappDto,
         token: string
     ): Promise<AxiosResponse<any>> {
         const url = 'http://34.214.124.124:9896/ws/novedades/maestro';
-        const config = {
+        const config: AxiosRequestConfig = {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            data: {}
         };
+
+        // const novelties = await this.noveltyModel.find({
+        //     _id: { $in: novelty.datos.}
+        // }).exec();
 
         // const novelties = await this.noveltyModel.findOne(id)
         //     .limit(validLimit)
@@ -543,6 +547,7 @@ export class NoveltyService {
 
 
         const response = await axios.post(url, novelty, config);
+        console.log(response.data);
         return response.data.mensaje;
     }
 }
