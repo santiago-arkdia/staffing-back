@@ -95,16 +95,20 @@ export class OperationDataDto {
 
 @Schema()
 export class NoveltyMasterTemporappDto {
-  @IsString()
-  tipoOperacion: string;
+  // @IsString()
+  // tipoOperacion: string;
+
+  // @IsString()
+  // instancia: string;
+
+  // @IsString()
+  // usuarioExterno: string;
+
+  // @ValidateNested()
+  // @Type(() => OperationDataDto)
+  // datos: OperationDataDto;
+  
 
   @IsString()
-  instancia: string;
-
-  @IsString()
-  usuarioExterno: string;
-
-  @ValidateNested()
-  @Type(() => OperationDataDto)
-  datos: OperationDataDto;
+  payroll: string;
 }

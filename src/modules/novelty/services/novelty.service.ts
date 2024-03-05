@@ -13,6 +13,7 @@ import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 import { NoveltyRetirement } from 'src/modules/novelty-retirement/entities/novelty-retirement.entity';
 import { Client } from 'src/modules/clients/entities/client.entity';
 import { NoveltySocialSecurity } from 'src/modules/novelty-social-security/entities/novelty-social-security.entity';
+import { Payrolls } from 'src/modules/payrolls/entities/payrolls.entity';
 
 @Injectable()
 export class NoveltyService {
@@ -25,6 +26,7 @@ export class NoveltyService {
         @InjectModel(Concept.name) private conceptModel: Model<Concept>,
         @InjectModel(Client.name) private readonly clientModel: Model<Client>,
         @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
+        @InjectModel(Payrolls.name) private readonly payrollsModel: Model<Payrolls>,
     ) {
     }
 
@@ -530,20 +532,21 @@ export class NoveltyService {
             data: {}
         };
 
-        // const novelties = await this.noveltyModel.find({
-        //     _id: { $in: novelty.datos.}
-        // }).exec();
+        let payroll = await this.payrollsModel.findById(novelty.payroll)
+                                                .populate('novelties')
+                                                .populate('client')
+                                                .exec()
 
-        // const novelties = await this.noveltyModel.findOne(id)
-        //     .limit(validLimit)
-        //     .populate('collaborator')
-        //     .populate({
-        //         path: 'concept',
-        //         populate: {
-        //             path: 'categoryNovelty',
-        //         },
-        //     })
-        //     .skip(skipAmount);
+                                                // novelties.novelties
+
+        payroll.novelties.forEach(novelty => {
+
+
+            // const response = await axios.post(url, novelty, config);
+
+            // array = response
+            
+        });                                         
 
 
         const response = await axios.post(url, novelty, config);
