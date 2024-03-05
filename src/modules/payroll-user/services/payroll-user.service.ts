@@ -59,6 +59,8 @@ export class PayrollUserService {
 
     async findAll(): Promise<Payroll[]> {
 
+        console.log(this.payrollModel);
+
         const total = await this.payrollModel.countDocuments().exec();
         const payrolls = await this.payrollModel.find()
             .populate({
