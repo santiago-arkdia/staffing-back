@@ -65,8 +65,9 @@ export class PayrollsService {
       consecutive: newConsecutive,
     });
 
-    let payroll = newPayroll.save()
-    ;(await payroll).pathPayroll = await this.downloadPayroll(payroll["_id"]);
+    let payroll = await newPayroll.save()
+    console.log(payroll["_id"]);
+    payroll.pathPayroll = await this.downloadPayroll(payroll["_id"].toString());
 
     return payroll;
   }
@@ -174,9 +175,7 @@ export class PayrollsService {
 
     try {
       const result = await this.uploadsService.uploadToFirebase(simulatedFile); 
-
-      await this.payrollModel.findByIdAndUpdate(payroll, {pathPayroll: result});
-
+      let data =  await this.payrollModel.findByIdAndUpdate(payroll, {pathPayroll: result}, { new: true });
       return result;
 
     } catch (error) {

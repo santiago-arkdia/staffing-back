@@ -333,6 +333,10 @@ export class NoveltyService {
         let search = await this.noveltyModel
             .find(queryNovelty)
             .skip((page - 1) * limit)
+            .populate({
+                path: 'contract',
+                model: 'Contract' 
+            })
             .populate('collaborator')
             .populate({
                 path: 'concept',
