@@ -503,7 +503,7 @@ export class NoveltyService {
                 },
             })
             .skip(skipAmount);
-    
+
         const combinedData = [...novelties, ...noveltyNoveltyReiterment];
         const totalRecords =  totalNovelties + totalNoveltyReiterment + totalNoveltySocialSecurity;
         const totalPages = totalPagesNovelties + totalPagesNoveltyReiterment + totalPagesNoveltySocialSecurity;
@@ -518,39 +518,193 @@ export class NoveltyService {
     }
 
 
+    async createNoveltyMaster(novelty: NoveltyMasterTemporappDto, token: string): Promise<any> {
+        const data = []
+        const payroll = await this.payrollsModel.findById(novelty.payroll)
+            .populate('novelties')
+            .populate('client')
+            .populate('client.user')
+            .exec()
 
+        console.log(payroll)
 
-    async createNoveltyMaster(novelty: NoveltyMasterTemporappDto,
-        token: string
-    ): Promise<AxiosResponse<any>> {
-        const url = 'http://34.214.124.124:9896/ws/novedades/maestro';
-        const config: AxiosRequestConfig = {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            data: {}
-        };
+        for (const novelty of payroll.novelties) {
+            const concept = await this.conceptModel.findById(novelty.concept).exec();
 
-        let payroll = await this.payrollsModel.findById(novelty.payroll)
-                                                .populate('novelties')
-                                                .populate('client')
-                                                .exec()
+            if (!concept)
+                continue;
 
-                                                // novelties.novelties
+            switch (concept.name) {
+                case 'SUBSIDIO TRANSPORTE':
+                    data.push({
+                        "Tipo Operación": concept.name,
+                        "Instancia": payroll.client.name,
+                        "Usuario Externo": payroll.client.user,
+                        "Datos": {
+                            "CANAL": "NELV2",
+                            "NITCLIENTE": payroll.client.nit,
+                            "IDCLIENTE": payroll.client.idTri,
+                            "DOCUMENTO": payroll.document,
+                            "CONCEPTO": concept.code,
+                            "PROPORCIONAL": "0/1",
+                            "CANTIDAD": "",
+                            "FECHAINICIAL": "",
+                        }
+                    })
+                    break;
+                case 'Terminación por justa causa':
+                    data.push({
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Terminación por mutuo acuerdo':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Terminación sin justa causa':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Terminación por renuncia':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Terminación por periodo de prueba':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Terminación por obra labor':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Terminación por fallecimiento':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Terminación aprendices de SENA':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'ANTICIPO DE SALARIO':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: {...(concept.toObject())}
+                    })
+                    break;
+                case 'MAYOR VR PAGADO MES ANTERIOR':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'MAYOR VR PAGADO MES ANTERIOR (VR)':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'MAYOR VR PAGADO HORAS MES ANTERIOR':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'AJUSTE SALARIO LIQUIDACION ANTERIOR':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Voluntaria':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Por motivación':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Ausentismos':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                case 'Incapacidades':
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+                default:
+                    data.push({
+                        ...(payroll.toObject()),
+                        concept: concept.toObject()
+                    })
+                    break;
+            }
+        }
 
-        payroll.novelties.forEach(novelty => {
+        // console.log(data)
 
+        // novelties.novelties
+        // console.log(payroll.novelties);
 
+        // for (const novelty of payroll.novelties) {
+        //     const concept = await this.conceptModel.findById(novelty.concept).exec();
+
+        //     console.log({ ...(novelty), concept });
+        //     // const url = 'http://54.245.197.90:9896/ws/novedades/maestro';
+        //     // const config: AxiosRequestConfig = {
+        //     //     headers: {
+        //     //         'Authorization': `Bearer ${token}`,
+        //     //         'Content-Type': 'application/json'
+        //     //     },
+        //     //     data: novelty
+        //     // };
+        //     // console.log(url, config);
+
+        //     // try {
+        //     //     const response = await axios.post(url, novelty, config);
+        //     //     data.push(response.data);
+        //     // } catch (error) {
+        //     //     console.log(error.message);
+        //     // }
+        // }
+
+        // payroll.novelties.forEach(novelty => {
             // const response = await axios.post(url, novelty, config);
 
             // array = response
-            
-        });                                         
+        // });
+        // const url = 'http://34.214.124.124:9896/ws/novedades/maestro';
+        // const config: AxiosRequestConfig = {
+        //     headers: {
+        //         'Authorization': `Bearer ${token}`,
+        //         'Content-Type': 'application/json'
+        //     },
+        //     data: {}
+        // };
 
-
-        const response = await axios.post(url, novelty, config);
-        console.log(response.data);
-        return response.data.mensaje;
+        // const response = await axios.post(url, novelty, config);
+        // console.log(response.data);
+        return data;
     }
 }
