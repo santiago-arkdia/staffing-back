@@ -519,192 +519,277 @@ export class NoveltyService {
 
 
     async createNoveltyMaster(novelty: NoveltyMasterTemporappDto, token: string): Promise<any> {
-        const data = []
-        const payroll = await this.payrollsModel.findById(novelty.payroll)
-            .populate('novelties')
-            .populate('client')
-            .populate('client.user')
-            .exec()
+        const data: Array<Record<string, string | Record<string, string>>> = []
+        const payroll = await this.payrollsModel.findById(novelty.idPayrolls).exec()
 
-        console.log(payroll)
+        if (!payroll?.novelties)
+            return [];
 
-        for (const novelty of payroll.novelties) {
-            const concept = await this.conceptModel.findById(novelty.concept).exec();
+        const novelties = await this.noveltyModel.find({
+            _id: { $in: payroll.novelties },
+            typeNovelty: 'novelty'
+        }).populate(['collaborator', 'client', 'concept']).exec();
 
-            if (!concept)
+        for (const novelty of novelties) {
+            if (['novelty'].includes(novelty.typeNovelty)) { //TODO: Novedad Nomina
+                data.push({
+                    "tipoOperacion": 'novedadNomina',
+                    "instancia": "staffing",
+                    "usuarioExterno": novelty.client.idTri.toString(),
+                    "datos": {
+                        "canal": "NELV2",
+                        "nitCliente": novelty.client.nit,
+                        "idCliente": novelty.client.idTri.toString(),
+                        "documento": novelty.collaborator.document,
+                        "concepto": novelty.concept?.code ?? '',
+                        "proporcional": "0",
+                        "cantidad": "",
+                        "fechaInicial": "",
+                    }
+                })
+
                 continue;
+            }
 
-            switch (concept.name) {
-                case 'SUBSIDIO TRANSPORTE':
-                    data.push({
-                        "Tipo Operación": concept.name,
-                        "Instancia": payroll.client.name,
-                        "Usuario Externo": payroll.client.user,
-                        "Datos": {
-                            "CANAL": "NELV2",
-                            "NITCLIENTE": payroll.client.nit,
-                            "IDCLIENTE": payroll.client.idTri,
-                            "DOCUMENTO": payroll.document,
-                            "CONCEPTO": concept.code,
-                            "PROPORCIONAL": "0/1",
-                            "CANTIDAD": "",
-                            "FECHAINICIAL": "",
-                        }
-                    })
-                    break;
-                case 'Terminación por justa causa':
-                    data.push({
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Terminación por mutuo acuerdo':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Terminación sin justa causa':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Terminación por renuncia':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Terminación por periodo de prueba':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Terminación por obra labor':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Terminación por fallecimiento':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Terminación aprendices de SENA':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'ANTICIPO DE SALARIO':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: {...(concept.toObject())}
-                    })
-                    break;
-                case 'MAYOR VR PAGADO MES ANTERIOR':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'MAYOR VR PAGADO MES ANTERIOR (VR)':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'MAYOR VR PAGADO HORAS MES ANTERIOR':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'AJUSTE SALARIO LIQUIDACION ANTERIOR':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Voluntaria':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Por motivación':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Ausentismos':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                case 'Incapacidades':
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
-                default:
-                    data.push({
-                        ...(payroll.toObject()),
-                        concept: concept.toObject()
-                    })
-                    break;
+            // if ([
+            //         'Por motivación'
+            //     ].includes(concept.name)) { //TODO: Auxilio Extra Legal
+            //     data.push({
+            //         "tipoOperacion": concept.name,
+            //         "instancia": "staffing",
+            //         "usuarioExterno": payroll.client.user.email,
+            //         "datos": {
+            //             "canal": "NELV2",
+            //             "nitCliente": payroll.client.nit,
+            //             "idCliente": payroll.client.idTri.toString(),
+            //             "documento": payroll.document,
+            //             "concepto": concept.code,
+            //             "proporcional": "0",
+            //             "cantidad": "",
+            //             "fechaInicial": "",
+            //         }
+            //     })
+
+            //     continue;
+            // }
+
+            // if ([''].includes(concept.name)) { //TODO: Libranza
+            //     data.push({
+            //         "tipoOperacion": concept.name,
+            //         "instancia": "staffing",
+            //         "usuarioExterno": payroll.client.user.email,
+            //         "datos": {
+            //             "canal": "NELV2",
+            //             "nitCliente": payroll.client.nit,
+            //             "idCliente": payroll.client.idTri.toString(),
+            //             "documento": payroll.document,
+            //             "concepto": concept.code,
+            //             "proporcional": "0",
+            //             "cantidad": "",
+            //             "fechaInicial": "",
+            //             "cuotas": "0",
+            //             "observacion": ""
+            //         }
+            //     })
+
+            //     continue;
+            // }
+
+            // if ([''].includes(concept.name)) { //TODO: SLN
+            //     data.push({
+            //         "tipoOperacion": concept.name,
+            //         "instancia": "staffing",
+            //         "usuarioExterno": payroll.client.user.email,
+            //         "datos": {
+            //             "canal": "NELV2",
+            //             "nitCliente": payroll.client.nit,
+            //             "idCliente": payroll.client.idTri.toString(),
+            //             "documento": payroll.document,
+            //             "concepto": concept.code,
+            //             "proporcional": "0",
+            //             "cantidad": "",
+            //             "fechaInicial": "",
+            //             "fechaAusenticmo": "",
+            //             "observacion": ""
+            //         }
+            //     })
+
+            //     continue;
+            // }
+
+            // if ([''].includes(concept.name)) { //TODO: LR
+            //     data.push({
+            //         "tipoOperacion": concept.name,
+            //         "instancia": "staffing",
+            //         "usuarioExterno": payroll.client.user.email,
+            //         "datos": {
+            //             "canal": "NELV2",
+            //             "nitCliente": payroll.client.nit,
+            //             "idCliente": payroll.client.idTri.toString(),
+            //             "documento": payroll.document,
+            //             "concepto": concept.code,
+            //             "proporcional": "0",
+            //             "cantidad": "",
+            //             "fechaInicial": "",
+            //             "fechaAusenticmo": "",
+            //             "observacion": ""
+            //         }
+            //     })
+
+            //     continue;
+            // }
+
+            // if ([''].includes(concept.name)) { //TODO: Vacaciones
+            //     data.push({
+            //         "tipoOperacion": concept.name,
+            //         "instancia": "staffing",
+            //         "usuarioExterno": payroll.client.user.email,
+            //         "datos": {
+            //             "canal": "NELV2",
+            //             "nitCliente": payroll.client.nit,
+            //             "idCliente": payroll.client.idTri.toString(),
+            //             "documento": payroll.document,
+            //             "concepto": concept.code,
+            //             "cantidad": "",
+            //             "fechaInicial": "",
+            //             "fechaAusenticmo": "",
+            //             "diasEnDinero": "0",
+            //             "proporcional": "0",
+            //             "dia31": "0",
+            //             "observacion": ""
+            //         }
+            //     })
+
+            //     continue;
+            // }
+
+            // if (['Incapacidades'].includes(concept.name)) { //TODO: incapasidadEG
+            //     data.push({
+            //         "tipoOperacion": concept.name,
+            //         "instancia": "staffing",
+            //         "usuarioExterno": payroll.client.user.email,
+            //         "datos": {
+            //             "canal": "NELV2",
+            //             "nitCliente": payroll.client.nit,
+            //             "idCliente": payroll.client.idTri.toString(),
+            //             "documento": payroll.document,
+            //             "concepto": concept.code,
+            //             "cantidad": "",
+            //             "fechaInicial": "",
+            //             "fechaAusenticmo": "",
+            //             "numinCapacidad": "",
+            //             "prorroga": "0",
+            //             "numprorroga": "",
+            //             "tipoAtencion": "",
+            //             "diagnostico": "",
+            //             "valor2": "0.00",
+            //             "observacion": ""
+            //         }
+            //     })
+
+            //     continue;
+            // }
+
+            // if ([''].includes(concept.name)) { //TODO: incapasidadLMA
+            //     data.push({
+            //         "tipoOperacion": concept.name,
+            //         "instancia": "staffing",
+            //         "usuarioExterno": payroll.client.user.email,
+            //         "datos": {
+            //             "canal": "NELV2",
+            //             "nitCliente": payroll.client.nit,
+            //             "idCliente": payroll.client.idTri.toString(),
+            //             "documento": payroll.document,
+            //             "concepto": concept.code,
+            //             "cantidad": "",
+            //             "fechaInicial": "",
+            //             "fechaAusenticmo": "",
+            //             "numinCapacidad": "",
+            //             "prorroga": "0",
+            //             "numprorroga": "",
+            //             "diagnostico": "",
+            //             "valor2": "0.00",
+            //             "observacion": ""
+            //         }
+            //     })
+
+            //     continue;
+            // }
+
+            // if ([''].includes(concept.name)) { //TODO: incapasidadLPA
+            //     data.push({
+            //         "tipoOperacion": concept.name,
+            //         "instancia": "staffing",
+            //         "usuarioExterno": payroll.client.user.email,
+            //         "datos": {
+            //             "canal": "NELV2",
+            //             "nitCliente": payroll.client.nit,
+            //             "idCliente": payroll.client.idTri.toString(),
+            //             "documento": payroll.document,
+            //             "concepto": concept.code,
+            //             "cantidad": "",
+            //             "fechaInicial": "",
+            //             "fechaAusenticmo": "",
+            //             "numinCapacidad": "",
+            //             "prorroga": "0",
+            //             "numprorroga": "",
+            //             "diagnostico": "",
+            //             "valor2": "0.00",
+            //             "observacion": ""
+            //         }
+            //     })
+
+            //     continue;
+            // }
+
+            // if ([''].includes(concept.name)) { //TODO: incapasidadAT
+            //     data.push({
+            //         "tipoOperacion": concept.name,
+            //         "instancia": "staffing",
+            //         "usuarioExterno": payroll.client.user.email,
+            //         "datos": {
+            //             "canal": "NELV2",
+            //             "nitCliente": payroll.client.nit,
+            //             "idCliente": payroll.client.idTri.toString(),
+            //             "documento": payroll.document,
+            //             "concepto": concept.code,
+            //             "cantidad": "",
+            //             "fechaInicial": "",
+            //             "fechaAusenticmo": "",
+            //             "fechaSuceso": "",
+            //             "numinCapacidad": "",
+            //             "prorroga": "0",
+            //             "numprorroga": "",
+            //             "diagnostico": "",
+            //             "valor2": "0.00",
+            //             "observacion": ""
+            //         }
+            //     })
+
+            //     continue;
+            // }
+        }
+
+        const dataResponse = [];
+
+        for (const item of data) {
+            const url = 'http://54.245.197.90:9896/ws/novedades/maestro';
+            const config: AxiosRequestConfig = {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                data: item
+            };
+
+            try {
+                const response = await axios.post(url, novelty, config);
+                dataResponse.push(response.data);
+            } catch (error) {
+                console.log(error.message);
             }
         }
 
-        // console.log(data)
-
-        // novelties.novelties
-        // console.log(payroll.novelties);
-
-        // for (const novelty of payroll.novelties) {
-        //     const concept = await this.conceptModel.findById(novelty.concept).exec();
-
-        //     console.log({ ...(novelty), concept });
-        //     // const url = 'http://54.245.197.90:9896/ws/novedades/maestro';
-        //     // const config: AxiosRequestConfig = {
-        //     //     headers: {
-        //     //         'Authorization': `Bearer ${token}`,
-        //     //         'Content-Type': 'application/json'
-        //     //     },
-        //     //     data: novelty
-        //     // };
-        //     // console.log(url, config);
-
-        //     // try {
-        //     //     const response = await axios.post(url, novelty, config);
-        //     //     data.push(response.data);
-        //     // } catch (error) {
-        //     //     console.log(error.message);
-        //     // }
-        // }
-
-        // payroll.novelties.forEach(novelty => {
-            // const response = await axios.post(url, novelty, config);
-
-            // array = response
-        // });
-        // const url = 'http://34.214.124.124:9896/ws/novedades/maestro';
-        // const config: AxiosRequestConfig = {
-        //     headers: {
-        //         'Authorization': `Bearer ${token}`,
-        //         'Content-Type': 'application/json'
-        //     },
-        //     data: {}
-        // };
-
-        // const response = await axios.post(url, novelty, config);
-        // console.log(response.data);
-        return data;
+        return dataResponse;
     }
 }
