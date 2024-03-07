@@ -107,8 +107,7 @@ export class NoveltyMasterTemporappDto {
   // @ValidateNested()
   // @Type(() => OperationDataDto)
   // datos: OperationDataDto;
-  
 
   @IsString()
-  payroll: string;
+  idPayrolls: string;
 }
