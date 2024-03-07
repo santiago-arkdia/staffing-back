@@ -520,7 +520,7 @@ export class NoveltyService {
 
     async createNoveltyMaster(novelty: NoveltyMasterTemporappDto, token: string): Promise<any> {
         const data: Array<Record<string, string | Record<string, string>>> = []
-        const payroll = await this.payrollsModel.findById(novelty.idPayrolls).exec()
+        const payroll = await this.payrollsModel.findById(novelty.payrolls).exec()
 
         if (!payroll?.novelties)
             return [];

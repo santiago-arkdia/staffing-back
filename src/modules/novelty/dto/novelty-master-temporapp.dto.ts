@@ -109,5 +109,5 @@ export class NoveltyMasterTemporappDto {
   // datos: OperationDataDto;
 
   @IsString()
-  idPayrolls: string;
+  payrolls: string;
 }
