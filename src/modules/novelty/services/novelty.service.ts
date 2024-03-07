@@ -519,7 +519,7 @@ export class NoveltyService {
 
 
     async createNoveltyMaster(novelty: NoveltyMasterTemporappDto, token: string): Promise<any> {
-        const data: Array<Record<string, string | Record<string, string>>> = []
+        const data: Array<Record<string, string | Record<string, string | number>>> = []
         const payroll = await this.payrollsModel.findById(novelty.payrolls).exec()
 
         if (!payroll?.novelties)
@@ -533,18 +533,20 @@ export class NoveltyService {
         for (const novelty of novelties) {
             if (['novelty'].includes(novelty.typeNovelty)) { //TODO: Novedad Nomina
                 data.push({
-                    "tipoOperacion": 'novedadNomina',
+                    "tipoOperacion": 'NovedadNomina',
                     "instancia": "staffing",
                     "usuarioExterno": novelty.client.idTri.toString(),
                     "datos": {
                         "canal": "NELV2",
                         "nitCliente": novelty.client.nit,
-                        "idCliente": novelty.client.idTri.toString(),
+                        "idCliente": novelty.client.idTri,
                         "documento": novelty.collaborator.document,
                         "concepto": novelty.concept?.code ?? '',
                         "proporcional": "0",
-                        "cantidad": "",
-                        "fechaInicial": "",
+                        "cantidad": "0.00",
+                        "fechaInicial": "2024-03-06",
+                        // "diagnostico": "A000",
+                        "dimension": "0"
                     }
                 })
 
@@ -772,18 +774,20 @@ export class NoveltyService {
 
         const dataResponse = [];
 
+        const url = 'http://54.245.197.90:9896/ws/novedades/maestro';
         for (const item of data) {
-            const url = 'http://54.245.197.90:9896/ws/novedades/maestro';
-            const config: AxiosRequestConfig = {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                data: item
-            };
-
             try {
-                const response = await axios.post(url, novelty, config);
+                const responseLogin = await axios.post('http://54.245.197.90:9896/ws/usuarios/login', {
+                    "usuario": "usrStaffingWeb",
+                    "clave": "L5M6ctb5I@jF"
+                })
+                const config: AxiosRequestConfig = {
+                    headers: {
+                        'Authorization': `Bearer ${responseLogin.data.accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                };
+                const response = await axios.post(url, item, config);
                 dataResponse.push(response.data);
             } catch (error) {
                 console.log(error.message);
