@@ -48,7 +48,12 @@ export class JobPositionsService {
                 .populate('region')
                 .populate('utilityCenter')
                 .populate('centersCosts')
-                .populate('hourlyMeshes')
+                .populate({
+                    path: 'hourlyMeshes',
+                    populate: {
+                        path: 'schedules',
+                    },
+                })
                 .exec();
     }
 
@@ -112,7 +117,6 @@ export class JobPositionsService {
         return jobPositions;
     }
 
-    
     async getAll(): Promise<JobPositions[]> {
 
         const jobPosition = await this.jobPositionsModel
