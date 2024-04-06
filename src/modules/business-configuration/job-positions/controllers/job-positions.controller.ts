@@ -43,6 +43,12 @@ export class JobPositionsController {
         return await this.jobPositionsService.findOne(id);
     }
 
+    @Get('hourly-by-position/:id')
+    @UseGuards(AuthExternalGuard)
+    async findOneExternal(@Param('id') id: string): Promise<JobPositions> {
+        return await this.jobPositionsService.findOne(id);
+    }
+
     @Get(':page/:limit/:by/:value')
     async findBy(
         @Param('page') page: number,
