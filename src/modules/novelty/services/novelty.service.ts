@@ -796,4 +796,8 @@ export class NoveltyService {
 
         return dataResponse;
     }
+
+    async findAll(): Promise<Novelty[]> {
+        return await this.noveltyModel.find().exec();
+    }
 }
