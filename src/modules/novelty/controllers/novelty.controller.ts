@@ -22,6 +22,11 @@ export class NoveltyController {
     return await this.noveltyService.create(novelty);
   }
 
+  @Get()
+  async findAll(): Promise<Novelty[]> {
+    return await this.noveltyService.findAll();
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Actualizar novedad' })
   @UseGuards(AuthGuard)
