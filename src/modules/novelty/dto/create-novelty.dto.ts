@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
-import {IsArray, IsDate, IsNumber, IsOptional, IsString} from 'class-validator';
+import {IsArray, IsDate, IsNumber, IsOptional, IsString , IsBoolean} from 'class-validator';
 
 // @Schema()
 // export class CreateNoveltyDto {
@@ -156,5 +156,12 @@ export class CreateNoveltyDto {
   @IsOptional()
   withSupportFile?: number;
 
+  @IsBoolean()
+  @IsOptional()
+  isSafeAndSound?: boolean;
+
+  @IsString()
+  @IsOptional()
+  whoReports?: boolean;
 }
 

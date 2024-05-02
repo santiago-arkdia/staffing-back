@@ -107,6 +107,11 @@ export class Novelty {
     @Prop({type: Number})
     withSupportFile?: number;
 
+    @Prop({type: Boolean})
+    isSafeAndSound?: boolean;
+    
+    @Prop({type: String})
+    whoReports?: string;
 }
 
 export const NoveltySchema = SchemaFactory.createForClass(Novelty);
