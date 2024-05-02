@@ -18,7 +18,7 @@ export class Concept {
     @Prop({type: String})
     reportType: string;
 
-    @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'CategoriesNovelty'}]})
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CategoriesNovelty'})
     categoryNovelty: CategoriesNovelty;
 
     @Prop({type: String, required: true})
