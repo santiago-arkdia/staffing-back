@@ -14,6 +14,7 @@ import { NoveltyRetirement } from 'src/modules/novelty-retirement/entities/novel
 import { Client } from 'src/modules/clients/entities/client.entity';
 import { NoveltySocialSecurity } from 'src/modules/novelty-social-security/entities/novelty-social-security.entity';
 import { Payrolls } from 'src/modules/payrolls/entities/payrolls.entity';
+import { APIFeatures } from 'src/utils/api.features';
 
 @Injectable()
 export class NoveltyService {
@@ -797,7 +798,14 @@ export class NoveltyService {
         return dataResponse;
     }
 
-    async findAll(): Promise<Novelty[]> {
-        return await this.noveltyModel.find().exec();
+    async findAll(query?:any): Promise<Novelty[]> {
+        const features = new APIFeatures(this.noveltyModel.find(), query)
+        .filter()
+        .sort()
+        .limit()
+        .pagination()
+        .populate();
+        const novelties = await features.mongooseQuery;
+        return novelties;
     }
 }

@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import {ApiBody, ApiOperation, ApiTags} from '@nestjs/swagger';
-import {NoveltyService} from '../services/novelty.service';
-import {Body, Controller, Get, Headers, Param, Post, Put, Query, Req, UseGuards} from '@nestjs/common';
-import {CreateNoveltyDto} from '../dto/create-novelty.dto';
-import {Novelty} from '../entities/novelty.entity';
-import {AuthGuard} from "../../auth/auth.guard";
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { NoveltyService } from '../services/novelty.service';
+import { Body, Controller, Get, Headers, Param, Post, Put, Query, Req, UseGuards, Res } from '@nestjs/common';
+import { CreateNoveltyDto } from '../dto/create-novelty.dto';
+import { Novelty } from '../entities/novelty.entity';
+import { AuthGuard } from "../../auth/auth.guard";
 import { Request } from 'express';
 import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 import { AxiosResponse } from 'axios';
@@ -13,7 +13,7 @@ import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
 @ApiTags('Novelty')
 @Controller('api/novelty')
 export class NoveltyController {
-  constructor(private readonly noveltyService: NoveltyService) {}
+  constructor(private readonly noveltyService: NoveltyService) { }
 
   @Post()
   @ApiOperation({ summary: 'Crear reporte de novedad' })
@@ -23,8 +23,10 @@ export class NoveltyController {
   }
 
   @Get()
-  async findAll(): Promise<Novelty[]> {
-    return await this.noveltyService.findAll();
+  @UseGuards(AuthGuard)
+  async findAll(@Query() query: any, @Res() response: any) {
+    const result = await this.noveltyService.findAll(query);
+    return response.status(200).json(result);
   }
 
   @Put(':id')
@@ -37,7 +39,7 @@ export class NoveltyController {
     return await this.noveltyService.update(id, updateNoveltyDto);
   }
 
-  
+
 
   @Get(':page/:limit/:type')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
@@ -52,7 +54,7 @@ export class NoveltyController {
   async findAllNoveltiesYear(@Param('page') page: number, @Param('limit') limit: number, @Param('year') year: string, @Param('type') typeNovelty: string): Promise<any> {
     return await this.noveltyService.findAllNoveltiesFilter(page, limit, year, null, typeNovelty);
   }
-  
+
   @Get(':page/:limit/:year/:month/:type')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   //@UseGuards(AuthGuard)
@@ -70,7 +72,7 @@ export class NoveltyController {
   @Get('find-by-client/:page/:limit/:id/:type')
   @ApiOperation({ summary: 'Filtrar novedad por ID' })
   @UseGuards(AuthGuard)
-  async findByClient( @Param('page') page: number,  @Param('limit') limit: number, @Param('type') typeNovelty: string, @Req() request: Request): Promise<any[]> {
+  async findByClient(@Param('page') page: number, @Param('limit') limit: number, @Param('type') typeNovelty: string, @Req() request: Request): Promise<any[]> {
     const { roleKey } = request['user'];
     return await this.noveltyService.findByClient(page, limit, typeNovelty, roleKey);
   }
@@ -102,7 +104,7 @@ export class NoveltyController {
         finalDate: { type: 'string' },
         type: { type: 'string' },
         token: { type: 'string' },
-      }, 
+      },
     },
   })
   async getNoveltyByDocument(
@@ -174,5 +176,5 @@ export class NoveltyController {
   async createNoveltyMaster(@Body() novelty: NoveltyMasterTemporappDto, @Headers('authorization-temporapp') token: string): Promise<AxiosResponse> {
     return await this.noveltyService.createNoveltyMaster(novelty, token);
   }
-  
+
 }
