@@ -75,7 +75,6 @@ export class APIFeatures {
 
     populate(defaultPopulation?: any) {
         let populate = this.getPopulationFromQuery() ?? defaultPopulation;
-        console.log(populate);
         if (populate) {
             this.mongooseQuery.populate(populate);
         }
