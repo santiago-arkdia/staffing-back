@@ -1,13 +1,13 @@
 /* eslint-disable prettier/prettier */
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import mongoose, {Model, Types} from 'mongoose';
-import {Novelty} from '../entities/novelty.entity';
-import {CreateNoveltyDto} from '../dto/create-novelty.dto';
-import {UpdateNoveltyDto} from '../dto/update-novelty.dto';
-import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
-import {Counter} from "../entities/counter.entity";
-import {Concept} from "../../concepts/entities/concepts.entity";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import mongoose, { Model, Types } from 'mongoose';
+import { Novelty } from '../entities/novelty.entity';
+import { CreateNoveltyDto } from '../dto/create-novelty.dto';
+import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { Counter } from "../entities/counter.entity";
+import { Concept } from "../../concepts/entities/concepts.entity";
 import { Roles } from 'src/modules/roles/entities/roles.entity';
 import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 import { NoveltyRetirement } from 'src/modules/novelty-retirement/entities/novelty-retirement.entity';
@@ -33,9 +33,9 @@ export class NoveltyService {
 
     async create(novelty: CreateNoveltyDto): Promise<Novelty> {
         const counter = await this.counterModel.findOneAndUpdate(
-            {model: 'Novelty', field: 'uid'},
-            {$inc: {count: 1}},
-            {upsert: true, new: true},
+            { model: 'Novelty', field: 'uid' },
+            { $inc: { count: 1 } },
+            { upsert: true, new: true },
         );
 
         const createdNovelty = new this.noveltyModel({
@@ -82,10 +82,10 @@ export class NoveltyService {
 
             endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
             if (month) {
-                endDate.setMonth(endDate.getMonth() + 1); 
+                endDate.setMonth(endDate.getMonth() + 1);
             } else {
-                startDate.setMonth(0); 
-                endDate.setMonth(0); 
+                startDate.setMonth(0);
+                endDate.setMonth(0);
                 endDate.setFullYear(endDate.getFullYear() + 1);
             }
             endDate.setHours(0, 0, 0, -1);
@@ -154,10 +154,10 @@ export class NoveltyService {
 
             endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
             if (month) {
-                endDate.setMonth(endDate.getMonth() + 1); 
+                endDate.setMonth(endDate.getMonth() + 1);
             } else {
-                startDate.setMonth(0); 
-                endDate.setMonth(0); 
+                startDate.setMonth(0);
+                endDate.setMonth(0);
                 endDate.setFullYear(endDate.getFullYear() + 1);
             }
             endDate.setHours(0, 0, 0, -1);
@@ -236,26 +236,26 @@ export class NoveltyService {
     ): Promise<Novelty[]> {
         let query = {};
         let queryBody = {};
-        let conceptList= []
+        let conceptList = []
 
         console.log(request['user']);
         console.log("object");
 
         if (by !== 'find' && value !== 'all') {
             if (typeof value === 'string' && !isNaN(Number(value))) {
-                query = {[by]: Number(value)};
+                query = { [by]: Number(value) };
             } else if (typeof value === 'string') {
                 if (Types.ObjectId.isValid(value)) {
-                    query = {[by]: value};
+                    query = { [by]: value };
                 } else {
-                    query = {[by]: {$regex: new RegExp(value, 'i')}};
+                    query = { [by]: { $regex: new RegExp(value, 'i') } };
                 }
             } else if (typeof value === 'number') {
-                query = {[by]: value};
+                query = { [by]: value };
             }
         }
         if (by === 'category') {
-            conceptList = await this.conceptModel.find({categoryNovelty: value}).select('_id').exec();
+            conceptList = await this.conceptModel.find({ categoryNovelty: value }).select('_id').exec();
         }
 
         if (Object.keys(requestBodyFilters).length > 0) {
@@ -266,7 +266,7 @@ export class NoveltyService {
                     if (mongoose.Types.ObjectId.isValid(val)) {
                         queryBody[key] = val;
                     } else {
-                        queryBody[key] = {$regex: new RegExp(val, 'i')};
+                        queryBody[key] = { $regex: new RegExp(val, 'i') };
                     }
                 } else if (typeof val === 'number') {
                     queryBody[key] = val;
@@ -276,38 +276,38 @@ export class NoveltyService {
 
         const queryNovelty = {}
 
-        if (request['user'].roleKey != "admin_payroll"){
+        if (request['user'].roleKey != "admin_payroll") {
 
-            if(typeNovelty != "all"){
+            if (typeNovelty != "all") {
                 queryNovelty["typeNovelty"] = typeNovelty;
             }
 
-            if (by === 'documents'){
+            if (by === 'documents') {
                 queryNovelty['documents'] = { $size: 0 };
             }
 
-            if (by === 'concept'){
+            if (by === 'concept') {
                 queryNovelty['concept'] = value
             }
 
-            if (by === 'state'){
+            if (by === 'state') {
                 queryNovelty['state'] = value
             }
 
-            if (request['user'].roleKey != "collaborator" ){
-                if(request['user'].roleKey == "client" ){
-                    queryNovelty['client'] =  request['user'].userEntity;
-                }else{
-                    let clients = await this.clientModel.find({analysts: { $in: request['user'].userEntity }}).exec();
+            if (request['user'].roleKey != "collaborator") {
+                if (request['user'].roleKey == "client") {
+                    queryNovelty['client'] = request['user'].userEntity;
+                } else {
+                    let clients = await this.clientModel.find({ analysts: { $in: request['user'].userEntity } }).exec();
                     queryNovelty['client'] = { '$in': clients.map(client => client._id) };
                 }
-            }else{
+            } else {
                 queryNovelty['collaborator'] = request['user'].userEntity;
             }
         }
 
-        if (by === 'categoryNovelty'){
-            let concepts = await this.conceptModel.find({categoryNovelty: value}).exec();
+        if (by === 'categoryNovelty') {
+            let concepts = await this.conceptModel.find({ categoryNovelty: value }).exec();
             queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
         }
 
@@ -337,7 +337,7 @@ export class NoveltyService {
             .skip((page - 1) * limit)
             .populate({
                 path: 'contract',
-                model: 'Contract' 
+                model: 'Contract'
             })
             .populate('collaborator')
             .populate({
@@ -349,9 +349,9 @@ export class NoveltyService {
             .limit(limit)
             .exec();
 
-            
-// estadoo
-// documentos en vacio 
+
+        // estadoo
+        // documentos en vacio 
 
 
         // if (roleKeys.length != 0){
@@ -384,7 +384,7 @@ export class NoveltyService {
     // Integrations
     async getNoveltyByDocument(identification: string, initialDate: string, finalDate: string, type: string, token: string): Promise<AxiosResponse<any>> {
         const url = 'http://34.214.124.124:9896/ws/novedades/consultar';
-        const data = {documento: identification, fechaDesde: initialDate, fechaHasta: finalDate, tipoInforme: type};
+        const data = { documento: identification, fechaDesde: initialDate, fechaHasta: finalDate, tipoInforme: type };
         const config = {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -434,16 +434,16 @@ export class NoveltyService {
     async findByClient(page: number, limit: number, typeNovelty: string, idClient): Promise<any> {
         const validPage = Number(page) > 0 ? Number(page) : 1;
         const validLimit = Number(limit) > 0 ? Number(limit) : 10;
-    
+
         const query = { typeNovelty: typeNovelty, state: { $in: [0, 1] } };
         // if (year) {
         //     let startDate = new Date();
         //     let endDate = new Date();
-    
+
         //     // Establecer el año y, si se proporciona, el mes (ajustando por el índice base 0 de los meses en JS)
         //     startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
         //     startDate.setHours(0, 0, 0, 0); // Comienzo del día
-    
+
         //     endDate.setFullYear(parseInt(year), month ? parseInt(month) : 0, 1);
         //     if (month) {
         //         endDate.setMonth(endDate.getMonth() + 1); // Mover al próximo mes
@@ -454,24 +454,24 @@ export class NoveltyService {
         //         endDate.setFullYear(endDate.getFullYear() + 1);
         //     }
         //     endDate.setHours(0, 0, 0, -1); // Justo antes de que comience el próximo periodo
-    
+
         //     query['createdAt'] = {
         //         $gte: startDate,
         //         $lt: endDate
         //     };
         // }
 
-    
+
         const totalNovelties = await this.noveltyModel.countDocuments(query);
         const totalNoveltyReiterment = await this.noveltyRetirementModel.countDocuments(query);
         const totalNoveltySocialSecurity = await this.noveltySocialSecurity.countDocuments(query);
-    
+
         const totalPagesNovelties = Math.ceil(totalNovelties / validLimit);
         const totalPagesNoveltyReiterment = Math.ceil(totalNoveltyReiterment / validLimit);
         const totalPagesNoveltySocialSecurity = Math.ceil(totalNoveltySocialSecurity / validLimit);
-    
+
         let skipAmount = (validPage - 1) * validLimit;
-    
+
         const novelties = await this.noveltyModel.find(query)
             .limit(validLimit)
             .populate('collaborator')
@@ -482,7 +482,7 @@ export class NoveltyService {
                 },
             })
             .skip(skipAmount);
-    
+
         const noveltyNoveltyReiterment = await this.noveltyRetirementModel.find(query)
             .limit(validLimit)
             .populate('collaborator')
@@ -506,7 +506,7 @@ export class NoveltyService {
             .skip(skipAmount);
 
         const combinedData = [...novelties, ...noveltyNoveltyReiterment];
-        const totalRecords =  totalNovelties + totalNoveltyReiterment + totalNoveltySocialSecurity;
+        const totalRecords = totalNovelties + totalNoveltyReiterment + totalNoveltySocialSecurity;
         const totalPages = totalPagesNovelties + totalPagesNoveltyReiterment + totalPagesNoveltySocialSecurity;
 
         const response = {
@@ -798,13 +798,13 @@ export class NoveltyService {
         return dataResponse;
     }
 
-    async findAll(query?:any): Promise<Novelty[]> {
+    async findAll(query?: any): Promise<Novelty[]> {
         const features = new APIFeatures(this.noveltyModel.find(), query)
-        .filter()
-        .sort()
-        .limit()
-        .pagination()
-        .populate();
+            .filter()
+            .sort()
+            .limit()
+            .pagination()
+            .populate();
         const novelties = await features.mongooseQuery;
         return novelties;
     }
