@@ -8,6 +8,10 @@ import { HourlyMeshes } from 'src/modules/hourly-meshes/entities/hourly-meshes.e
 
 @Schema({collection: 'job-positions', timestamps: true})
 export class JobPositions {
+    
+    @Prop({type: String})
+    idTry: string;
+
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Region'})
     region: Region;
 
