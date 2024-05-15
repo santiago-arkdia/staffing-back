@@ -58,11 +58,12 @@ import { PayrollsModule } from './modules/payrolls/payrolls.module';
 import { PayrollUserModule } from './modules/payroll-user/payroll-user.module';
 import { UsersExternalsModule } from './modules/users-externals/users-externals.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
+import { PucModule } from './modules/puc/puc.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot(),
-        MongooseModule.forRoot(process.env.MONGO_DATABASE_URL, {
+        MongooseModule.forRoot("mongodb+srv://eafic-be:6C6KV8suRjYCNGju@eafic.heb7ypl.mongodb.net/staffing-fase-2", {
             autoIndex: true,
         }),
         MongooseModule.forFeature([
@@ -115,7 +116,8 @@ import { ContractsModule } from './modules/contracts/contracts.module';
         NoveltySocialSecurityModule,
         PayrollsModule,
         UsersExternalsModule,
-        ContractsModule
+        ContractsModule,
+        PucModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],

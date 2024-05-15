@@ -3,6 +3,7 @@ import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Admin } from 'src/modules/admin/entities/admin.entity';
 import {ModuleParameterization} from 'src/modules/module-parameterization/entities/module-parameterization.entity';
+import { Puc } from 'src/modules/puc/entities/puc.entity';
 import {UserEntity} from 'src/modules/users/entities/user.entity';
 
 @Schema({timestamps: true})
@@ -30,6 +31,9 @@ export class Client {
 
     @Prop({type: mongoose.Schema.Types.Array, ref: 'ModuleParameterization'})
     moduleParameterization: ModuleParameterization[];
+
+    @Prop({type: mongoose.Schema.Types.Array, ref: 'Puc'})
+    conceptsPuc: any[];
 
 }
 

@@ -32,6 +32,10 @@ export class ClientService {
         },
       })
       .populate({
+        path: 'conceptsPuc',
+        model: 'Puc'
+      })
+      .populate({
         path: 'analysts',
         populate: {
           path: 'user',
