@@ -8,12 +8,15 @@ export class AdminsDto{
   name: string;
 
   @IsString()
+  @IsOptional()
   lastName: string;
 
   @IsNumber()
+  @IsOptional()
   documentType: string;
 
   @IsNumber()
+  @IsOptional()
   documentNumber: string;
 
   @IsString()
