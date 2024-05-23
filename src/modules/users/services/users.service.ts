@@ -32,6 +32,7 @@ export class UsersService {
     }
 
     async updateState(id: string, user: UpdateUserStateDto): Promise<UserEntity> {
+        console.log(user);
         return this.userModel.findByIdAndUpdate(id, user, {new: true});
     }
 

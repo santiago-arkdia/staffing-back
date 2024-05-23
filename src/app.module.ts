@@ -59,6 +59,7 @@ import { PayrollUserModule } from './modules/payroll-user/payroll-user.module';
 import { UsersExternalsModule } from './modules/users-externals/users-externals.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { PucModule } from './modules/puc/puc.module';
+import { AccountingInterfaceModule } from './modules/accounting-interface/accounting-interface.module';
 
 @Module({
     imports: [
@@ -117,7 +118,8 @@ import { PucModule } from './modules/puc/puc.module';
         PayrollsModule,
         UsersExternalsModule,
         ContractsModule,
-        PucModule
+        PucModule,
+        AccountingInterfaceModule
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],
