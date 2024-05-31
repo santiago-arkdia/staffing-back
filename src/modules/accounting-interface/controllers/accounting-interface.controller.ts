@@ -5,6 +5,7 @@ import {CreateAccountingInterfaceDto} from '../dto/create-accounting-interface.d
 import {AccountingInterface} from '../entities/accounting-interface.entity';
 import {ApiTags} from '@nestjs/swagger';
 import {UpdateAccountingInterfaceDto} from '../dto/update-accounting-interface.dto';
+import { FilterInterfaceDto } from '../dto/filter-accounting.dtos';
 
 @ApiTags('Accounting Interface')
 @Controller('api/accounting-interface')
@@ -25,15 +26,15 @@ export class AccountingInterfaceController {
     //     return await this.epsService.update(id, updateAccountingInterfaceDto);
     // }
 
-    @Get()
-    async findAll(): Promise<AccountingInterface[]> {
-        return await this.epsService.findAll();
+    @Post("get-all")
+    async findAll(@Body() filterIntefaceDto: FilterInterfaceDto): Promise<AccountingInterface[]> {
+        return await this.epsService.findAll(filterIntefaceDto);
     }
 
-    // @Get(':id')
-    // async findOne(@Param('id') id: string): Promise<AccountingInterface> {
-    //     return await this.epsService.findOne(id);
-    // }
+    @Get(':id')
+    async findOne(@Param('id') id: string): Promise<AccountingInterface> {
+        return await this.epsService.findOne(id);
+    }
 
     // @Get(':by/:value')
     // async findBy(

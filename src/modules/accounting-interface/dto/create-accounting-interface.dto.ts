@@ -1,27 +1,40 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @Schema()
 export class CreateAccountingInterfaceDto {
-  @IsString()
-  name: string;
 
   @IsString()
+  @IsNotEmpty()
   payroll: string;
 
   @IsString()
+  @IsOptional()
   socialSecurity: string;
 
   @IsString()
+  @IsOptional()
   reteSource: string;
 
   @IsString()
-  time: string;
+  @IsOptional()
+  month: string;
 
   @IsString()
+  @IsOptional()
+  year: string;
+
+  @IsString()
+  @IsOptional()
   client: string;
 
   @IsString()
+  @IsOptional()
   acountingInterface: string;
+
+  @IsNumber()
+  @IsOptional()
+  state: number;
+
 }

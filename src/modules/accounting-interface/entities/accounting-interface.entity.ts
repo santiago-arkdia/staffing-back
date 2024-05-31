@@ -15,6 +15,12 @@ export class AccountingInterface {
     reteSource: string;
 
     @Prop({type: String})
+    month: string;
+
+    @Prop({type: String})
+    year: string;
+
+    @Prop({type: String})
     time: string;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Client'})
@@ -22,6 +28,9 @@ export class AccountingInterface {
     
     @Prop({type: String})
     acountingInterface: string;
+
+    @Prop({type: Number})
+    state: number;
 
 }
 

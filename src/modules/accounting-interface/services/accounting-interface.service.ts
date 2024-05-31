@@ -4,6 +4,7 @@ import { AccountingInterface } from '../entities/accounting-interface.entity';
 import { Model } from 'mongoose';
 import { CreateAccountingInterfaceDto } from '../dto/create-accounting-interface.dto';
 import { UpdateAccountingInterfaceDto } from '../dto/update-accounting-interface.dto';
+import { FilterInterfaceDto } from '../dto/filter-accounting.dtos';
 
 @Injectable()
 export class AccountingInterfaceService {
@@ -18,12 +19,19 @@ export class AccountingInterfaceService {
     return await this.accountingInterfaceModel.findByIdAndUpdate(id, eps, { new: true });
   }
 
-  async findAll(): Promise<AccountingInterface[]> {
-    const total = await this.accountingInterfaceModel.countDocuments().exec();
+  async findAll(params?: FilterInterfaceDto): Promise<AccountingInterface[]> {
+    const { limit = params.limit, page = 1, order = params.order, ...filters } = params;
+    const offset = (page - 1) * limit;
     const accountingInterfaces = await this.accountingInterfaceModel
-        .find()
+        .find(filters)
         .populate("client")
+        .skip(offset)
+        .limit(limit)
+        .sort({ createdAt: order === 'asc' ? 1 : -1 })
         .exec();
+
+
+    const total = await this.accountingInterfaceModel.find(filters).countDocuments().exec();
 
     const accountingInterface: any = {};
     accountingInterface.total = total;
@@ -31,9 +39,13 @@ export class AccountingInterfaceService {
 
     return accountingInterface;
   }
+  
 
   async findOne(id: string): Promise<AccountingInterface> {
-    return await this.accountingInterfaceModel.findById(id).exec();
+    return await this.accountingInterfaceModel
+          .findById(id)
+          .populate("client")
+          .exec();
   }
 
   async findBy(by: string, value: string): Promise<AccountingInterface[]> {
