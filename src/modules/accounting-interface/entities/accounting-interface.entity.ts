@@ -32,6 +32,9 @@ export class AccountingInterface {
     @Prop({type: Number})
     state: number;
 
+    @Prop([Comment])
+    comments: Comment[];
+    
 }
 
 export const AccountingInterfaceSchema = SchemaFactory.createForClass(AccountingInterface);
