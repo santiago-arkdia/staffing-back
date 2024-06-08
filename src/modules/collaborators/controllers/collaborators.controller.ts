@@ -6,6 +6,7 @@ import {Collaborator} from '../entities/collaborators.entity';
 import {ApiTags} from '@nestjs/swagger';
 import {UpdateCollaboratorDto} from '../dto/update-collaborators.dto';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
+import { Request } from 'express';
 
 @ApiTags('Collaborator')
 @Controller('api/collaborator')

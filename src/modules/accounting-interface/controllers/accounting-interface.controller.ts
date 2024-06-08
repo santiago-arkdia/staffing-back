@@ -18,17 +18,22 @@ export class AccountingInterfaceController {
         return await this.epsService.create(eps);
     }
 
-    // @Put(':id')
-    // async update(
-    //     @Param('id') id: string,
-    //     @Body() updateAccountingInterfaceDto: UpdateAccountingInterfaceDto,
-    // ): Promise<UpdateAccountingInterfaceDto> {
-    //     return await this.epsService.update(id, updateAccountingInterfaceDto);
+    @Put(':id')
+    async update(
+        @Param('id') id: string,
+        @Body() updateAccountingInterfaceDto: UpdateAccountingInterfaceDto,
+    ): Promise<AccountingInterface> {
+        return await this.epsService.update(id, updateAccountingInterfaceDto);
+    }
+
+    // @Post("get-all")
+    // async findAll(@Body() filterIntefaceDto: FilterInterfaceDto): Promise<AccountingInterface[]> {
+    //     return await this.epsService.findAll(filterIntefaceDto);
     // }
 
-    @Post("get-all")
-    async findAll(@Body() filterIntefaceDto: FilterInterfaceDto): Promise<AccountingInterface[]> {
-        return await this.epsService.findAll(filterIntefaceDto);
+    @Get("get-all")
+    async findAll(): Promise<AccountingInterface[]> {
+        return await this.epsService.findAll();
     }
 
     @Get(':id')

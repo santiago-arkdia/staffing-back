@@ -15,31 +15,37 @@ export class AccountingInterfaceService {
     return await createdAccountingInterface.save();
   }
 
-  async update(id: string, eps: AccountingInterface): Promise<UpdateAccountingInterfaceDto> {
+  async update(id: string, eps: UpdateAccountingInterfaceDto): Promise<AccountingInterface> {
     return await this.accountingInterfaceModel.findByIdAndUpdate(id, eps, { new: true });
   }
 
-  async findAll(params?: FilterInterfaceDto): Promise<AccountingInterface[]> {
-    const { limit = params.limit, page = 1, order = params.order, ...filters } = params;
-    const offset = (page - 1) * limit;
-    const accountingInterfaces = await this.accountingInterfaceModel
-        .find(filters)
-        .populate("client")
-        .skip(offset)
-        .limit(limit)
-        .sort({ createdAt: order === 'asc' ? 1 : -1 })
-        .exec();
+  // async findAll(params?: FilterInterfaceDto): Promise<AccountingInterface[]> {
+  //   const { limit = params.limit, page = 1, order = params.order, ...filters } = params;
+  //   const offset = (page - 1) * limit;
+  //   const accountingInterfaces = await this.accountingInterfaceModel
+  //       .find(filters)
+  //       .populate("client")
+  //       .skip(offset)
+  //       .limit(limit)
+  //       .sort({ createdAt: order === 'asc' ? 1 : -1 })
+  //       .exec();
 
 
-    const total = await this.accountingInterfaceModel.find(filters).countDocuments().exec();
+  //   const total = await this.accountingInterfaceModel.find(filters).countDocuments().exec();
 
-    const accountingInterface: any = {};
-    accountingInterface.total = total;
-    accountingInterface.data = accountingInterfaces;
+  //   const accountingInterface: any = {};
+  //   accountingInterface.total = total;
+  //   accountingInterface.data = accountingInterfaces;
 
-    return accountingInterface;
-  }
+  //   return accountingInterface;
+  // }
   
+  async findAll(): Promise<AccountingInterface[]> {
+    return await this.accountingInterfaceModel
+          .find()
+          .populate("client")
+          .exec();
+  }
 
   async findOne(id: string): Promise<AccountingInterface> {
     return await this.accountingInterfaceModel
