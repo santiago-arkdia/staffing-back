@@ -2,6 +2,7 @@
 import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Client } from 'src/modules/clients/entities/client.entity';
+import { Comment } from 'src/shared/models/commet';
 
 @Schema({timestamps: true})
 export class AccountingInterface {
