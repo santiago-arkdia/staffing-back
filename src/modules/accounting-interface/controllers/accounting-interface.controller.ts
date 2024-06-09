@@ -31,9 +31,13 @@ export class AccountingInterfaceController {
     //     return await this.epsService.findAll(filterIntefaceDto);
     // }
 
-    @Get("get-all/:page/:limit")
-    async findAll(@Param('page') page: number, @Param('limit') limit: number): Promise<AccountingInterface[]> {
-        return await this.epsService.findAll(page, limit);
+    @Get("get-all/:page/:limit/:by/:value")
+    async findAll(
+        @Param('page') page: number, 
+        @Param('limit') limit: number,
+        @Param('by') by: string,
+        @Param('value') value: string): Promise<AccountingInterface[]> {
+        return await this.epsService.findBy(page, limit, by, value);
     }
 
     @Get(':id')

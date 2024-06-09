@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { AccountingInterface } from '../entities/accounting-interface.entity';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateAccountingInterfaceDto } from '../dto/create-accounting-interface.dto';
 import { UpdateAccountingInterfaceDto } from '../dto/update-accounting-interface.dto';
 import { FilterInterfaceDto } from '../dto/filter-accounting.dtos';
@@ -40,17 +40,47 @@ export class AccountingInterfaceService {
   //   return accountingInterface;
   // }
 
-  async findAll(page: number, limit: number): Promise<AccountingInterface[]> {
+  async findBy(
+    page: number, 
+    limit: number, 
+    by: string,
+    value: string | number
+  ): Promise<AccountingInterface[]> {
 
-    const total = await this.accountingInterfaceModel.countDocuments().exec();
-    const totalPages = Math.ceil(total / limit)
+    let query = {};
 
-    const AccountingInterfaceData = await this.accountingInterfaceModel
-      .find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate("client")
-      .exec();
+    if (by !== 'find' && value !== 'all') {
+      if (typeof value === 'string' && !isNaN(Number(value))) {
+        query = { [by]: Number(value) };
+      } else if (typeof value === 'string') {
+        if (Types.ObjectId.isValid(value)) {
+          query = { [by]: value };
+        } else {
+          query = { [by]: { $regex: new RegExp(value, 'i') } };
+        }
+      } else if (typeof value === 'number') {
+        query = { [by]: value };
+      }
+    }
+
+    const total = by === 'find' && value === 'all'
+        ? await this.accountingInterfaceModel.countDocuments().exec()
+        : await this.accountingInterfaceModel.countDocuments(query).exec();
+    const totalPages = Math.ceil(total / limit);
+
+    let queryBuilder
+
+    if (by === 'find' && value === 'all') {
+      queryBuilder = this.accountingInterfaceModel.find();
+    }else{
+      queryBuilder = this.accountingInterfaceModel.find(query);
+    }
+
+    if (page > 0 && limit > 0) {
+      queryBuilder = queryBuilder.skip((page - 1) * limit).limit(limit);
+    }
+
+    const AccountingInterfaceData = await queryBuilder.exec();
 
     const AccountingInterface: any = {};
     AccountingInterface.total = total;
@@ -67,8 +97,8 @@ export class AccountingInterfaceService {
       .exec();
   }
 
-  async findBy(by: string, value: string): Promise<AccountingInterface[]> {
-    const query = { [by]: value };
-    return await this.accountingInterfaceModel.find(query).exec();
-  }
+  // async findBy(by: string, value: string): Promise<AccountingInterface[]> {
+  //   const query = { [by]: value };
+  //   return await this.accountingInterfaceModel.find(query).exec();
+  // }
 }
