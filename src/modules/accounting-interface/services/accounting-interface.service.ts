@@ -8,7 +8,7 @@ import { FilterInterfaceDto } from '../dto/filter-accounting.dtos';
 
 @Injectable()
 export class AccountingInterfaceService {
-  constructor(@InjectModel(AccountingInterface.name) private readonly accountingInterfaceModel: Model<AccountingInterface>) {}
+  constructor(@InjectModel(AccountingInterface.name) private readonly accountingInterfaceModel: Model<AccountingInterface>) { }
 
   async create(eps: CreateAccountingInterfaceDto): Promise<AccountingInterface> {
     const createdAccountingInterface = new this.accountingInterfaceModel(eps);
@@ -39,19 +39,32 @@ export class AccountingInterfaceService {
 
   //   return accountingInterface;
   // }
-  
-  async findAll(): Promise<AccountingInterface[]> {
-    return await this.accountingInterfaceModel
-          .find()
-          .populate("client")
-          .exec();
+
+  async findAll(page: number, limit: number): Promise<AccountingInterface[]> {
+
+    const total = await this.accountingInterfaceModel.countDocuments().exec();
+    const totalPages = Math.ceil(total / limit)
+
+    const AccountingInterfaceData = await this.accountingInterfaceModel
+      .find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("client")
+      .exec();
+
+    const AccountingInterface: any = {};
+    AccountingInterface.total = total;
+    AccountingInterface.pages = totalPages;
+    AccountingInterface.data = AccountingInterfaceData;
+
+    return AccountingInterface
   }
 
   async findOne(id: string): Promise<AccountingInterface> {
     return await this.accountingInterfaceModel
-          .findById(id)
-          .populate("client")
-          .exec();
+      .findById(id)
+      .populate("client")
+      .exec();
   }
 
   async findBy(by: string, value: string): Promise<AccountingInterface[]> {
