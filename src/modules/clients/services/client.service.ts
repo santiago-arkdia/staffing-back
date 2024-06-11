@@ -1,17 +1,19 @@
 /* eslint-disable prettier/prettier */
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model, Types} from 'mongoose';
-import {Client} from '../entities/client.entity';
-import {CreateClientsDto} from '../dto/create-client.dto';
-import axios, {AxiosResponse} from 'axios';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { Client } from '../entities/client.entity';
+import { AccountingInterface } from 'src/modules/accounting-interface/entities/accounting-interface.entity';
+import { CreateClientsDto } from '../dto/create-client.dto';
+import axios, { AxiosResponse } from 'axios';
 import { UpdateClientsDto } from '../dto/update-client.dto';
 
 @Injectable()
 export class ClientService {
   constructor(
     @InjectModel(Client.name) private readonly clientModel: Model<Client>,
-  ) {}
+    @InjectModel(AccountingInterface.name) private AccountingInterfaceModel: Model<AccountingInterface>
+  ) { }
 
   async create(client: CreateClientsDto): Promise<Client> {
     const createdClient = new this.clientModel(client);
@@ -19,11 +21,11 @@ export class ClientService {
   }
 
   async update(id: string, client: UpdateClientsDto): Promise<Client> {
-    return this.clientModel.findByIdAndUpdate(id, client, {new: true});
+    return this.clientModel.findByIdAndUpdate(id, client, { new: true });
   }
 
   async findOne(id: string): Promise<Client> {
-    return await this.clientModel
+    const clientData = this.clientModel
       .findById(id)
       .populate({
         path: 'user',
@@ -42,13 +44,24 @@ export class ClientService {
         },
       })
       .exec();
+
+    if (!clientData) {
+      return null
+    }
+    const accountingInterface = await this.AccountingInterfaceModel
+      .find({ client: id })
+      .exec();
+
+    (await clientData).accountingInterface = accountingInterface;
+
+    return clientData;
   }
 
   async findBy(
-      page: number,
-      limit: number,
-      by: string,
-      value: string | number,
+    page: number,
+    limit: number,
+    by: string,
+    value: string | number,
   ): Promise<Client[]> {
     let query = {};
 
@@ -67,14 +80,14 @@ export class ClientService {
     }
 
     const total = by === 'find' && value === 'all'
-        ? await this.clientModel.countDocuments().exec()
-        : await this.clientModel.countDocuments(query).exec();
+      ? await this.clientModel.countDocuments().exec()
+      : await this.clientModel.countDocuments(query).exec();
     const totalPages = Math.ceil(total / limit);
 
     let search;
 
 
-    if(by == "analysts"){
+    if (by == "analysts") {
       query = {
         analysts: { $in: value }
       }
@@ -82,30 +95,30 @@ export class ClientService {
 
     if (by === 'find' && value === 'all') {
       search = this.clientModel
-          .find();
+        .find();
     } else {
       search = this.clientModel
-          .find(query);
+        .find(query);
     }
 
-    if(page != 0){
+    if (page != 0) {
       search = search
         .skip((page - 1) * limit)
     }
 
-    if(limit != 0){
+    if (limit != 0) {
       search = search
         .limit(limit)
     }
 
     let clients = await search
-            .populate({
-              path: 'user',
-              populate: {
-                path: 'role',
-              },
-            })
-            .exec();
+      .populate({
+        path: 'user',
+        populate: {
+          path: 'role',
+        },
+      })
+      .exec();
 
     const data: any = {};
     data.total = total;
@@ -114,11 +127,11 @@ export class ClientService {
 
     return data;
   }
-  
+
 
   async getClientByIdentification(identification: number, initialDate: string, finalDate: string, token: string): Promise<AxiosResponse<any>> {
     const url = 'http://34.214.124.124:9896/ws/clientes/consultar_cliente_documento';
-    const data = { documento: identification, fechaInicial:initialDate, fechaFinal:finalDate };
+    const data = { documento: identification, fechaInicial: initialDate, fechaFinal: finalDate };
     const config = {
       headers: {
         'Authorization': `Bearer ${token}`,
