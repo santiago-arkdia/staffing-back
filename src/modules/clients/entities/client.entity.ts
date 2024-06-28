@@ -31,6 +31,9 @@ export class Client {
     @Prop({type: mongoose.Schema.Types.Array, ref: 'ModuleParameterization'})
     moduleParameterization: ModuleParameterization[];
 
+    @Prop({ type: [String], default: [] })
+    filesName: string[]; 
+
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);
