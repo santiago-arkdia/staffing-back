@@ -21,7 +21,7 @@ export class ConceptsService {
     }
 
     async update(id: string, concept: CreateConceptsDto): Promise<Concept> {
-        return this.conceptModel.findByIdAndUpdate(id, concept);
+        return await this.conceptModel.findByIdAndUpdate(id, concept, { new: true });
     }
 
     async findAll(): Promise<Concept[]> {

@@ -68,11 +68,11 @@ export class CreateNoveltyDto {
 
   // Campos comunes a Novelty y Retirement
   @IsString()
-  @IsOptional()
+  //@IsOptional()  cambio 
   concept?: string;
 
   @IsString()
-  @IsOptional()
+ // @IsOptional()  cambio
   contract: string;
 
   // Campos exclusivos de Novelty

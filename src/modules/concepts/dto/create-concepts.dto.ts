@@ -14,21 +14,21 @@ export class CreateConceptsDto {
   @IsOptional()
   name: string;
 
-  @IsBoolean()
-  @IsOptional()
-  benefit: string;
+  // @IsBoolean()
+  // @IsOptional()
+  // benefit: string;
 
-  @IsString()
-  @IsOptional()
-  reportType: string;
+  // @IsString()
+  // @IsOptional()
+  // reportType: string;
 
   @IsString()
   @IsOptional()
   categoryNovelty: CategoriesNovelty;
 
-  @IsString()
-  @IsOptional()
-  registers: string
+  // @IsString()
+  // @IsOptional()
+  // registers: string
 
   @IsString()
   @IsOptional()
@@ -38,17 +38,17 @@ export class CreateConceptsDto {
   @IsOptional()
   state: number
 
-  @IsString()
-  @IsOptional()
-  applyDate: boolean
+  // @IsString()
+  // @IsOptional()
+  // applyDate: boolean
 
   @IsString()
   @IsOptional()
   manages: string
 
-  @IsString()
-  @IsOptional()
-  measurement: string
+  // @IsString()
+  // @IsOptional()
+  // measurement: string
 
   @IsString()
   typeNovelty: 'novelty' | 'retirement' | 'social-security';
