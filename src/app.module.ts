@@ -58,6 +58,9 @@ import { PayrollsModule } from './modules/payrolls/payrolls.module';
 import { PayrollUserModule } from './modules/payroll-user/payroll-user.module';
 import { UsersExternalsModule } from './modules/users-externals/users-externals.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
+import { MySqlModule } from './database/mysql.module';
+import { DatasourcesModule } from './modules/datasources/datasources.module';
+import { AwsS3Module } from './modules/aws/s3/aws-s3.module';
 
 @Module({
     imports: [
@@ -115,7 +118,12 @@ import { ContractsModule } from './modules/contracts/contracts.module';
         NoveltySocialSecurityModule,
         PayrollsModule,
         UsersExternalsModule,
-        ContractsModule
+        ContractsModule,
+
+        /**Integracion con MySQL para StoreProcedures */
+        MySqlModule,
+        DatasourcesModule,
+        
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],
