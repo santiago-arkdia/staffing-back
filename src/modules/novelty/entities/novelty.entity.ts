@@ -49,6 +49,9 @@ export class Novelty {
     type: number;
 
     @Prop({ type: Object })
+    temporApp: Record<string, any>;
+
+    @Prop({ type: Object })
     more: Record<string, any>;
 
 

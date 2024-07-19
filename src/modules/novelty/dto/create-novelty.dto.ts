@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
-import {IsArray, IsDate, IsNumber, IsOptional, IsString , IsBoolean} from 'class-validator';
+import {IsArray, IsDate, IsNumber, IsOptional, IsString , IsBoolean, IsObject} from 'class-validator';
 
 // @Schema()
 // export class CreateNoveltyDto {
@@ -142,6 +142,10 @@ export class CreateNoveltyDto {
   @IsString()
   @IsOptional()
   observations?: string;
+
+  @IsObject()
+  @IsOptional()
+  temporApp: Record<string, any>;
 
   // Campos comunes a todos
   @IsArray()
