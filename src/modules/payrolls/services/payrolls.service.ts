@@ -136,12 +136,12 @@ export class PayrollsService {
         "Nombre colaborador": novelty.collaborator?.name,
         "Documento": novelty.collaborator.document,
         "Cargo": novelty.collaborator.jobPosition?.name,
-        "Centro de costo": novelty.centersCosts?.name,
-        "Centro de utilidad": novelty.utilityCenter?.name,
+//        "Centro de costo": novelty.centersCosts?.name,
+//        "Centro de utilidad": novelty.utilityCenter?.name,
         "Codigo Concepto": novelty.concept?.code,
         "Concepto": novelty.concept?.name,
         "Categoria": novelty.concept?.categoryNovelty?.typeNovelty,
-        "Observaciones": novelty.observations,
+//        "Observaciones": novelty.observations,
         "Fecha Reporte": novelty["createdAt"],
       }))
     );

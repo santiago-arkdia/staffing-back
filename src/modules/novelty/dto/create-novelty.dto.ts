@@ -71,83 +71,14 @@ export class CreateNoveltyDto {
   //@IsOptional()  cambio 
   concept?: string;
 
-  @IsString()
- // @IsOptional()  cambio
-  contract: string;
-
-  // Campos exclusivos de Novelty
-  @IsString()
-  @IsOptional()
-  description?: string;
-
-  @IsNumber()
-  @IsOptional()
-  value?: number;
-
-  @IsDate()
-  @IsOptional()
-  @Type(() => Date)
-  date?: Date;
-
-  // Campos exclusivos de Retirement
-  @IsString()
-  @IsOptional()
-  finishDate?: string;
-
-  @IsString()
-  @IsOptional()
-  endDate?: string;
-
-  @IsString()
-  @IsOptional()
-  note?: string;
-
   @IsNumber()
   @IsOptional()
   state?: number;
 
-  @IsNumber()
-  @IsOptional()
-  signedByApprover?: number;
-
-  @IsNumber()
-  @IsOptional()
-  signedByCollaborator?: number;
-
-  @IsNumber()
-  @IsOptional()
-  signedByManagment?: number;
-
-  @IsNumber()
-  @IsOptional()
-  loadedOnPayroll?: number;
-
-  // Campos exclusivos de SocialSecurity
-  @IsString()
-  @IsOptional()
-  utilityCenter?: string;
-
-  @IsString()
-  @IsOptional()
-  centersCosts?: string;
-
-  @IsString()
-  @IsOptional()
-  startDate?: string;
-
-  @IsString()
-  @IsOptional()
-  previousPeriod?: string;
-
-  @IsString()
-  @IsOptional()
-  observations?: string;
-
   @IsObject()
   @IsOptional()
-  temporApp: Record<string, any>;
+  reportingObject: Record<string, any>;
 
-  // Campos comunes a todos
   @IsArray()
   @IsOptional()
   documents?: any[];
@@ -156,16 +87,93 @@ export class CreateNoveltyDto {
   @IsOptional()
   comments?: any[]; 
 
-  @IsNumber()
-  @IsOptional()
-  withSupportFile?: number;
+//   @IsString()
+//  // @IsOptional()  cambio
+//   contract: string;
 
-  @IsBoolean()
-  @IsOptional()
-  isSafeAndSound?: boolean;
+//   // Campos exclusivos de Novelty
+//   @IsString()
+//   @IsOptional()
+//   description?: string;
 
-  @IsString()
-  @IsOptional()
-  whoReports?: boolean;
+//   @IsNumber()
+//   @IsOptional()
+//   value?: number;
+
+//   @IsDate()
+//   @IsOptional()
+//   @Type(() => Date)
+//   date?: Date;
+
+//   // Campos exclusivos de Retirement
+//   @IsString()
+//   @IsOptional()
+//   finishDate?: string;
+
+//   @IsString()
+//   @IsOptional()
+//   endDate?: string;
+
+//   @IsString()
+//   @IsOptional()
+//   note?: string;
+  
+
+  
+
+//   @IsNumber()
+//   @IsOptional()
+//   signedByApprover?: number;
+
+//   @IsNumber()
+//   @IsOptional()
+//   signedByCollaborator?: number;
+
+//   @IsNumber()
+//   @IsOptional()
+//   signedByManagment?: number;
+
+//   @IsNumber()
+//   @IsOptional()
+//   loadedOnPayroll?: number;
+
+//   // Campos exclusivos de SocialSecurity
+//   @IsString()
+//   @IsOptional()
+//   utilityCenter?: string;
+
+//   @IsString()
+//   @IsOptional()
+//   centersCosts?: string;
+
+//   @IsString()
+//   @IsOptional()
+//   startDate?: string;
+
+//   @IsString()
+//   @IsOptional()
+//   previousPeriod?: string;
+
+//   @IsString()
+//   @IsOptional()
+//   observations?: string;
+
+//   @IsObject()
+//   @IsOptional()
+//   temporApp: Record<string, any>;
+
+//   // Campos comunes a todos
+
+//   @IsNumber()
+//   @IsOptional()
+//   withSupportFile?: number;
+
+//   @IsBoolean()
+//   @IsOptional()
+//   isSafeAndSound?: boolean;
+
+//   @IsString()
+//   @IsOptional()
+//   whoReports?: boolean;
 }
 

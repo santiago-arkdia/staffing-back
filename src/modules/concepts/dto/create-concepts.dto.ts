@@ -14,6 +14,18 @@ export class CreateConceptsDto {
   @IsOptional()
   name: string;
 
+  @IsString()
+  @IsOptional()
+  categoryNovelty: CategoriesNovelty;
+
+  @IsString()
+  @IsOptional()
+  state: number
+
+  @IsString()
+  @IsOptional()
+  approves: string
+
   // @IsBoolean()
   // @IsOptional()
   // benefit: string;
@@ -22,34 +34,22 @@ export class CreateConceptsDto {
   // @IsOptional()
   // reportType: string;
 
-  @IsString()
-  @IsOptional()
-  categoryNovelty: CategoriesNovelty;
-
   // @IsString()
   // @IsOptional()
   // registers: string
-
-  @IsString()
-  @IsOptional()
-  approves: string
-
-  @IsString()
-  @IsOptional()
-  state: number
 
   // @IsString()
   // @IsOptional()
   // applyDate: boolean
 
-  @IsString()
-  @IsOptional()
-  manages: string
+  // @IsString()
+  // @IsOptional()
+  // manages: string
 
   // @IsString()
   // @IsOptional()
   // measurement: string
 
-  @IsString()
-  typeNovelty: 'novelty' | 'retirement' | 'social-security';
+  // @IsString()
+  // typeNovelty: 'novelty' | 'retirement' | 'social-security';
 }

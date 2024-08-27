@@ -5,22 +5,14 @@ import {Schema, Prop, SchemaFactory} from '@nestjs/mongoose';
 export class CategoriesNovelty {
 
     @Prop({type: String, required: true})
-    type: string;
+    name: string;
 
     @Prop({type: String})
-    description: string;
+    typeNovelty: string;
 
     @Prop({type: Number, default: 1})
     state: number;
 
-    @Prop({type: String})
-    approves: string;
-
-    @Prop({ type: Object })
-    more: Record<string, any>;
-
-    @Prop({type: String})
-    typeNovelty: string;
 }
 
 export const CategoriesNoveltySchema = SchemaFactory.createForClass(CategoriesNovelty);

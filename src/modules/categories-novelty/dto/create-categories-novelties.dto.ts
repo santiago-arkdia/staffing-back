@@ -5,19 +5,19 @@ import {IsOptional, IsString} from 'class-validator';
 @Schema()
 export class CreateCategoriesNoveltiesDto {
   @IsString()
-  type: string;
+  name: string;
 
   @IsString()
   @IsOptional()
-  description: string;
+  typeNovelty: string;
 
   @IsString()
   @IsOptional()
   state: number;
 
-  @IsString()
-  approves: string;
+  // @IsString()
+  // approves: string;
 
-  @IsString()
-  typeNovelty: 'novelty' | 'retirement' | 'social-security';
+  // @IsString()
+  // typeNovelty: 'novelty' | 'retirement' | 'social-security';
 }
