@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import {IsBoolean, IsOptional, IsString} from 'class-validator';
+import {IsBoolean, IsOptional, IsString, IsObject} from 'class-validator';
 import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
 
 @Schema()
@@ -25,6 +25,10 @@ export class CreateConceptsDto {
   @IsString()
   @IsOptional()
   approves: string
+
+  @IsObject()
+  @IsOptional()
+  formObject: Record<string, any>;
 
   // @IsBoolean()
   // @IsOptional()
