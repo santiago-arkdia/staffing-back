@@ -9,8 +9,8 @@ import * as XLSX from 'xlsx';
 @Injectable()
 export class InjectDatasourceService {
 
-    private readonly ACUMULADO_FILE: string = 'ACUMULADO.xlsx';
-    private readonly SS_FILE: string = 'SS_STEWARD.xlsx';
+    private ACUMULADO_FILE: string = '';
+    private SS_FILE: string = '';
 
 
 
@@ -34,11 +34,17 @@ export class InjectDatasourceService {
         const offset = date.getTimezoneOffset() * 60 * 1000;
         return new Date(milliseconds + offset);
     }
-    
+
 
     public async injectTemporalAccumulatedExtract(files: Array<Express.Multer.File>): Promise<TemporalAccumulatedExtract[]> {
 
-
+        // Sobreescibir el archivo temporal y de seguridad social.
+        if (files.length > 0) {
+            this.ACUMULADO_FILE = files[0].originalname;
+            console.log('Nombre del archivo dinámicamente asignado:', this.ACUMULADO_FILE);
+        } else {
+            throw new BadRequestException(`No found ${this.ACUMULADO_FILE} file, the name of the file must be ${this.ACUMULADO_FILE}, please try again.`);
+        }
 
 
         // Encontrar el archivo específico ACUMULADO.xlsx
@@ -111,8 +117,6 @@ export class InjectDatasourceService {
             return tempAccumulated;
         });
 
-        // console.log(data);
-
         // Guardar los datos en la base de datos en lotes en paralelo
         const batchSize = 1000;
         const numBatches = Math.ceil(data.length / batchSize);
@@ -157,6 +161,16 @@ export class InjectDatasourceService {
 
 
     public async injectTemporalSS(files: Array<Express.Multer.File>): Promise<TemporalSS[]> {
+
+        // Sobreescibir el archivo temporal y de seguridad social.
+        if (files.length > 0) {
+            this.SS_FILE = files[1].originalname;
+            console.log('Nombre del archivo dinámicamente asignado:', this.SS_FILE);
+        } else {
+            throw new BadRequestException(`No found ${this.SS_FILE} file, the name of the file must be ${this.SS_FILE}, please try again.`);
+        }
+
+
         const ssFile = files.find(file => file.originalname === this.SS_FILE);
         if (!ssFile) {
             throw new BadRequestException(`No se encontro el archivo ${this.SS_FILE}.`);
@@ -187,36 +201,36 @@ export class InjectDatasourceService {
             tempSS.TempExt = row[6] || null;
             tempSS.FechaRadicacionEnElExterior = row[7] || null;
             tempSS.IngNovedades = row[8] || null;
-            tempSS.FechaIngNovedades = row[9]  ? this.excelDateToJSDate(row[9]) : null;
+            tempSS.FechaIngNovedades = row[9] ? this.excelDateToJSDate(row[9]) : null;
             tempSS.RetNovedades = row[10] || null;
-            tempSS.FechaRetNovedades = row[11]  ? this.excelDateToJSDate(row[11]) : null;
+            tempSS.FechaRetNovedades = row[11] ? this.excelDateToJSDate(row[11]) : null;
             tempSS.TdeNovedades = row[12] || null;
             tempSS.TaeNovedades = row[13] || null;
             tempSS.TdpNovedades = row[14] || null;
             tempSS.TapNovedades = row[15] || null;
             tempSS.VspNovedades = row[16] || null;
-            tempSS.FechaInicioVspNovedades = row[17]  ? this.excelDateToJSDate(row[17]) : null;
+            tempSS.FechaInicioVspNovedades = row[17] ? this.excelDateToJSDate(row[17]) : null;
             tempSS.CorNovedades = row[18] || null;
             tempSS.VstNovedades = row[19] || null;
             tempSS.SlnNovedades = row[20] || null;
-            tempSS.FechaInicioSlnNovedades = row[21]  ? this.excelDateToJSDate(row[21]) : null;
-            tempSS.FechaFinSlnNovedades = row[22]  ? this.excelDateToJSDate(row[22]) : null;
+            tempSS.FechaInicioSlnNovedades = row[21] ? this.excelDateToJSDate(row[21]) : null;
+            tempSS.FechaFinSlnNovedades = row[22] ? this.excelDateToJSDate(row[22]) : null;
             tempSS.IgeNovedades = row[23] || null;
-            tempSS.FechaInicioIgeNovedades = row[24]  ? this.excelDateToJSDate(row[24]) : null;
-            tempSS.FechaFinIgeNovedades = row[25]  ? this.excelDateToJSDate(row[25]) : null;
+            tempSS.FechaInicioIgeNovedades = row[24] ? this.excelDateToJSDate(row[24]) : null;
+            tempSS.FechaFinIgeNovedades = row[25] ? this.excelDateToJSDate(row[25]) : null;
             tempSS.LmaNovedades = row[26] || null;
-            tempSS.FechaInicioLmaNovedades = row[27]  ? this.excelDateToJSDate(row[27]) : null;
-            tempSS.FechaFinLmaNovedades = row[28]  ? this.excelDateToJSDate(row[28]) : null;
+            tempSS.FechaInicioLmaNovedades = row[27] ? this.excelDateToJSDate(row[27]) : null;
+            tempSS.FechaFinLmaNovedades = row[28] ? this.excelDateToJSDate(row[28]) : null;
             tempSS.VacLrNovedades = row[29] || null;
-            tempSS.FechaInicioVacLrNovedades = row[30]  ? this.excelDateToJSDate(row[30]) : null;
+            tempSS.FechaInicioVacLrNovedades = row[30] ? this.excelDateToJSDate(row[30]) : null;
             tempSS.FechaFinVacLrNovedades = row[31] ? this.excelDateToJSDate(row[31]) : null;
             tempSS.AvpNovedades = row[32] || null;
             tempSS.VctNovedades = row[33] || null;
-            tempSS.FechaInicioVctNovedades = row[34]  ? this.excelDateToJSDate(row[34]) : null;
-            tempSS.FechaFinVctNovedades = row[35]   ? this.excelDateToJSDate(row[35]) : null;
+            tempSS.FechaInicioVctNovedades = row[34] ? this.excelDateToJSDate(row[34]) : null;
+            tempSS.FechaFinVctNovedades = row[35] ? this.excelDateToJSDate(row[35]) : null;
             tempSS.IrlNovedades = row[36] || null;
-            tempSS.FechaInicioIrlNovedades = row[37]  ? this.excelDateToJSDate(row[37]) : null;
-            tempSS.FechaFinIrlNovedades = row[38]  ? this.excelDateToJSDate(row[38]) : null;
+            tempSS.FechaInicioIrlNovedades = row[37] ? this.excelDateToJSDate(row[37]) : null;
+            tempSS.FechaFinIrlNovedades = row[38] ? this.excelDateToJSDate(row[38]) : null;
             tempSS.VipNovedades = row[39] || null;
             tempSS.ValorSalario = row[40] || 0;
             tempSS.IntegralSalario = row[41] || null;
@@ -270,7 +284,7 @@ export class InjectDatasourceService {
 
 
 
-        console.log(data, 'VICTOR--------------------------------------------------');
+        console.log(data);
 
         let entityManager: EntityManager;
 
