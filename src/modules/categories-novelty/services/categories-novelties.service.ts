@@ -31,7 +31,7 @@ export class CategoriesNewsService {
   }
 
   async delete(id: string): Promise<CategoriesNovelty | null> {
-    return this.categoriesNewsModel.findByIdAndDelete(id);
+    return this.categoriesNewsModel.findByIdAndDelete(id).exec();
 }
 
   async findAll(): Promise<CategoriesNovelty[]> {
