@@ -29,25 +29,25 @@ export class TemporalSS {
     @Column({ type: 'varchar', length: 8 })
     TempExt: string;
 
-    @Column({ type: 'date', name: 'FechaRadicacionEnElExterior' })
+    @Column({ nullable: true })
     FechaRadicacionEnElExterior: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'IngNovedades' })
     IngNovedades: string;
 
-    @Column({ type: 'date', name: 'FechaIngNovedades' })
+    @Column({ nullable: true })
     FechaIngNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'RetNovedades' })
     RetNovedades: string;
 
-    @Column({ type: 'date', name: 'FechaRetNovedades' })
+    @Column({ nullable: true })
     FechaRetNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'TdeNovedades' })
     TdeNovedades: string;
 
-    @Column({ type: 'date', name: 'TaeNovedades' })
+    @Column({ nullable: true })
     TaeNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'TdpNovedades' })
@@ -59,7 +59,7 @@ export class TemporalSS {
     @Column({ type: 'varchar', length: 32, name: 'VspNovedades' })
     VspNovedades: string;
 
-    @Column({ type: 'date', name: 'FechaInicioVspNovedades' })
+    @Column({ nullable: true })
     FechaInicioVspNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'CorNovedades' })
@@ -71,37 +71,37 @@ export class TemporalSS {
     @Column({ type: 'varchar', length: 32, name: 'SlnNovedades' })
     SlnNovedades: string;
 
-    @Column({ type: 'date', name: 'FechaInicioSlnNovedades' })
+    @Column({ nullable: true })
     FechaInicioSlnNovedades: Date;
 
-    @Column({ type: 'date', name: 'FechaFinSlnNovedades' })
+    @Column({ nullable: true })
     FechaFinSlnNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'IgeNovedades' })
     IgeNovedades: string;
 
-    @Column({ type: 'date', name: 'FechaInicioIgeNovedades' })
+    @Column({ nullable: true })
     FechaInicioIgeNovedades: Date;
 
-    @Column({ type: 'date', name: 'FechaFinIgeNovedades' })
+    @Column({ nullable: true })
     FechaFinIgeNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'LmaNovedades' })
     LmaNovedades: string;
 
-    @Column({ type: 'date', name: 'FechaInicioLmaNovedades' })
+    @Column({ nullable: true })
     FechaInicioLmaNovedades: Date;
 
-    @Column({ type: 'date', name: 'FechaFinLmaNovedades' })
+    @Column({ nullable: true })
     FechaFinLmaNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'VacLrNovedades' })
     VacLrNovedades: string;
 
-    @Column({ type: 'date', name: 'FechaInicioVacLrNovedades' })
+    @Column({ nullable: true })
     FechaInicioVacLrNovedades: Date;
 
-    @Column({ type: 'date', name: 'FechaFinVacLrNovedades' })
+    @Column({ nullable: true })
     FechaFinVacLrNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'AvpNovedades' })
@@ -110,19 +110,19 @@ export class TemporalSS {
     @Column({ type: 'varchar', length: 32, name: 'VctNovedades' })
     VctNovedades: string;
 
-    @Column({ type: 'date', name: 'FechaInicioVctNovedades' })
+    @Column({ nullable: true })
     FechaInicioVctNovedades: Date;
 
-    @Column({ type: 'date', name: 'FechaFinVctNovedades' })
+    @Column({ nullable: true })
     FechaFinVctNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'IrlNovedades' })
     IrlNovedades: string;
 
-    @Column({ type: 'date', name: 'FechaInicioIrlNovedades' })
+    @Column({ nullable: true })
     FechaInicioIrlNovedades: Date;
 
-    @Column({ type: 'date', name: 'FechaFinIrlNovedades' })
+    @Column({ nullable: true })
     FechaFinIrlNovedades: Date;
 
     @Column({ type: 'varchar', length: 32, name: 'VipNovedades' })
@@ -265,10 +265,10 @@ export class TemporalSS {
     @Column({ type: 'text', name: 'ExoneradoSENAeICBFParafiscales' })
     ExoneradoSENAeICBFParafiscales: string;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+    @Column({ type: 'timestamp' })
     created_at: Date;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP', name: 'updated_at' })
+    @Column({ type: 'timestamp' })
     updated_at: Date;
 
 }

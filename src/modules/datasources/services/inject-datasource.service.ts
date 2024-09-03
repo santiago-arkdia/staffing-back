@@ -9,8 +9,8 @@ import * as XLSX from 'xlsx';
 @Injectable()
 export class InjectDatasourceService {
 
-    private readonly ACUMULADO_FILE: string = 'ACUMULADO.xlsx';
-    private readonly SS_FILE: string = 'SS_MHS.xlsx';
+    private ACUMULADO_FILE: string = '';
+    private SS_FILE: string = '';
 
 
 
@@ -27,9 +27,24 @@ export class InjectDatasourceService {
 
     ) { }
 
+    public excelDateToJSDate(serial: number): Date {
+        const days = Math.floor(serial - 25569);
+        const milliseconds = days * 86400 * 1000;
+        const date = new Date(milliseconds);
+        const offset = date.getTimezoneOffset() * 60 * 1000;
+        return new Date(milliseconds + offset);
+    }
+
+
     public async injectTemporalAccumulatedExtract(files: Array<Express.Multer.File>): Promise<TemporalAccumulatedExtract[]> {
 
-
+        // Sobreescibir el archivo temporal y de seguridad social.
+        if (files.length > 0) {
+            this.ACUMULADO_FILE = files[0].originalname;
+            console.log('Nombre del archivo dinámicamente asignado:', this.ACUMULADO_FILE);
+        } else {
+            throw new BadRequestException(`No found ${this.ACUMULADO_FILE} file, the name of the file must be ${this.ACUMULADO_FILE}, please try again.`);
+        }
 
 
         // Encontrar el archivo específico ACUMULADO.xlsx
@@ -66,10 +81,10 @@ export class InjectDatasourceService {
             tempAccumulated.Jornada = row[11] || null;
             tempAccumulated.Basico = row[12] || null;
             tempAccumulated.TipoSalario = row[13] || null;
-            tempAccumulated.FechaInicio = row[14]?.trim() || null;
-            tempAccumulated.FechaFin = row[15]?.trim() || null;
+            tempAccumulated.FechaInicio = row[14] || null;
+            tempAccumulated.FechaFin = row[15] || null;
             tempAccumulated.NoNomina = row[16] || null;
-            tempAccumulated.Ano = row[17] ? parseInt(row[17], 10) : null;
+            tempAccumulated.Ano = row[17] || null;
             tempAccumulated.Mes = row[18] || null;
             tempAccumulated.PeriodoNominal = row[19] || null;
             tempAccumulated.CodConcepto = row[20] || null;
@@ -78,12 +93,12 @@ export class InjectDatasourceService {
             tempAccumulated.MedidaConcepto = row[23] || null;
             tempAccumulated.SubConcepto = row[24] || null;
             tempAccumulated.Ajuste = row[25] || null;
-            tempAccumulated.CantidadUnidades = row[26] || null;
-            tempAccumulated.Valor = row[27] || null;
+            tempAccumulated.CantidadUnidades = row[26] || 0;
+            tempAccumulated.Valor = row[27] || 0;
             tempAccumulated.Liquidacion = row[28] || null;
             tempAccumulated.NoDocumentoIncapacidad = row[29] || null;
-            tempAccumulated.FechaInicioIncapacidad = row[30]?.trim() || null;
-            tempAccumulated.FechaFinIncapacidad = row[31]?.trim() || null;
+            tempAccumulated.FechaInicioIncapacidad = row[30] || null;
+            tempAccumulated.FechaFinIncapacidad = row[31] || null;
             tempAccumulated.NoCuenta = row[32] || null;
             tempAccumulated.Banco = row[33] || null;
             tempAccumulated.Facturable = row[34] || null;
@@ -92,17 +107,15 @@ export class InjectDatasourceService {
             tempAccumulated.NombreCCNovedad = row[37] || null;
             tempAccumulated.Aiu = row[38] || null;
             tempAccumulated.NoFactura = row[39] || null;
-            tempAccumulated.FechaEmision = row[40]?.trim() || null;
+            tempAccumulated.FechaEmision = row[40] || null;
             tempAccumulated.LoteGerencia = row[41] || null;
-            tempAccumulated.FechaDePago = row[42]?.trim() || null;
+            tempAccumulated.FechaDePago = row[42] || null;
             tempAccumulated.Grupo = row[43] || null;
             tempAccumulated.PerPermanencia = row[44] || null;
             tempAccumulated.PagDocNumero = row[45] || null;
             tempAccumulated.HomologacionNE = row[46] || null;
             return tempAccumulated;
         });
-
-        console.log(data);
 
         // Guardar los datos en la base de datos en lotes en paralelo
         const batchSize = 1000;
@@ -128,14 +141,37 @@ export class InjectDatasourceService {
         } catch (error) {
             await queryRunner.rollbackTransaction();
             console.error('Error al guardar los datos en la base de datos:', error);
-            throw new Error('Error al guardar datos en la base de datos desde el archivo ACUMULADO.xlsx: ' + error);
+
+            try {
+                // Truncar la tabla en caso de error
+                await queryRunner.query(`TRUNCATE TABLE ${this.tempAccumulatedRepo.metadata.tableName}`);
+                await queryRunner.query(`TRUNCATE TABLE ${this.temporalSSRepo.metadata.tableName}`);
+
+                console.log(`Tabla ${this.tempAccumulatedRepo.metadata.tableName} truncada exitosamente.`);
+            } catch (truncateError) {
+                console.error('Error al truncar la tabla:', truncateError);
+            }
+
+            throw new Error(`Error al guardar datos en la base de datos desde el archivo ${this.ACUMULADO_FILE} ` + error);
+
         } finally {
             await queryRunner.release();
         }
     }
 
+
     public async injectTemporalSS(files: Array<Express.Multer.File>): Promise<TemporalSS[]> {
-        const ssFile = files.find(file => file.originalname ===  this.SS_FILE);
+
+        // Sobreescibir el archivo temporal y de seguridad social.
+        if (files.length > 0) {
+            this.SS_FILE = files[1].originalname;
+            console.log('Nombre del archivo dinámicamente asignado:', this.SS_FILE);
+        } else {
+            throw new BadRequestException(`No found ${this.SS_FILE} file, the name of the file must be ${this.SS_FILE}, please try again.`);
+        }
+
+
+        const ssFile = files.find(file => file.originalname === this.SS_FILE);
         if (!ssFile) {
             throw new BadRequestException(`No se encontro el archivo ${this.SS_FILE}.`);
         }
@@ -156,97 +192,99 @@ export class InjectDatasourceService {
         const data: TemporalSS[] = jsonData.map(row => {
             const tempSS = new TemporalSS();
 
-            tempSS.TipoId = row[1] ? row[1].toString() : null;
-            tempSS.NoId = row[2] ? row[2].toString() : null;
-            tempSS.NombreEmpleado = row[3] ? row[3].toString() : null;
-            tempSS.TipoCotizante = row[4] ? row[4].toString() : null;
-            tempSS.HorasLaboradas = row[5] ? row[5].toString() : null;
-            tempSS.Extranjero = row[6] ? row[6].toString() : null;
-            tempSS.TempExt = row[7] ? row[7].toString() : null;
-            tempSS.FechaRadicacionEnElExterior = row[8] ? new Date(row[8]) : null;
-            tempSS.IngNovedades = row[9] ? row[9].toString() : null;
-            tempSS.FechaIngNovedades = row[10] ? new Date(row[10]) : null;
-            tempSS.RetNovedades = row[11] ? row[11].toString() : null;
-            tempSS.FechaRetNovedades = row[12] ? new Date(row[12]) : null;
-            tempSS.TdeNovedades = row[13] ? row[13].toString() : null;
-            tempSS.TaeNovedades = row[14] ? new Date(row[14]) : null;
-            tempSS.TdpNovedades = row[15] ? row[15].toString() : null;
-            tempSS.TapNovedades = row[16] ? row[16].toString() : null;
-            tempSS.VspNovedades = row[17] ? row[17].toString() : null;
-            tempSS.FechaInicioVspNovedades = row[18] ? new Date(row[18]) : null;
-            tempSS.CorNovedades = row[19] ? row[19].toString() : null;
-            tempSS.VstNovedades = row[20] ? row[20].toString() : null;
-            tempSS.SlnNovedades = row[21] ? row[21].toString() : null;
-            tempSS.FechaInicioSlnNovedades = row[22] ? new Date(row[22]) : null;
-            tempSS.FechaFinSlnNovedades = row[23] ? new Date(row[23]) : null;
-            tempSS.IgeNovedades = row[24] ? row[24].toString() : null;
-            tempSS.FechaInicioIgeNovedades = row[25] ? new Date(row[25]) : null;
-            tempSS.FechaFinIgeNovedades = row[26] ? new Date(row[26]) : null;
-            tempSS.LmaNovedades = row[27] ? row[27].toString() : null;
-            tempSS.FechaInicioLmaNovedades = row[28] ? new Date(row[28]) : null;
-            tempSS.FechaFinLmaNovedades = row[29] ? new Date(row[29]) : null;
-            tempSS.VacLrNovedades = row[30] ? row[30].toString() : null;
-            tempSS.FechaInicioVacLrNovedades = row[31] ? new Date(row[31]) : null;
-            tempSS.FechaFinVacLrNovedades = row[32] ? new Date(row[32]) : null;
-            tempSS.AvpNovedades = row[33] ? row[33].toString() : null;
-            tempSS.VctNovedades = row[34] ? row[34].toString() : null;
-            tempSS.FechaInicioVctNovedades = row[35] ? new Date(row[35]) : null;
-            tempSS.FechaFinVctNovedades = row[36] ? new Date(row[36]) : null;
-            tempSS.IrlNovedades = row[37] ? row[37].toString() : null;
-            tempSS.FechaInicioIrlNovedades = row[38] ? new Date(row[38]) : null;
-            tempSS.FechaFinIrlNovedades = row[39] ? new Date(row[39]) : null;
-            tempSS.VipNovedades = row[40] ? row[40].toString() : null;
-            tempSS.ValorSalario = row[41] ? row[41].toString() : null;
-            tempSS.IntegralSalario = row[42] ? row[42].toString() : null;
-            tempSS.TipoSalario = row[43] ? row[43].toString() : null;
-            tempSS.AdministradoraPension = row[44] ? row[44].toString() : null;
-            tempSS.DiasPension = row[45] ? row[45].toString() : null;
-            tempSS.IBCPension = row[46] ? row[46].toString() : null;
-            tempSS.TarifaPension = row[47] ? row[47].toString() : null;
-            tempSS.TarifaAltoRiesgoPension = row[48] ? row[48].toString() : null;
-            tempSS.ValorCotizacionPension = row[49] ? row[49].toString() : null;
-            tempSS.CotizacionVoluntariaEmpleadorPension = row[50] ? row[50].toString() : null;
-            tempSS.CotizacionVoluntariaAfiliadoPension = row[51] ? row[51].toString() : null;
-            tempSS.FondoSolidaridadPensional = row[52] ? row[52].toString() : null;
-            tempSS.FondoSubsistenciaPension = row[53] ? row[53].toString() : null;
-            tempSS.ValorNoRetenidoPension = row[54] ? row[54].toString() : null;
-            tempSS.TotalPension = row[55] ? row[55].toString() : null;
-            tempSS.AFPDestinoPension = row[56] ? row[56].toString() : null;
-            tempSS.AdministradoraSalud = row[57] ? row[57].toString() : null;
-            tempSS.DiasSalud = row[58] ? row[58].toString() : null;
-            tempSS.IBCSalud = row[59] ? row[59].toString() : null;
-            tempSS.TarifaSalud = row[60] ? row[60].toString() : null;
-            tempSS.ValorCotizacionSalud = row[61] ? row[61].toString() : null;
-            tempSS.ValorUPCSalud = row[62] ? row[62].toString() : null;
-            tempSS.TotalSalud = row[63] ? row[63].toString() : null;
-            tempSS.EPSDestinoSalud = row[64] ? row[64].toString() : null;
-            tempSS.AdministradoraCCF = row[65] ? row[65].toString() : null;
-            tempSS.DiasCCF = row[66] ? row[66].toString() : null;
-            tempSS.IBCCCF = row[67] ? row[67].toString() : null;
-            tempSS.TarifaCCF = row[68] ? row[68].toString() : null;
-            tempSS.ValorCotizacionCCF = row[69] ? row[69].toString() : null;
-            tempSS.AdministradoraRiesgos = row[70] ? row[70].toString() : null;
-            tempSS.DiasRiesgos = row[71] ? row[71].toString() : null;
-            tempSS.IBCRiesgos = row[72] ? row[72].toString() : null;
-            tempSS.TarifaRiesgos = row[73] ? row[73].toString() : null;
-            tempSS.ClaseRiesgoRiesgos = row[74] ? row[74].toString() : null;
-            tempSS.ValorCotizacionRiesgos = row[75] ? row[75].toString() : null;
-            tempSS.DiasParafiscales = row[76] ? row[76].toString() : null;
-            tempSS.IBCParafiscales = row[77] ? row[77].toString() : null;
-            tempSS.TarifaSENAParafiscales = row[78] ? row[78].toString() : null;
-            tempSS.ValorCotizacionSENAParafiscales = row[79] ? row[79].toString() : null;
-            tempSS.TarifaICBFParafiscales = row[80] ? row[80].toString() : null;
-            tempSS.ValorCotizacionICBFParafiscales = row[81] ? row[81].toString() : null;
-            tempSS.TarifaESAPParafiscales = row[82] ? row[82].toString() : null;
-            tempSS.ValorCotizacionESAPParafiscales = row[83] ? row[8].toString() : null;
-            tempSS.TarifaMENParafiscales = row[84] ? row[84].toString() : null;
-            tempSS.ValorCotizacionMENParafiscales = row[85] ? row[85].toString() : null;
-            tempSS.ExoneradoSENAeICBFParafiscales = row[86] ? row[86].toString() : null;
+            tempSS.TipoId = row[0] || null;  // Ajustado a 0
+            tempSS.NoId = row[1] || null;
+            tempSS.NombreEmpleado = row[2] || null;
+            tempSS.TipoCotizante = row[3] || null;
+            tempSS.HorasLaboradas = row[4] || null;
+            tempSS.Extranjero = row[5] || null;
+            tempSS.TempExt = row[6] || null;
+            tempSS.FechaRadicacionEnElExterior = row[7] || null;
+            tempSS.IngNovedades = row[8] || null;
+            tempSS.FechaIngNovedades = row[9] ? this.excelDateToJSDate(row[9]) : null;
+            tempSS.RetNovedades = row[10] || null;
+            tempSS.FechaRetNovedades = row[11] ? this.excelDateToJSDate(row[11]) : null;
+            tempSS.TdeNovedades = row[12] || null;
+            tempSS.TaeNovedades = row[13] || null;
+            tempSS.TdpNovedades = row[14] || null;
+            tempSS.TapNovedades = row[15] || null;
+            tempSS.VspNovedades = row[16] || null;
+            tempSS.FechaInicioVspNovedades = row[17] ? this.excelDateToJSDate(row[17]) : null;
+            tempSS.CorNovedades = row[18] || null;
+            tempSS.VstNovedades = row[19] || null;
+            tempSS.SlnNovedades = row[20] || null;
+            tempSS.FechaInicioSlnNovedades = row[21] ? this.excelDateToJSDate(row[21]) : null;
+            tempSS.FechaFinSlnNovedades = row[22] ? this.excelDateToJSDate(row[22]) : null;
+            tempSS.IgeNovedades = row[23] || null;
+            tempSS.FechaInicioIgeNovedades = row[24] ? this.excelDateToJSDate(row[24]) : null;
+            tempSS.FechaFinIgeNovedades = row[25] ? this.excelDateToJSDate(row[25]) : null;
+            tempSS.LmaNovedades = row[26] || null;
+            tempSS.FechaInicioLmaNovedades = row[27] ? this.excelDateToJSDate(row[27]) : null;
+            tempSS.FechaFinLmaNovedades = row[28] ? this.excelDateToJSDate(row[28]) : null;
+            tempSS.VacLrNovedades = row[29] || null;
+            tempSS.FechaInicioVacLrNovedades = row[30] ? this.excelDateToJSDate(row[30]) : null;
+            tempSS.FechaFinVacLrNovedades = row[31] ? this.excelDateToJSDate(row[31]) : null;
+            tempSS.AvpNovedades = row[32] || null;
+            tempSS.VctNovedades = row[33] || null;
+            tempSS.FechaInicioVctNovedades = row[34] ? this.excelDateToJSDate(row[34]) : null;
+            tempSS.FechaFinVctNovedades = row[35] ? this.excelDateToJSDate(row[35]) : null;
+            tempSS.IrlNovedades = row[36] || null;
+            tempSS.FechaInicioIrlNovedades = row[37] ? this.excelDateToJSDate(row[37]) : null;
+            tempSS.FechaFinIrlNovedades = row[38] ? this.excelDateToJSDate(row[38]) : null;
+            tempSS.VipNovedades = row[39] || null;
+            tempSS.ValorSalario = row[40] || 0;
+            tempSS.IntegralSalario = row[41] || null;
+            tempSS.TipoSalario = row[42] || null;
+            tempSS.AdministradoraPension = row[43] || null;
+            tempSS.DiasPension = row[44] || null;
+            tempSS.IBCPension = row[45] || 0;
+            tempSS.TarifaPension = row[46] || 0;
+            tempSS.TarifaAltoRiesgoPension = row[47] || null;
+            tempSS.ValorCotizacionPension = row[48] || 0;
+            tempSS.CotizacionVoluntariaEmpleadorPension = row[49] || 0;
+            tempSS.CotizacionVoluntariaAfiliadoPension = row[50] || 0;
+            tempSS.FondoSolidaridadPensional = row[51] || 0;
+            tempSS.FondoSubsistenciaPension = row[52] || 0;
+            tempSS.ValorNoRetenidoPension = row[53] || 0;
+            tempSS.TotalPension = row[54] || 0;
+            tempSS.AFPDestinoPension = row[55] || null;
+            tempSS.AdministradoraSalud = row[56] || null;
+            tempSS.DiasSalud = row[57] || 0;
+            tempSS.IBCSalud = row[58] || 0;
+            tempSS.TarifaSalud = row[59] || 0;
+            tempSS.ValorCotizacionSalud = row[60] || 0;
+            tempSS.ValorUPCSalud = row[61] || 0;
+            tempSS.TotalSalud = row[62] || 0;
+            tempSS.EPSDestinoSalud = row[63] || null;
+            tempSS.AdministradoraCCF = row[64] || null;
+            tempSS.DiasCCF = row[65] || null;
+            tempSS.IBCCCF = row[66] || 0;
+            tempSS.TarifaCCF = row[67] || 0;
+            tempSS.ValorCotizacionCCF = row[68] || 0;
+            tempSS.AdministradoraRiesgos = row[69] || null;
+            tempSS.DiasRiesgos = row[70] || null;
+            tempSS.IBCRiesgos = row[71] || 0;
+            tempSS.TarifaRiesgos = row[72] || 0;
+            tempSS.ClaseRiesgoRiesgos = row[73] || null;
+            tempSS.ValorCotizacionRiesgos = row[74] || 0;
+            tempSS.DiasParafiscales = row[75] || null;
+            tempSS.IBCParafiscales = row[76] || 0;
+            tempSS.TarifaSENAParafiscales = row[77] || 0;
+            tempSS.ValorCotizacionSENAParafiscales = row[78] || 0;
+            tempSS.TarifaICBFParafiscales = row[79] || 0;
+            tempSS.ValorCotizacionICBFParafiscales = row[80] || 0;
+            tempSS.TarifaESAPParafiscales = row[81] || 0;
+            tempSS.ValorCotizacionESAPParafiscales = row[82] || 0;
+            tempSS.TarifaMENParafiscales = row[83] || 0;
+            tempSS.ValorCotizacionMENParafiscales = row[84] || 0;
+            tempSS.ExoneradoSENAeICBFParafiscales = row[85] || null;
 
             return tempSS;
         });
 
-        // console.log(data);
+
+
+        console.log(data);
 
         let entityManager: EntityManager;
 
@@ -260,17 +298,18 @@ export class InjectDatasourceService {
                 }));
             });
 
-            console.log('Datos de archivo SS_MHS.xlsx guardados exitosamente en la base de datos.');
+            console.log(`Datos de archivo ${this.SS_FILE} guardados exitosamente en la base de datos.`);
             return data;
 
         } catch (error) {
             await entityManager.transaction(async entityManager => {
                 await entityManager.query(`TRUNCATE TABLE ${this.tempAccumulatedRepo.metadata.tableName};`);
+                await entityManager.query(`TRUNCATE TABLE ${this.temporalSSRepo.metadata.tableName};`);
             })
             console.error('Error al guardar los datos en la base de datos:', error);
-            throw new Error('Error al guardar datos en la base de datos desde el archivo SS_MHS.xlsx: ' + error);
+            throw new Error(`No se encontraron datos en el archivo ${this.SS_FILE}.` + error);
 
-        } 
+        }
     }
 }
 
