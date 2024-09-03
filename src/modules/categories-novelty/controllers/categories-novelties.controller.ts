@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {Controller, Post, Put, Get, Param, Body} from '@nestjs/common';
+import {Controller, Post, Put, Get, Param, Body, Delete, HttpStatus, HttpException } from '@nestjs/common';
 import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import { CategoriesNewsService } from '../services/categories-novelties.service';
 import { CreateCategoriesNoveltiesDto } from '../dto/create-categories-novelties.dto';
@@ -20,6 +20,22 @@ export class CategoriesNewsController {
   async update( @Param('id') id: string, @Body() categoriesNews: UpdateModuleParameterizationsDto): Promise<CategoriesNovelty> {
     return await this.categoriesNewsService.update(id, categoriesNews);
   }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<{ message: string }> {
+    try {
+      const result = await this.categoriesNewsService.delete(id);
+
+      if (result) {
+        return { message: 'Documento eliminado exitosamente' };
+      } else {
+        throw new HttpException('Documento no encontrado', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      throw new HttpException('Error al eliminar el documento', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 
   @Get()
   @ApiOperation({ summary: 'Lista todas las categorias' })

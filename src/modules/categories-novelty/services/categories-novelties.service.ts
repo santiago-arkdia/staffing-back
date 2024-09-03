@@ -30,6 +30,10 @@ export class CategoriesNewsService {
     );
   }
 
+  async delete(id: string): Promise<CategoriesNovelty | null> {
+    return this.categoriesNewsModel.findByIdAndDelete(id);
+}
+
   async findAll(): Promise<CategoriesNovelty[]> {
     return await this.categoriesNewsModel.find().exec();
   }
