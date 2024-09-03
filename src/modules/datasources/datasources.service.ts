@@ -27,7 +27,7 @@ export class DatasourcesService {
         
         await this.injectDatasourceService.injectTemporalAccumulatedExtract(files);
         await this.injectDatasourceService.injectTemporalSS(files);
-        // const executeStoreProcedure = await this.accountingInterfaceService.generateAccountingInterface();
+        const executeStoreProcedure = await this.accountingInterfaceService.generateAccountingInterface();
 
 
         await queryRunner.commitTransaction();
@@ -36,7 +36,7 @@ export class DatasourcesService {
           response: true,
           data: [
             {
-              ulrAccountingInterface: true
+              ulrAccountingInterface: executeStoreProcedure
             }
           ],
           message: `Accounting interface created successfully and file generated successfully for ${Client.name}`,

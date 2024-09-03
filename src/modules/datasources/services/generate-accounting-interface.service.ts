@@ -43,13 +43,13 @@ export class AccountingInterfaceService {
         ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       };
 
-      // const data = await this.s3.upload(uploadParams).promise();
-      // console.log(`Archivo Excel subido a S3 en: ${data.Location}`);
+      const data = await this.s3.upload(uploadParams).promise();
+      console.log(`Archivo Excel subido a S3 en: ${data.Location}`);
 
       await queryRunner.manager.clear(AccountingInterface);
       await queryRunner.commitTransaction();
 
-      // return data.Location;
+      return data.Location;
       return 'accounting_interface.xlsx';
     } catch (error) {
       await queryRunner.rollbackTransaction();
