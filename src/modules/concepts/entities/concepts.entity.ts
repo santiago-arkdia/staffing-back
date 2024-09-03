@@ -21,8 +21,8 @@ export class Concept {
     @Prop({type: String, required: true})
     approves: string;
 
-    @Prop({ type: Object })
-    formObject: Record<string, any>;
+    @Prop({ type: Array })
+    formObject: any[];
 
     // @Prop({type: Boolean})
     // benefit: boolean;

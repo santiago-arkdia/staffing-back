@@ -28,7 +28,7 @@ export class CreateConceptsDto {
 
   @IsObject()
   @IsOptional()
-  formObject: Record<string, any>;
+  formObject?: any[];
 
   // @IsBoolean()
   // @IsOptional()
