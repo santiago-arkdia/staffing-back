@@ -36,7 +36,7 @@ export class DatasourcesService {
           response: true,
           data: [
             {
-              ulrAccountingInterface:executeStoreProcedure,
+              ulrAccountingInterface: executeStoreProcedure
             }
           ],
           message: `Accounting interface created successfully and file generated successfully for ${Client.name}`,
