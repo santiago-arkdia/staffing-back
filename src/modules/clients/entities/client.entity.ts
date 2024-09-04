@@ -38,6 +38,8 @@ export class Client {
 
     @Prop({ type: mongoose.Schema.Types.Array, ref: 'AccountingInterface' })
     accountingInterface: AccountingInterface[];
+    @Prop({ type: [String], default: [] })
+    filesName: string[]; 
 
 }
 

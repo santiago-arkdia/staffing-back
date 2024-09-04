@@ -58,8 +58,9 @@ import { PayrollsModule } from './modules/payrolls/payrolls.module';
 import { PayrollUserModule } from './modules/payroll-user/payroll-user.module';
 import { UsersExternalsModule } from './modules/users-externals/users-externals.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
-import { PucModule } from './modules/puc/puc.module';
-import { AccountingInterfaceModule } from './modules/accounting-interface/accounting-interface.module';
+import { MySqlModule } from './database/mysql.module';
+import { DatasourcesModule } from './modules/datasources/datasources.module';
+import { AwsS3Module } from './modules/aws/s3/aws-s3.module';
 
 @Module({
     imports: [
@@ -118,8 +119,11 @@ import { AccountingInterfaceModule } from './modules/accounting-interface/accoun
         PayrollsModule,
         UsersExternalsModule,
         ContractsModule,
-        PucModule,
-        AccountingInterfaceModule
+
+        /**Integracion con MySQL para StoreProcedures */
+        MySqlModule,
+        DatasourcesModule,
+        
     ],
     controllers: [AppController, ConnectionController],
     providers: [AppService, AuthService],

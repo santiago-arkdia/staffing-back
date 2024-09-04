@@ -798,14 +798,27 @@ export class NoveltyService {
         return dataResponse;
     }
 
-    async findAll(query?: any): Promise<Novelty[]> {
+    async findAll(query?: any): Promise<any> {
         const features = new APIFeatures(this.noveltyModel.find(), query)
             .filter()
             .sort()
-            .limit()
             .pagination()
             .populate();
         const novelties = await features.mongooseQuery;
-        return novelties;
+        return {
+            data: novelties,
+            pages: await this.getPages(query)
+        }
+    }
+
+    async getPages(query?: any) {
+        const countFeatures = new APIFeatures(this.noveltyModel.find(), query).filter();
+        const count = await countFeatures.mongooseQuery.countDocuments();
+        const limit = query.limit * 1 || 10;
+        let pages = 1;
+        if (count > 0) {
+            pages = Math.ceil(count / limit);
+        }
+        return pages;
     }
 }

@@ -11,6 +11,9 @@ export class JobPositions {
 
     @Prop()
     idExternal: number;
+    
+    @Prop({type: String})
+    idTry: string;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Region'})
     region: Region;
