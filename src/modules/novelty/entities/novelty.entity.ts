@@ -27,8 +27,8 @@ export class Novelty {
     @Prop({type: Number, default: 2})
     state: number;
 
-    @Prop({ type: Array })
-    reportingObject: any[];
+    @Prop({ type: Object })
+    reportingObject: Record<string, any>;
 
     @Prop([Documents])
     documents: Documents[];

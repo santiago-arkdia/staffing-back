@@ -77,7 +77,7 @@ export class CreateNoveltyDto {
 
   @IsObject()
   @IsOptional()
-  reportingObject: any[];
+  reportingObject: Record<string, any>;
 
   @IsArray()
   @IsOptional()
