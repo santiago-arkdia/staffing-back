@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {Controller, Post, Put, Get, Param, Body} from '@nestjs/common';
+import {Controller, Post, Put, Get, Delete, Param, Body, HttpException, HttpStatus} from '@nestjs/common';
 import {ConceptsService} from '../services/concepts.service';
 import {CreateConceptsDto} from '../dto/create-concepts.dto';
 import {Concept} from '../entities/concepts.entity';
@@ -23,6 +23,21 @@ export class ConceptsController {
     ): Promise<Concept> {
         return await this.conceptService.update(id, concept);
     }
+
+    @Delete(':id')
+  async delete(@Param('id') id: string): Promise<{ message: string }> {
+    try {
+      const result = await this.conceptService.delete(id);
+
+      if (result) {
+        return { message: 'Documento eliminado exitosamente' };
+      } else {
+        throw new HttpException('Documento no encontrado', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      throw new HttpException('Error al eliminar el documento', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
     @Get()
     async findAll(): Promise<Concept[]> {

@@ -24,6 +24,10 @@ export class ConceptsService {
         return await this.conceptModel.findByIdAndUpdate(id, concept, { new: true });
     }
 
+    async delete(id: string): Promise<Concept> {
+        return await this.conceptModel.findByIdAndDelete(id).exec();
+      }
+
     async findAll(): Promise<Concept[]> {
         return await this.conceptModel.find().exec();
     }
