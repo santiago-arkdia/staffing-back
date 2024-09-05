@@ -24,6 +24,17 @@ export class Concept {
     @Prop({ type: Array })
     formObject: any[];
 
+    @Prop({type: String})
+    typeNovelty: string;
+    /*
+    * state = 0 => No aprobado 
+    * state = 1 => Aprobado
+    * state = 2 => Por aprobar de analista
+    * state = 3 => Por corregir
+    * state = 4 => Pre aprobados
+    * state = 5 => Por aprobar juridico
+    */
+
     // @Prop({type: Boolean})
     // benefit: boolean;
 
@@ -43,8 +54,7 @@ export class Concept {
     // @Prop({ type: Object })
     // more: Record<string, any>;
 
-    // @Prop({type: String})
-    // typeNovelty: string;
+    
 }
 
 export const ConceptSchema = SchemaFactory.createForClass(Concept);
