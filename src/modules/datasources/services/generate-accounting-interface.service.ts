@@ -5,46 +5,24 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryRunner } from 'typeorm';
 import * as XLSX from 'xlsx';
 import { AccountingInterface } from 'src/modules/datasources/entities/temporal-accounting-interface.entity';
-import * as AWS from 'aws-sdk';  // Importar AWS SDK para la configuración
+import * as AWS from 'aws-sdk';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AccountingInterfaceService {
   private readonly ACCOUNTING_INTERFACE_SP_PROCEDURE_SQL: string = process.env.ACCOUNTING_INTERFACE_SP_PROCEDURE_SQL;
-  private readonly BUCKET_NAME: string = process.env.BUCKET_NAME;
-  private readonly ACCESS_KEY: string = process.env.ACCESS_KEY;
-  private readonly SECRET_KEY: string = process.env.SECRET_KEY;
-  private readonly ZONE: string = process.env.ZONE;
-
-  private s3: AWS.S3;
-
+  
   constructor(
     @InjectRepository(AccountingInterface)
     private readonly accountingInterfaceRepository: Repository<AccountingInterface>,
     private readonly configService: ConfigService,
   ) {
-
+    // Configuración de AWS S3 con las credenciales desde el archivo .env
     AWS.config.update({
-      accessKeyId: this.ACCESS_KEY,
-      secretAccessKey: this.SECRET_KEY,
-      region: this.ZONE,
+      accessKeyId: process.env.ACCESS_KEY,
+      secretAccessKey: process.env.SECRECT_KEY,
+      region: process.env.ZONE,
     });
-
-    this.s3 = new AWS.S3();
-
-    this.validateS3Connection().catch(error => {
-      console.error('Error al conectar con el bucket S3:', error);
-      process.exit(1); 
-    });
-  }
-
-  private async validateS3Connection(): Promise<void> {
-    try {
-      const data = await this.s3.listObjectsV2({ Bucket: this.BUCKET_NAME }).promise();
-      console.log('Conexión al bucket S3 verificada. Objetos en el bucket:', data.Contents?.length || 0);
-    } catch (error) {
-      throw new Error(`No se pudo conectar al bucket S3: ${error.message}`);
-    }
   }
 
   async generateAccountingInterface(): Promise<string> {
@@ -64,14 +42,15 @@ export class AccountingInterfaceService {
       XLSX.utils.book_append_sheet(wb, ws, 'Accounting Interface');
       const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
 
+      const s3 = new AWS.S3();
       const uploadParams = {
-        Bucket: this.BUCKET_NAME,
+        Bucket: process.env.BUCKET_NAME,
         Key: 'accounting_interface.xlsx',
         Body: excelBuffer,
         ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       };
 
-      const data = await this.s3.upload(uploadParams).promise();
+      const data = await s3.upload(uploadParams).promise();
       console.log(`Archivo Excel subido a S3 en: ${data.Location}`);
 
       await queryRunner.manager.clear(AccountingInterface);
