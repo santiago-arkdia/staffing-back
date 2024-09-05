@@ -39,6 +39,9 @@ export class Novelty {
     @Prop({type: String})
     typeNovelty: string;
 
+    @Prop({type: String})
+    contract: string;
+
     // @Prop({type: Date})
     // date: Date;
 

@@ -87,6 +87,9 @@ export class CreateNoveltyDto {
   @IsOptional()
   comments?: any[]; 
 
+  @IsString()
+  contract: string;
+
 //   @IsString()
 //  // @IsOptional()  cambio
 //   contract: string;
