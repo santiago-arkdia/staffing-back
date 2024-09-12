@@ -38,6 +38,8 @@ export class NoveltyService {
             { upsert: true, new: true },
         );
 
+        console.log("actualizado")
+
         const createdNovelty = new this.noveltyModel({
             uid: counter.count,
             ...novelty,
