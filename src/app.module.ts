@@ -62,7 +62,7 @@ import { MySqlModule } from './database/mysql.module';
 import { DatasourcesModule } from './modules/datasources/datasources.module';
 import { AwsS3Module } from './modules/aws/s3/aws-s3.module';
 import { PucModule } from './modules/puc/puc.module'; 
-import { AccountingInterfaceModule } from './modules/accounting-
+import { AccountingInterfaceModule } from './modules/accounting-interface/accounting-interface.module';
 
 @Module({
     imports: [
