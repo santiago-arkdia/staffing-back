@@ -61,6 +61,8 @@ import { ContractsModule } from './modules/contracts/contracts.module';
 import { MySqlModule } from './database/mysql.module';
 import { DatasourcesModule } from './modules/datasources/datasources.module';
 import { AwsS3Module } from './modules/aws/s3/aws-s3.module';
+import { PucModule } from './modules/puc/puc.module'; 
+import { AccountingInterfaceModule } from './modules/accounting-
 
 @Module({
     imports: [
@@ -119,8 +121,8 @@ import { AwsS3Module } from './modules/aws/s3/aws-s3.module';
         PayrollsModule,
         UsersExternalsModule,
         ContractsModule,
-
-        /**Integracion con MySQL para StoreProcedures */
+        PucModule,
+        AccountingInterfaceModule,
         MySqlModule,
         DatasourcesModule,
         
