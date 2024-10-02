@@ -38,7 +38,7 @@ export class PayrollsService {
       .find({
         createdAt: { $gte: startDate, $lt: endDate },
         client: payrollsDto.client,
-        outDate: 0,
+        // outDate: 0,
       })
       .select('_id')
       .exec();
@@ -120,12 +120,12 @@ export class PayrollsService {
             }
         },
       })
-      .populate({
-        path: 'novelties',
-        populate: {
-            path: 'centersCosts',
-        },
-      })
+      // .populate({
+      //   path: 'novelties',
+      //   populate: {
+      //       path: 'centersCosts',
+      //   },
+      // })
       .populate('client')
       .exec();
 
