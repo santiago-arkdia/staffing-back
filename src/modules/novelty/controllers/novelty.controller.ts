@@ -9,11 +9,15 @@ import { Request } from 'express';
 import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 import { AxiosResponse } from 'axios';
 import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
+import { NoveltyTemporAppService } from '../services/novelty-temporapp.service';
 
 @ApiTags('Novelty')
 @Controller('api/novelty')
 export class NoveltyController {
-  constructor(private readonly noveltyService: NoveltyService) { }
+  constructor(
+    private readonly noveltyTemporAppService: NoveltyTemporAppService,
+    private readonly noveltyService: NoveltyService
+  ) { }
 
   @Post()
   @ApiOperation({ summary: 'Crear reporte de novedad' })
@@ -173,8 +177,8 @@ export class NoveltyController {
   @Post('ws/maestro')
   @ApiOperation({ summary: 'Maestro para el crud de novedades' })
   @UseGuards(AuthGuard)
-  async createNoveltyMaster(@Body() novelty: NoveltyMasterTemporappDto, @Headers('authorization-temporapp') token: string): Promise<AxiosResponse> {
-    return await this.noveltyService.createNoveltyMaster(novelty, token);
+  async createNoveltyMaster(@Body() novelty: NoveltyMasterTemporappDto) {
+    return await this.noveltyTemporAppService.createNovelty(novelty);
   }
 
 }
