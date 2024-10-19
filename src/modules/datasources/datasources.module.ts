@@ -16,12 +16,13 @@ import { AccountingInterface } from './entities/temporal-accounting-interface.en
 import { TemporalSS } from './entities/temporal-ss.entity';
 import { AwsS3Module } from '../aws/s3/aws-s3.module';
 import { ConfigModule } from '@nestjs/config';
+import { SourceRetention } from './entities/source-retention.entity';
 @Module({
   imports: 
 
   [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([TemporalAccumulatedExtract, AccountingInterface, TemporalSS]),
+    TypeOrmModule.forFeature([TemporalAccumulatedExtract, AccountingInterface, TemporalSS, SourceRetention]),
     MongooseModule.forFeature([{ name: Client.name,  schema: ClientSchema }]),
 
   MulterModule.register({

@@ -29,12 +29,12 @@ export class DatasourcesService {
 
       await this.injectDatasourceService.injectTemporalAccumulatedExtract(files);
       await this.injectDatasourceService.injectTemporalSS(files);
-      const executeStoreProcedure = await this.accountingInterfaceService.generateAccountingInterface();
+      //const executeStoreProcedure = await this.accountingInterfaceService.generateAccountingInterface();
 
       // Truncar las tablas temporales
 
-      await queryRunner.query(`TRUNCATE TABLE temporal_accounting_interface;`);
-      await queryRunner.query(`TRUNCATE TABLE temporal_ss;`);
+      // await queryRunner.query(`TRUNCATE TABLE temporal_accounting_interface;`);
+      //await queryRunner.query(`TRUNCATE TABLE temporal_ss;`);
 
 
       await queryRunner.commitTransaction();
@@ -43,7 +43,8 @@ export class DatasourcesService {
         response: true,
         data: [
           {
-            ulrAccountingInterface: executeStoreProcedure
+            //ulrAccountingInterface: executeStoreProcedure,
+            true: true,
           }
         ],
         message: `Accounting interface created successfully and file generated successfully for ${Client.name}`,
