@@ -167,13 +167,18 @@ export class InjectDatasourceService {
 
     public async injectTemporalSS(files: Array<Express.Multer.File>): Promise<TemporalSS[]> {
 
+
         // Sobreescibir el archivo temporal y de seguridad social.
         if (files.length > 0) {
+
             this.SS_FILE = files[1].originalname;
+
             console.log('Nombre del archivo dinámicamente asignado:', this.SS_FILE);
         } else {
             throw new BadRequestException(`No found ${this.SS_FILE} file, the name of the file must be ${this.SS_FILE}, please try again.`);
         }
+
+
 
 
         const ssFile = files.find(file => file.originalname === this.SS_FILE);
@@ -193,6 +198,10 @@ export class InjectDatasourceService {
         if (!jsonData || jsonData.length === 0) {
             throw new BadRequestException(`No se encontraron datos en el archivo ${this.SS_FILE}.`);
         }
+
+
+
+
         // Mapear los datos a objetos de TemporalSS
         const data: TemporalSS[] = jsonData.map(row => {
             const tempSS = new TemporalSS();
@@ -319,98 +328,64 @@ export class InjectDatasourceService {
 
 
 
-    public async injectSourceRetention(files: Array<Express.Multer.File>): Promise<SourceRetention[]> {
+    public async injectSourceRetention(files: Array<Express.Multer.File>) {
         // Validar si se han subido archivos
         if (files.length === 0) {
             throw new BadRequestException(`No se encontraron archivos. Por favor, intenta de nuevo.`);
         }
-    
+
         // Asignar el nombre del archivo esperado
-        this.RETENTION_FILE = files[0]?.originalname;
-    
+        this.RETENTION_FILE = files[2]?.originalname;
+
         if (!this.RETENTION_FILE) {
             throw new BadRequestException(`El nombre del archivo debe ser ${this.RETENTION_FILE}.`);
         }
-    
+
         const retentionFile = files.find(file => file.originalname === this.RETENTION_FILE);
         if (!retentionFile) {
             throw new BadRequestException(`No se encontró el archivo ${this.RETENTION_FILE}.`);
         }
-    
+
         // Leer el archivo Excel
         const workbook = XLSX.read(retentionFile.buffer, { type: 'buffer' });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-    
+
         // Convertir la hoja a formato JSON
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 1 });
-    
+
         // Validar que se haya leído información del archivo
         if (!jsonData || jsonData.length === 0) {
             throw new BadRequestException(`No se encontraron datos en el archivo ${this.RETENTION_FILE}.`);
         }
-    
+
         // Mapear los datos a objetos de SourceRetention
         const data: SourceRetention[] = jsonData.map(row => {
             const sourceRetention = new SourceRetention();
-            
-            sourceRetention.identificacionColaborador = row[0] || null;  // Identificación del colaborador
-            sourceRetention.nombreColaborador = row[1] || null;  // Nombre del colaborador
-            sourceRetention.fechaInicio = row[2] ? this.excelDateToJSDate(row[2]) : null;  // Fecha de inicio
-            sourceRetention.mes = row[3] || null;  // Mes
-            sourceRetention.salario = row[4] ? parseFloat(row[4]) : null;  // Salario
-            sourceRetention.auxilioTransporte = row[5] ? parseFloat(row[5]) : null;  // Auxilio de transporte
-            sourceRetention.bonificacionExtraLegal = row[6] ? parseFloat(row[6]) : null;  // Bonificación extra legal
-            sourceRetention.bonificacionPrestacional = row[7] ? parseFloat(row[7]) : null;  // Bonificación prestacional
-            sourceRetention.licenciaRemunerada = row[8] ? parseFloat(row[8]) : null;  // Licencia remunerada
-            sourceRetention.incapacidad = row[9] ? parseFloat(row[9]) : null;  // Incapacidad
-            sourceRetention.horasExtras = row[10] ? parseFloat(row[10]) : null;  // Horas extras
-            sourceRetention.vacaciones = row[11] ? parseFloat(row[11]) : null;  // Vacaciones
-            sourceRetention.totalIngresosBrutos = row[12] ? parseFloat(row[12]) : null;  // Total ingresos brutos
-            sourceRetention.salud = row[13] ? parseFloat(row[13]) : null;  // Salud
-            sourceRetention.pension = row[14] ? parseFloat(row[14]) : null;  // Pensión
-            sourceRetention.fss = row[15] ? parseFloat(row[15]) : null;  // FSS
-            sourceRetention.fsp = row[16] ? parseFloat(row[16]) : null;  // FSP
-            sourceRetention.baseGravable1 = row[17] ? parseFloat(row[17]) : null;  // Base gravable 1
-            sourceRetention.dependientes = row[18] || null;  // Dependientes
-            sourceRetention.depuracion1 = row[19] ? parseFloat(row[19]) : null;  // Depuración 1
-            sourceRetention.medicinaPrepagada = row[20] ? parseFloat(row[20]) : null;  // Medicina prepagada
-            sourceRetention.depuracion2 = row[21] ? parseFloat(row[21]) : null;  // Depuración 2
-            sourceRetention.intCreditoHipotecarioLeasing = row[22] ? parseFloat(row[22]) : null;  // Interés crédito hipotecario leasing
-            sourceRetention.depuracion3 = row[23] ? parseFloat(row[23]) : null;  // Depuración 3
-            sourceRetention.baseGravable2 = row[24] ? parseFloat(row[24]) : null;  // Base gravable 2
-            sourceRetention.afc = row[25] ? parseFloat(row[25]) : null;  // AFC
-            sourceRetention.avp = row[26] ? parseFloat(row[26]) : null;  // AVP
-            sourceRetention.depuracion4 = row[27] ? parseFloat(row[27]) : null;  // Depuración 4
-            sourceRetention.baseRentaExenta = row[28] ? parseFloat(row[28]) : null;  // Base renta exenta
-            sourceRetention.veinticincoPorcientoRentaExenta = row[29] ? parseFloat(row[29]) : null;  // 25% renta exenta
-            sourceRetention.baseGravable3 = row[30] ? parseFloat(row[30]) : null;  // Base gravable 3
-            sourceRetention.totalDedExcento = row[31] ? parseFloat(row[31]) : null;  // Total deducible exento
-            sourceRetention.cuarentaPorcientoRentaLiqCed = row[32] ? parseFloat(row[32]) : null;  // 40% renta líquida cedida
-            sourceRetention.acumVeinticincoPorciento = row[33] ? parseFloat(row[33]) : null;  // Acumulado 25%
-            sourceRetention.acumCuarentaPorciento = row[34] ? parseFloat(row[34]) : null;  // Acumulado 40%
-            sourceRetention.baseGravable4 = row[35] ? parseFloat(row[35]) : null;  // Base gravable 4
-            sourceRetention.uvts = row[36] ? parseFloat(row[36]) : null;  // UVTs
-            sourceRetention.proc = row[37] ? parseFloat(row[37]) : null;  // PROC
-            sourceRetention.retencion = row[38] ? parseFloat(row[38]) : null;  // Retención
-            sourceRetention.comentarios = row[39] || null;  // Comentarios
-    
+
+            sourceRetention.IdentificacionColaborador = row[0] || null;  // Identificación del colaborador
+            sourceRetention.NombreColaborador = row[1] || null;          // Nombre del colaborador
+            sourceRetention.Mes = row[2] || null;                        // Mes
+            sourceRetention.BaseGravable = row[3] !== undefined ? parseFloat(row[3]) : null; // Base gravable
+            sourceRetention.Retencion = row[4] !== undefined ? parseFloat(row[4]) : null;     // Retención
+
             return sourceRetention;
         });
-    
+
+
         console.log(data);
-    
+
         const batchSize = 1000;
         const numBatches = Math.ceil(data.length / batchSize);
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
-    
+
         try {
             await queryRunner.startTransaction();
-    
+
             // Limpiar la tabla antes de insertar nuevos datos
             await queryRunner.query(`TRUNCATE TABLE ${this.sourceRetentionRepo.metadata.tableName};`);
-    
+
             // Guardar los datos en lotes en paralelo
             await Promise.all(Array.from({ length: numBatches }, async (_, index) => {
                 const start = index * batchSize;
@@ -418,15 +393,15 @@ export class InjectDatasourceService {
                 const batch = data.slice(start, end);
                 await queryRunner.manager.save(SourceRetention, batch);
             }));
-    
+
             await queryRunner.commitTransaction();
             console.log(`Datos de archivo ${this.RETENTION_FILE} guardados exitosamente en la base de datos.`);
             return data;
-    
+
         } catch (error) {
             await queryRunner.rollbackTransaction();
             console.error('Error al guardar los datos en la base de datos:', error);
-    
+
             try {
                 // Truncar la tabla en caso de error
                 await queryRunner.query(`TRUNCATE TABLE ${this.sourceRetentionRepo.metadata.tableName};`);
@@ -434,14 +409,15 @@ export class InjectDatasourceService {
             } catch (truncateError) {
                 console.error('Error al truncar la tabla:', truncateError);
             }
-    
+
             throw new Error(`Error al guardar datos en la base de datos desde el archivo ${this.RETENTION_FILE}: ${error}`);
-    
+
         } finally {
             await queryRunner.release();
         }
+
     }
-    
+
 }
 
 

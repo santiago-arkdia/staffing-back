@@ -25,6 +25,7 @@ export class CheckDataSourcesGuard implements CanActivate {
         }
 
         const client = await this.clientModel.findOne({ nit: nit, name: name }).exec();
+        console.log({client, name, nit});
 
 
         if (!client) {

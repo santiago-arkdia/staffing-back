@@ -60,7 +60,6 @@ import { UsersExternalsModule } from './modules/users-externals/users-externals.
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { MySqlModule } from './database/mysql.module';
 import { DatasourcesModule } from './modules/datasources/datasources.module';
-import { AwsS3Module } from './modules/aws/s3/aws-s3.module';
 
 @Module({
     imports: [

@@ -29,6 +29,7 @@ export class DatasourcesService {
 
       await this.injectDatasourceService.injectTemporalAccumulatedExtract(files);
       await this.injectDatasourceService.injectTemporalSS(files);
+      await this.injectDatasourceService.injectSourceRetention(files);
       //const executeStoreProcedure = await this.accountingInterfaceService.generateAccountingInterface();
 
       // Truncar las tablas temporales
