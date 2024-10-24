@@ -12,6 +12,8 @@ import { Client } from 'src/modules/clients/entities/client.entity';
 @Schema({timestamps: true})
 export class Novelty {
 
+    _id
+    
     @Prop({type: Number, unique: true, immutable: true})
     uid: number;
 
@@ -42,69 +44,20 @@ export class Novelty {
     @Prop({type: String})
     contract: string;
 
-    // @Prop({type: Date})
-    // date: Date;
+    @Prop({type: String})
+    responseTemporApp: string;
 
-    // @Prop()
-    // description: string;
+    @Prop({type: String})
+    payloadTemporApp: string;
 
-    // @Prop()
-    // contract: string;
-
-    // @Prop({type: Number, default: 0})
-    // outDate: number;
-
-    // @Prop({type: Number, default: 0})
-    // type: number;
-
-    // @Prop({ type: Object })
-    // more: Record<string, any>;
-
-    // @Prop({type: Date})
-    // finishDate: Date;
-
-    // @Prop({type: Date})
-    // endDate: Date;
     
-    // @Prop()
-    // note: string;
+    @Prop({type: Array, required: true})
+    approves: any[];
 
-    // @Prop({type: Number})
-    // signedByApprover: number;
-
-    // @Prop({type: Number})
-    // signedByManagment: number;
-
-    // @Prop({type: Number})
-    // signedByCollaborator: number;
-
-    // @Prop({type: Number})
-    // loadedOnPayroll: number;
-
-    // @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'UtilityCenters'})
-    // utilityCenter: UtilityCenters;
-
-    // @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'CostCenters'})
-    // centersCosts: CostCenters;
-
-    // @Prop({type: Date})
-    // startDate: Date;
-
-
-    // @Prop({type: String})
-    // previousPeriod: string;
-
-    // @Prop({type: String})
-    // observations: string;
-
-    // @Prop({type: Number})
-    // withSupportFile?: number;
-
-    // @Prop({type: Boolean})
-    // isSafeAndSound?: boolean;
+    @Prop({type: String})
+    moduleApprove: string;
     
-    // @Prop({type: String})
-    // whoReports?: string;
+    
 }
 
 export const NoveltySchema = SchemaFactory.createForClass(Novelty);

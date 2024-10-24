@@ -18,8 +18,8 @@ export class Concept {
     @Prop({type: Number, default: 1})
     state: number;
 
-    @Prop({type: String, required: true})
-    approves: string;
+    @Prop({type: Object, required: true})
+    approves: object;
 
     @Prop({ type: Array })
     formObject: any[];

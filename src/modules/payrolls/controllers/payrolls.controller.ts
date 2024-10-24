@@ -5,11 +5,16 @@ import {PayrollsService} from '../services/payrolls.service';
 import {ApiTags} from '@nestjs/swagger';
 import {PayrollsDto} from '../dto/payrolls.dto';
 import { UpdatPayrollDto } from '../dto/update-payrolls.dto';
+import { PayrollsTemporAppService } from '../services/payrolls-temporapp.service';
 
 @ApiTags('Payrolls')
 @Controller('api/payrolls')
 export class PayrollsController {
-    constructor(private readonly payrollService: PayrollsService) {
+    constructor(
+      private readonly payrollService: PayrollsService,
+      private readonly payrollsTemporAppService: PayrollsTemporAppService
+      
+    ) {
     }
 
     @Post("generate-payroll/:year/:month")
@@ -24,6 +29,7 @@ export class PayrollsController {
 
     @Put(':id')
     async update( @Param('id') id: string,  @Body() payroll: UpdatPayrollDto): Promise<UpdatPayrollDto> {
+      this.payrollsTemporAppService.noveltyPayroll(id);
       return await this.payrollService.update(id, payroll);
     }
 

@@ -2,7 +2,7 @@
 import { Injectable,  } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Novelty } from '../entities/novelty.entity';
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { Counter } from "../entities/counter.entity";
 import { Concept } from "../../concepts/entities/concepts.entity";
 import { Roles } from 'src/modules/roles/entities/roles.entity';
@@ -12,7 +12,7 @@ import { Client } from 'src/modules/clients/entities/client.entity';
 import { NoveltySocialSecurity } from 'src/modules/novelty-social-security/entities/novelty-social-security.entity';
 import { Payrolls } from 'src/modules/payrolls/entities/payrolls.entity';
 import { Model } from 'mongoose';
-import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
+// import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 
 
 @Injectable()
@@ -47,9 +47,9 @@ export class NoveltyTemporAppService {
         return responseLogin;
     }
 
-    async createNovelty(novelty:NoveltyMasterTemporappDto){
+    async createNovelty(noveltyId){
         const accessToken = await this.getToken();
-        const noveltyInfo = await this.noveltyModel.findById(novelty.noveltyId)
+        const noveltyInfo = await this.noveltyModel.findById(noveltyId)
             .populate('client')
             .populate('collaborator')
             .exec();
@@ -58,7 +58,7 @@ export class NoveltyTemporAppService {
                     
         const item = {
             "tipoOperacion": 'NovedadNomina',
-            "instancia": "staffing",
+            "instancia": "pruebas",
             "usuarioExterno": noveltyInfo.client.idTri.toString(),
             "datos":{
                 "canal": "NELV2",
@@ -70,6 +70,8 @@ export class NoveltyTemporAppService {
             }
             
         };
+        
+        
         const config: AxiosRequestConfig = {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -77,9 +79,8 @@ export class NoveltyTemporAppService {
             }
         };
         const response = await axios.post(url, item, config);
-        console.log(item);
 
-        return response.data;
+        return {data:item,response:response.data};
 
     }
 }

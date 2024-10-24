@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import {IsBoolean, IsOptional, IsString, IsArray} from 'class-validator';
+import { IsOptional, IsString, IsArray,  IsObject} from 'class-validator';
 import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
+
 
 @Schema()
 export class CreateConceptsDto {
@@ -22,9 +23,9 @@ export class CreateConceptsDto {
   @IsOptional()
   state: number
 
-  @IsString()
+  @IsArray()
   @IsOptional()
-  approves: string
+  approves: any[];
 
   @IsArray()
   @IsOptional()
