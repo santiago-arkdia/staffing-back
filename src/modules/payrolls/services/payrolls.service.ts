@@ -34,10 +34,18 @@ export class PayrollsService {
       0,
     );
 
+    const existPayroll =  this.payrollModel.find({
+      year: year,
+      month: month
+    });
+
+    console.log(existPayroll);
+
     const novelties = await this.noveltyModel
       .find({
         createdAt: { $gte: startDate, $lt: endDate },
         client: payrollsDto.client,
+        state:1
         // outDate: 0,
       })
       .select('_id')
@@ -65,7 +73,7 @@ export class PayrollsService {
       consecutive: newConsecutive,
     });
 
-    let payroll = await newPayroll.save()
+    const payroll = await newPayroll.save()
     console.log(payroll["_id"]);
     payroll.pathPayroll = await this.downloadPayroll(payroll["_id"].toString());
 

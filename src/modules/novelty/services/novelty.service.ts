@@ -57,6 +57,44 @@ export class NoveltyService {
             noveltyToUpdate.comments.push(...updateNoveltyDto.comments);
         }
         updateNoveltyDto.comments = noveltyToUpdate.comments;
+        if (!updateNoveltyDto.approves) {
+            updateNoveltyDto.approves = noveltyToUpdate.approves;
+        }
+        if (updateNoveltyDto.role && updateNoveltyDto.role.length > 0 && updateNoveltyDto.stateRole && updateNoveltyDto.stateRole.length > 0) {
+            noveltyToUpdate.approves.forEach((approve, index) => {
+               if (Object.keys(approve).includes(updateNoveltyDto.role)) {
+                    updateNoveltyDto.approves[index][updateNoveltyDto.role] = updateNoveltyDto.stateRole;  
+                    
+                    if(updateNoveltyDto.approves[index]['nextModule'] == 'payroll'){
+                        updateNoveltyDto.state = 1;
+                    }
+                    if(updateNoveltyDto.stateRole == 'REJECTED' ){
+                        updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['previusModule'];
+                    
+                    }if(updateNoveltyDto.stateRole == 'CORRECTION' ){
+                        noveltyToUpdate.approves.forEach((approve2, index2) => {
+                            if (Object.keys(approve2).includes(updateNoveltyDto.approves[index]['nextModule'])) {
+                                updateNoveltyDto.approves[index2][updateNoveltyDto.approves[index]['nextModule']] = 'CORRECTION';
+                            }
+                        });
+                        updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['previusModule'];
+                        
+                    }  if(updateNoveltyDto.stateRole == 'PENDING' ){
+                        noveltyToUpdate.approves.forEach((approve2, index2) => {
+                            if (Object.keys(approve2).includes(updateNoveltyDto.approves[index]['previusModule'])) {
+                                updateNoveltyDto.approves[index2][updateNoveltyDto.approves[index]['previusModule']] = 'PENDING';
+                            }
+                        });
+                        updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['previusModule'];
+                        
+                    } else{
+                        updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['nextModule'];
+                    }
+                }
+            });
+        }
+    
+
         const updateNovelty = await this.noveltyModel.findByIdAndUpdate(
             id,
             updateNoveltyDto,
@@ -237,8 +275,6 @@ export class NoveltyService {
         request: Record<string, any>
     ): Promise<Novelty[]> {
         let query = {};
-        let queryBody = {};
-        let conceptList = []
 
         console.log(request['user']);
         console.log("object");
@@ -256,33 +292,34 @@ export class NoveltyService {
                 query = { [by]: value };
             }
         }
-        if (by === 'category') {
-            conceptList = await this.conceptModel.find({ categoryNovelty: value }).select('_id').exec();
-        }
+     
 
+        console.log(requestBodyFilters);
+        const queryNovelty = {}
         if (Object.keys(requestBodyFilters).length > 0) {
             Object.entries(requestBodyFilters).forEach(([key, val]) => {
                 if (typeof val === 'string' && !isNaN(Number(val))) {
-                    queryBody[key] = Number(val);
+                    queryNovelty[key] = Number(val);
                 } else if (typeof val === 'string') {
                     if (mongoose.Types.ObjectId.isValid(val)) {
-                        queryBody[key] = val;
+                        queryNovelty[key] = val;
                     } else {
-                        queryBody[key] = { $regex: new RegExp(val, 'i') };
+                        queryNovelty[key] = { $regex: new RegExp(val, 'i') };
                     }
                 } else if (typeof val === 'number') {
-                    queryBody[key] = val;
+                    queryNovelty[key] = val;
                 }
             });
         }
+        const flattenedObject  = flattenObject(requestBodyFilters);   
+        Object.assign(queryNovelty, flattenedObject);
 
-        const queryNovelty = {}
-
+         console.log(request['user'].roleKey);   
         if (request['user'].roleKey != "admin_payroll") {
 
-            if (typeNovelty != "all") {
-                queryNovelty["typeNovelty"] = typeNovelty;
-            }
+            // if (typeNovelty != "all") {
+            //     queryNovelty["typeNovelty"] = typeNovelty;
+            // }
 
             if (by === 'documents') {
                 queryNovelty['documents'] = { $size: 0 };
@@ -296,11 +333,15 @@ export class NoveltyService {
                 queryNovelty['state'] = value
             }
 
+            if (by === 'moduleApprove') {
+                queryNovelty['moduleApprove'] = value
+            }
+
             if (request['user'].roleKey != "collaborator") {
                 if (request['user'].roleKey == "client") {
                     queryNovelty['client'] = request['user'].userEntity;
                 } else {
-                    let clients = await this.clientModel.find({ analysts: { $in: request['user'].userEntity } }).exec();
+                    const clients = await this.clientModel.find({ analysts: { $in: request['user'].userEntity } }).exec();
                     queryNovelty['client'] = { '$in': clients.map(client => client._id) };
                 }
             } else {
@@ -313,27 +354,14 @@ export class NoveltyService {
             queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
         }
 
-        // const combinedQuery = {...query, ...queryBody};
-        // combinedQuery['client'] = { '$in': clients.map(client => client._id) };
-
-        // let roleKeys = await this.rolesModel.find({ ["supervisor_role"]: request['user'].roleKey }).exec();
-        // const queryConcept = {}
-        //  if (roleKeys.length !== 0) {
-        //     queryConcept['approves'] = { '$in': roleKeys.map(role => role.role_key) };
-        // } else if (request['user'].roleKey !== "client") {
-        //     queryConcept["approves"] = request['user'].roleKey;
-        // }
-
-        // let concepts = await this.conceptModel.find(queryConcept).exec();
-        // const queryNovelty = by === 'category' ? { concept: { $in: conceptList } } : combinedQuery;
-        // queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
+    
 
 
         const total = by === 'find' && value === 'all'
             ? await this.noveltyModel.countDocuments(queryNovelty).exec()
             : await this.noveltyModel.countDocuments(queryNovelty).exec();
         const totalPages = Math.ceil(total / limit);
-
+        console.log(queryNovelty);
         let search = await this.noveltyModel
             .find(queryNovelty)
             .skip((page - 1) * limit)
@@ -352,19 +380,131 @@ export class NoveltyService {
             .exec();
 
 
-        // estadoo
-        // documentos en vacio 
+        const novelties: any = {};
+        novelties.total = total;
+        novelties.pages = totalPages;
+        novelties.roleKey = request['user'].roleKey;
+        novelties.data = search;
+
+        return novelties;
+    }
+
+    async findByProfile(
+        page: number,
+        limit: number,
+        requestBodyFilters: Record<string, any> = {},
+        request: Record<string, any>
+    ): Promise<Novelty[]> {
+        let query = {};
+        const by = requestBodyFilters.by??'';
+        const value = requestBodyFilters.value??'';
+        // const typeNovelty = requestBodyFilters.typeNovelty??'';
+
+        console.log(request['user']);
+        console.log("object");
+
+        if (by !== 'find' && value !== 'all') {
+            if (typeof value === 'string' && !isNaN(Number(value))) {
+                query = { [by]: Number(value) };
+            } else if (typeof value === 'string') {
+                if (Types.ObjectId.isValid(value)) {
+                    query = { [by]: value };
+                } else {
+                    query = { [by]: { $regex: new RegExp(value, 'i') } };
+                }
+            } else if (typeof value === 'number') {
+                query = { [by]: value };
+            }
+        }
+     
+
+        console.log(requestBodyFilters);
+        const queryNovelty = {}
+        if (Object.keys(requestBodyFilters).length > 0) {
+            Object.entries(requestBodyFilters).forEach(([key, val]) => {
+                if(key != 'page' && key != 'limit'){
+                    if (typeof val === 'string' && !isNaN(Number(val))) {
+                        queryNovelty[key] = Number(val);
+                    } else if (typeof val === 'string') {
+                        if (mongoose.Types.ObjectId.isValid(val)) {
+                            queryNovelty[key] = val;
+                        } else {
+                            queryNovelty[key] = { $regex: new RegExp(val, 'i') };
+                        }
+                    } else if (typeof val === 'number') {
+                        queryNovelty[key] = val;
+                    }
+                }
+            });
+        }
+        const flattenedObject  = flattenObject(requestBodyFilters);   
+        Object.assign(queryNovelty, flattenedObject);
+
+         console.log(request['user'].roleKey);   
+        if (request['user'].roleKey != "admin_payroll") {
+
+            // if (typeNovelty != "all") {
+            //     queryNovelty["typeNovelty"] = typeNovelty;
+            // }
+
+            if (by === 'documents') {
+                queryNovelty['documents'] = { $size: 0 };
+            }
+
+            if (by === 'concept') {
+                queryNovelty['concept'] = value
+            }
+
+            if (by === 'state') {
+                queryNovelty['state'] = value
+            }
+
+            if (by === 'moduleApprove') {
+                queryNovelty['moduleApprove'] = value
+            }
+
+            if (request['user'].roleKey != "collaborator") {
+                if (request['user'].roleKey == "client") {
+                    queryNovelty['client'] = request['user'].userEntity;
+                } else {
+                    const clients = await this.clientModel.find({ analysts: { $in: request['user'].userEntity } }).exec();
+                    queryNovelty['client'] = { '$in': clients.map(client => client._id) };
+                }
+            } else {
+                queryNovelty['collaborator'] = request['user'].userEntity;
+            }
+        }
+
+        if (by === 'categoryNovelty') {
+            let concepts = await this.conceptModel.find({ categoryNovelty: value }).exec();
+            queryNovelty['concept'] = { '$in': concepts.map(concept => concept._id) };
+        }
+
+    
 
 
-        // if (roleKeys.length != 0){
-        //     data = search.filter(novelty => {
-        //         return roleKeys.some(role => role.role_key === novelty.concept?.approves);
-        //     });
-        // }else{
-        //     if (roleKey != "client") {
-        //         data = search.filter(novelty => novelty.concept?.approves === roleKey);
-        //     }
-        // }
+        const total = by === 'find' && value === 'all'
+            ? await this.noveltyModel.countDocuments(queryNovelty).exec()
+            : await this.noveltyModel.countDocuments(queryNovelty).exec();
+        const totalPages = Math.ceil(total / limit);
+        console.log(queryNovelty);
+        let search = await this.noveltyModel
+            .find(queryNovelty)
+            .skip((page - 1) * limit)
+            .populate({
+                path: 'contract',
+                model: 'Contract'
+            })
+            .populate('collaborator')
+            .populate({
+                path: 'concept',
+                populate: {
+                    path: 'categoryNovelty',
+                },
+            })
+            .limit(limit)
+            .exec();
+
 
         const novelties: any = {};
         novelties.total = total;
@@ -824,3 +964,17 @@ export class NoveltyService {
         return pages;
     }
 }
+
+function flattenObject(obj: Record<string, any>, parentKey = '', res: Record<string, any> = {}): Record<string, any> {
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const newKey = parentKey ? `${parentKey}.${key}` : key;
+        if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+          flattenObject(obj[key], newKey, res);
+        } else {
+          res[newKey] = obj[key];
+        }
+      }
+    }
+    return res;
+  }

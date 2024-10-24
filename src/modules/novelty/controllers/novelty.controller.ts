@@ -1,28 +1,33 @@
 /* eslint-disable prettier/prettier */
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NoveltyService } from '../services/novelty.service';
-import { Body, Controller, Get, Headers, Param, Post, Put, Query, Req, UseGuards, Res } from '@nestjs/common';
+import { Body, Controller, Get,  Param, Post, Put, Query, Req, UseGuards, Res } from '@nestjs/common';
 import { CreateNoveltyDto } from '../dto/create-novelty.dto';
 import { Novelty } from '../entities/novelty.entity';
 import { AuthGuard } from "../../auth/auth.guard";
 import { Request } from 'express';
 import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
-import { AxiosResponse } from 'axios';
 import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
 import { NoveltyTemporAppService } from '../services/novelty-temporapp.service';
+import { ConceptsService } from 'src/modules/concepts/services/concepts.service';
 
 @ApiTags('Novelty')
 @Controller('api/novelty')
 export class NoveltyController {
   constructor(
     private readonly noveltyTemporAppService: NoveltyTemporAppService,
-    private readonly noveltyService: NoveltyService
+    private readonly noveltyService: NoveltyService,
+    private readonly conceptService: ConceptsService
   ) { }
 
   @Post()
   @ApiOperation({ summary: 'Crear reporte de novedad' })
   @UseGuards(AuthGuard)
   async create(@Body() novelty: CreateNoveltyDto): Promise<Novelty> {
+    const conceptData = await this.conceptService.findOne(novelty.concept);
+    console.log(conceptData);
+    novelty.approves = conceptData.approves;
+    novelty.moduleApprove = 'payroll_analyst';
     return await this.noveltyService.create(novelty);
   }
 
@@ -95,6 +100,18 @@ export class NoveltyController {
     @Req() request: Request
   ): Promise<Novelty[]> {
     return await this.noveltyService.findBy(page, limit, by, value, requestBody, typeNovelty, request);
+  }
+
+  @Post('/profile/:page/:limit')
+  @ApiOperation({ summary: 'Filtrar novedades por valor y paginación' })
+  @UseGuards(AuthGuard)
+  async findByProfile(
+    @Param('page') page: number,
+    @Param('limit') limit: number,
+    @Body() requestBody: Record<string, any>,
+    @Req() request: Request
+  ): Promise<Novelty[]> {
+    return await this.noveltyService.findByProfile(page, limit,requestBody, request);
   }
 
   @Post('ws/find')

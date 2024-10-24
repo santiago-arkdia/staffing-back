@@ -4,7 +4,6 @@ import {InjectModel} from '@nestjs/mongoose';
 import {Model, Types} from 'mongoose';
 import {Concept} from './../entities/concepts.entity';
 import {CreateConceptsDto} from '../dto/create-concepts.dto';
-import {CostCenters} from "../../business-configuration/centers-costs/entities/centers-costs.entity";
 
 @Injectable()
 export class ConceptsService {
