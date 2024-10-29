@@ -256,6 +256,7 @@ export class NoveltyService {
         return await this.noveltyModel.findById(id)
             .populate('contract')
             .populate('collaborator')
+            .populate('client')
             .populate({
                 path: 'concept',
                 populate: {
