@@ -1,14 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Payrolls } from '../entities/payrolls.entity';
 import { PayrollsDto } from '../dto/payrolls.dto';
-import { FilterPayrollsDto } from '../dto/filter-payrolls.dto.';
-import { CategoriesNovelty } from '../../categories-novelty/entities/categories-novelties.entity';
 import { Novelty } from 'src/modules/novelty/entities/novelty.entity';
-import { NoveltyRetirement } from 'src/modules/novelty-retirement/entities/novelty-retirement.entity';
-import { NoveltySocialSecurity } from 'src/modules/novelty-social-security/entities/novelty-social-security.entity';
 import { UpdatPayrollDto } from '../dto/update-payrolls.dto';
 import * as XLSX from 'xlsx';
 import { UploadsService } from 'src/modules/uploads/services/uploads.service';
@@ -22,11 +18,39 @@ export class PayrollsService {
     private uploadsService: UploadsService
   ) {}
 
-  async generatePayroll(
-    year: string,
-    month: string,
+  async updatePayroll(
+    id: string,
     payrollsDto: PayrollsDto,
   ): Promise<Payrolls> {
+    
+    const novelties = await this.noveltyModel
+      .find({ _id: { $in: payrollsDto.novelty } })
+      .select('_id')
+      .exec();
+
+      const payrollModelFind = await this.payrollModel.findById(id).exec();
+      novelties.forEach(element => {
+          payrollModelFind.novelties.push(element._id);
+      });
+    const updatePayroll =  this.payrollModel.findByIdAndUpdate(id,
+      {
+        novelties: payrollModelFind.novelties,
+      }, {
+      new: true,
+      useFindAndModify: false,
+    });
+    return updatePayroll;
+  }
+
+  async generatePayroll(
+    
+    payrollsDto: PayrollsDto,
+  ): Promise<Payrolls> {
+    
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
     const startDate = new Date(`${year}-${month}-01T00:00:00.000Z`);
     const endDate = new Date(
       startDate.getFullYear(),
@@ -38,8 +62,10 @@ export class PayrollsService {
       year: year,
       month: month
     });
-
-    console.log(existPayroll);
+    if(existPayroll){
+      throw new HttpException('Ya existe una nomina generada', HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+    
 
     const novelties = await this.noveltyModel
       .find({
@@ -60,7 +86,7 @@ export class PayrollsService {
 
     let newConsecutive = 1;
 
-    if (maxConsecutive.consecutive != null) {
+    if (maxConsecutive && maxConsecutive.consecutive != null) {
       newConsecutive = maxConsecutive ? maxConsecutive.consecutive + 1 : 1;
     }
 
@@ -247,5 +273,23 @@ export class PayrollsService {
       .exec();
 
     return payrolls;
+  }
+
+  async noveltyNotAdded(id: string): Promise<Novelty[]> {
+    const payrolls = await this.payrollModel
+      .findById(id)
+      .exec();
+    const startDate = new Date(`${payrolls.year}-${payrolls.month}-01T00:00:00.000Z`);
+    const endDate = new Date( startDate.getFullYear(), startDate.getMonth() + 2, 0, );
+    const novelties = await this.noveltyModel
+      .find({ 
+        _id: { $nin: payrolls.novelties } ,
+        client: payrolls.client,
+        state:1,
+        createdAt: { $gte: startDate, $lt: endDate },
+      })
+      .exec();
+
+    return novelties;
   }
 }

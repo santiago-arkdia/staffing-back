@@ -20,14 +20,10 @@ export class PayrollsTemporAppService {
   ) {}
 
   async noveltyPayroll(id){
-    
     const noveltyToUpdate = await this.payrollModel.findById(id).populate('novelties').exec();
-    // console.log(noveltyToUpdate.novelties);
     for (const novelty of noveltyToUpdate.novelties) {
-      // console.log(novelty);
       // Aquí puedes realizar cualquier operación con cada elemento de noveltyToUpdate.novelties
       const result = await this.noveltyTemporAppService.createNovelty(novelty._id);
-console.log(result);
       await this.noveltyModel.findByIdAndUpdate(novelty._id, { payloadTemporApp:JSON.stringify(result.data),responseTemporApp: JSON.stringify(result.response) });
     }
   }

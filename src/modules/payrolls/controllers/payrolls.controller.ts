@@ -6,6 +6,7 @@ import {ApiTags} from '@nestjs/swagger';
 import {PayrollsDto} from '../dto/payrolls.dto';
 import { UpdatPayrollDto } from '../dto/update-payrolls.dto';
 import { PayrollsTemporAppService } from '../services/payrolls-temporapp.service';
+import { Novelty } from 'src/modules/novelty/entities/novelty.entity';
 
 @ApiTags('Payrolls')
 @Controller('api/payrolls')
@@ -17,9 +18,13 @@ export class PayrollsController {
     ) {
     }
 
-    @Post("generate-payroll/:year/:month")
-    async create(@Param('year') year: string, @Param('month') month: string,  @Body() payrollsDto: PayrollsDto): Promise<Payrolls> {
-        return await this.payrollService.generatePayroll(year, month, payrollsDto);
+    @Post("generate-payroll")
+    async create( @Body() payrollsDto: PayrollsDto): Promise<Payrolls> {
+        return await this.payrollService.generatePayroll( payrollsDto);
+    }
+    @Put("update-novelty/:id")
+    async updateNovelty( @Param('id') id: string,  @Body() payrollsDto: PayrollsDto): Promise<Payrolls> {
+        return await this.payrollService.updatePayroll(id, payrollsDto);
     }
 
     @Post("donwload-payroll/:payroll")
@@ -36,6 +41,11 @@ export class PayrollsController {
     @Get(':id')
     async findById( @Param('id') id: string): Promise<Payrolls> {
       return await this.payrollService.findById(id);
+    }
+
+    @Get(':id/novelties-not-added')
+    async listNoveltyNotAdded( @Param('id') id: string): Promise<Novelty[]> {
+      return await this.payrollService.noveltyNotAdded(id);
     }
   
     @Post(':page/:limit')
