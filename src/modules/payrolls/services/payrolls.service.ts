@@ -58,11 +58,12 @@ export class PayrollsService {
       0,
     );
 
-    const existPayroll =  this.payrollModel.find({
+    const existPayroll = await this.payrollModel.find({
       year: year,
       month: month
-    });
-    if(existPayroll){
+    }).exec();
+    console.log(existPayroll);
+    if(existPayroll) {
       throw new HttpException('Ya existe una nomina generada', HttpStatus.UNPROCESSABLE_ENTITY);
     }
     
