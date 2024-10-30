@@ -63,7 +63,7 @@ export class PayrollsService {
       month: month
     }).exec();
     console.log(existPayroll);
-    if(existPayroll) {
+    if(existPayroll.length > 0) {
       throw new HttpException('Ya existe una nomina generada', HttpStatus.UNPROCESSABLE_ENTITY);
     }
     
