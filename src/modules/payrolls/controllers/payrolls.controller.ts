@@ -33,9 +33,13 @@ export class PayrollsController {
     }
 
     @Put(':id')
-    async update( @Param('id') id: string,  @Body() payroll: UpdatPayrollDto): Promise<UpdatPayrollDto> {
-      this.payrollsTemporAppService.noveltyPayroll(id);
-      return await this.payrollService.update(id, payroll);
+    async update( @Param('id') id: string,  @Body() payroll: UpdatPayrollDto): Promise<any> {
+      let infoTemporApp = {};
+      if(payroll.state == 1){
+        infoTemporApp = await this.payrollsTemporAppService.noveltyPayroll(id);
+      }
+      const dataPayroll = await this.payrollService.update(id, payroll);
+      return {'payroll':dataPayroll,...infoTemporApp};
     }
 
     @Get(':id')

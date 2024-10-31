@@ -50,7 +50,9 @@ export class Novelty {
     @Prop({type: String})
     payloadTemporApp: string;
 
-    
+    @Prop({type: Boolean})
+    statusTemporApp: boolean;
+
     @Prop({type: Array, required: true})
     approves: any[];
 

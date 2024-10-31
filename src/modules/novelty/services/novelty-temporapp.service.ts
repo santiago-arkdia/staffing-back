@@ -39,8 +39,6 @@ export class NoveltyTemporAppService {
                 "clave": "L5M6ctb5I@jF"
             })
             responseLogin = response.data.accessToken;
-            
-            //dataResponse.push(response.data);
         } catch (error) {
             console.log(error.message);
         }
