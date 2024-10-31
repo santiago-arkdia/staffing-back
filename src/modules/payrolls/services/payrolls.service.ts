@@ -287,6 +287,7 @@ export class PayrollsService {
         _id: { $nin: payrolls.novelties } ,
         client: payrolls.client,
         state:1,
+        moduleApprove:'payroll',
         createdAt: { $gte: startDate, $lt: endDate },
       })
       .exec();
