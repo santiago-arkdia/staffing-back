@@ -21,10 +21,42 @@ export class PayrollsTemporAppService {
 
   async noveltyPayroll(id){
     const noveltyToUpdate = await this.payrollModel.findById(id).populate('novelties').exec();
+    const noveltySuccessfull = [];
+    const noveltyReject = [];
     for (const novelty of noveltyToUpdate.novelties) {
       // Aquí puedes realizar cualquier operación con cada elemento de noveltyToUpdate.novelties
       const result = await this.noveltyTemporAppService.createNovelty(novelty._id);
-      await this.noveltyModel.findByIdAndUpdate(novelty._id, { payloadTemporApp:JSON.stringify(result.data),responseTemporApp: JSON.stringify(result.response) });
+      const objectNovelty = {
+        payloadTemporApp:JSON.stringify(result.data),
+        responseTemporApp: JSON.stringify(result.response),
+        statusTemporApp: true,
+        moduleApprove: novelty.moduleApprove,
+      };
+      if(result['response']['mensaje'][0][0]['respuesta'] == 0 ){
+        //ACTUALIZAR NOVEDADES RECHAZADAS POR TEMPORAPP
+        objectNovelty.moduleApprove = 'out_of_time';
+        objectNovelty.statusTemporApp = false;
+        noveltyReject.push(novelty);
+      }else{
+        noveltySuccessfull.push(novelty._id);
+      }
+      await this.noveltyModel.findByIdAndUpdate(novelty._id, objectNovelty);
+      console.log(result['response']['mensaje'][0][0]['respuesta']);
     }
+    if(noveltySuccessfull.length > 0){
+      //ACTUALIZAR NOMINA CON NOVEDADES APROBADAS POR TEMPORAPP
+      await this.payrollModel.findByIdAndUpdate(
+        id,
+        {
+          novelties:noveltySuccessfull
+        },
+        {
+          new: true,
+          useFindAndModify: false,
+        },
+      );
+    }
+
+    return {noveltySuccessfull,noveltyReject};
   }
 }

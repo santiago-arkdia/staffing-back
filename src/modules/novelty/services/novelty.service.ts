@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model, Types } from 'mongoose';
 import { Novelty } from '../entities/novelty.entity';
@@ -15,6 +15,7 @@ import { Client } from 'src/modules/clients/entities/client.entity';
 import { NoveltySocialSecurity } from 'src/modules/novelty-social-security/entities/novelty-social-security.entity';
 import { Payrolls } from 'src/modules/payrolls/entities/payrolls.entity';
 import { APIFeatures } from 'src/utils/api.features';
+import { NoveltyTemporAppService } from './novelty-temporapp.service';
 
 @Injectable()
 export class NoveltyService {
@@ -28,6 +29,7 @@ export class NoveltyService {
         @InjectModel(Client.name) private readonly clientModel: Model<Client>,
         @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
         @InjectModel(Payrolls.name) private readonly payrollsModel: Model<Payrolls>,
+        @Inject(NoveltyTemporAppService) private readonly noveltyTemporAppService: NoveltyTemporAppService, // Inyecta el servicio
     ) {
     }
 
@@ -963,6 +965,21 @@ export class NoveltyService {
             pages = Math.ceil(count / limit);
         }
         return pages;
+    }
+
+    async sendNoveltyTemporApp(novelty:string){
+        const result = await this.noveltyTemporAppService.createNovelty(novelty);
+        const objectNovelty = {
+          payloadTemporApp:JSON.stringify(result.data),
+          responseTemporApp: JSON.stringify(result.response),
+          statusTemporApp: true
+        };
+        if(result['response']['mensaje'][0][0]['respuesta'] == 0 ){
+          //ACTUALIZAR NOVEDADES RECHAZADAS POR TEMPORAPP
+          objectNovelty.statusTemporApp = false;
+        }
+        await this.noveltyModel.findByIdAndUpdate(novelty, objectNovelty)
+        return await this.noveltyModel.findById(novelty).exec();
     }
 }
 

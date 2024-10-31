@@ -11,6 +11,7 @@ import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
 import { NoveltyTemporAppService } from '../services/novelty-temporapp.service';
 import { ConceptsService } from 'src/modules/concepts/services/concepts.service';
 
+
 @ApiTags('Novelty')
 @Controller('api/novelty')
 export class NoveltyController {
@@ -188,14 +189,11 @@ export class NoveltyController {
       token,
     );
   }
-
-
-
-  @Post('ws/maestro')
-  @ApiOperation({ summary: 'Maestro para el crud de novedades' })
-  @UseGuards(AuthGuard)
-  async createNoveltyMaster(@Body() novelty: NoveltyMasterTemporappDto) {
-    return await this.noveltyTemporAppService.createNovelty(novelty);
+  
+  @Get('send-temporapp/:novelty')
+  @ApiOperation({ summary: 'Enviar novedad a temporapp' })
+  async sendTemporapp(@Param('novelty') novelty: string) {
+      return await this.noveltyService.sendNoveltyTemporApp(novelty);
   }
 
 }
