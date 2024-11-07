@@ -55,7 +55,7 @@ export class NoveltyTemporAppService {
         const url = 'http://54.245.197.90:9896/ws/novedades/maestro';
                     
         const item = {
-            "tipoOperacion": 'NovedadNomina',
+            "tipoOperacion": noveltyInfo.typeNovelty,
             "instancia": "pruebas",
             "usuarioExterno": noveltyInfo.client.idTri.toString(),
             "datos":{
@@ -68,8 +68,6 @@ export class NoveltyTemporAppService {
             }
             
         };
-        
-        
         const config: AxiosRequestConfig = {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,

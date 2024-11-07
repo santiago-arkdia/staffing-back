@@ -24,8 +24,8 @@ export class Concept {
     @Prop({ type: Array })
     formObject: any[];
 
-    @Prop({type: String})
-    typeNovelty: string;
+    // @Prop({type: String})
+    // typeNovelty: string;
     /*
     * state = 0 => No aprobado 
     * state = 1 => Aprobado
