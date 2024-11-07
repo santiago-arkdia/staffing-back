@@ -31,8 +31,8 @@ export class CreateConceptsDto {
   @IsOptional()
   formObject?: any[];
 
-  @IsString()
-  typeNovelty: string
+  // @IsString()
+  // typeNovelty: string
 
   // @IsBoolean()
   // @IsOptional()
