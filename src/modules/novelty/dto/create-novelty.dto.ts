@@ -7,7 +7,7 @@ import {IsArray,  IsNumber, IsOptional, IsString ,  IsObject, IsBoolean} from 'c
 @Schema()
 export class CreateNoveltyDto {
   @IsString()
-  typeNovelty: 'novelty' | 'retirement' | 'social-security' | 'vinculations';
+  typeNovelty:string;
 
   @IsString()
   client: string;
