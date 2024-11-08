@@ -26,7 +26,7 @@ export class NoveltyController {
   @UseGuards(AuthGuard)
   async create(@Body() novelty: CreateNoveltyDto): Promise<Novelty> {
     const conceptData = await this.conceptService.findOne(novelty.concept);
-    console.log(conceptData);
+    console.log(novelty);
     novelty.approves = conceptData.approves;
     novelty.moduleApprove = 'payroll_analyst';
     return await this.noveltyService.create(novelty);
