@@ -173,7 +173,7 @@ export class PayrollsService {
         "Cargo": novelty.collaborator.jobPosition?.name,
 //        "Centro de costo": novelty.centersCosts?.name,
 //        "Centro de utilidad": novelty.utilityCenter?.name,
-        "Codigo Concepto": novelty.concept?.code,
+        "Codigo Concepto": novelty.reportingObject?.concepto,
         "Concepto": novelty.concept?.name,
         "Categoria": novelty.concept?.categoryNovelty?.typeNovelty,
 //        "Observaciones": novelty.observations,
