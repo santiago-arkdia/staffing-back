@@ -16,12 +16,14 @@ import {
 import { UploadsService } from '../uploads/services/uploads.service';
 import { PayrollsTemporAppService } from './services/payrolls-temporapp.service';
 import { NoveltyModule } from '../novelty/novelty.module';
+import { Client, ClientSchema } from '../clients/entities/client.entity';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Payrolls.name, schema: PayrollsSchema },
       { name: Novelty.name, schema: NoveltySchema },
+      { name: Client.name, schema: ClientSchema },
       { name: NoveltyRetirement.name, schema: NNoveltyRetirementSchema },
       {
         name: NoveltySocialSecurity.name,

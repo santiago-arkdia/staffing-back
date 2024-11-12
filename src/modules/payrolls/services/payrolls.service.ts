@@ -8,6 +8,7 @@ import { Novelty } from 'src/modules/novelty/entities/novelty.entity';
 import { UpdatPayrollDto } from '../dto/update-payrolls.dto';
 import * as XLSX from 'xlsx';
 import { UploadsService } from 'src/modules/uploads/services/uploads.service';
+import { Client } from 'src/modules/clients/entities/client.entity';
 
 
 @Injectable()
@@ -15,6 +16,8 @@ export class PayrollsService {
   constructor(
     @InjectModel(Payrolls.name) private readonly payrollModel: Model<Payrolls>,
     @InjectModel(Novelty.name) private readonly noveltyModel: Model<Novelty>,
+    @InjectModel(Client.name) private readonly clientModel: Model<Client>,
+    
     private uploadsService: UploadsService
   ) {}
 
@@ -47,16 +50,19 @@ export class PayrollsService {
     payrollsDto: PayrollsDto,
   ): Promise<Payrolls> {
     
-
+    const clientData = await this.clientModel
+    .find({  _id: payrollsDto.client})
+    .exec();
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
     const startDate = new Date(`${year}-${month}-01T00:00:00.000Z`);
-    const endDate = new Date(
-      startDate.getFullYear(),
-      startDate.getMonth() + 2,
-      0,
-    );
+    const endDate = new Date(`${year}-${month}-${clientData[0].cutoffDate}T23:59:59.000Z`);
+    // const endDate = new Date(
+    //   startDate.getFullYear(),
+    //   startDate.getMonth() + 2,
+    //   0,
+    // );
 
     const existPayroll = await this.payrollModel.find({
       year: year,
