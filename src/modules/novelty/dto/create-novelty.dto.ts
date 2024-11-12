@@ -40,9 +40,9 @@ export class CreateNoveltyDto {
   @IsString()
   contract: string;
 
-  @IsObject()
+  @IsArray()
   @IsOptional()
-  approves: object;
+  approves: any[];
 
   @IsString()
   @IsOptional()
@@ -55,6 +55,10 @@ export class CreateNoveltyDto {
   @IsString()
   @IsOptional()
   stateRole: string;
+
+  @IsBoolean()
+  @IsOptional()
+  statusTemporApp: boolean;
 
 }
 

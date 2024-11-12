@@ -34,14 +34,24 @@ export class NoveltyService {
     }
 
     async create(novelty: CreateNoveltyDto): Promise<Novelty> {
+      
+
         const counter = await this.counterModel.findOneAndUpdate(
             { model: 'Novelty', field: 'uid' },
             { $inc: { count: 1 } },
             { upsert: true, new: true },
         );
-
-//         console.log("actualizado")
-// console.log(novelty)
+        const conceptData = await this.conceptModel.findById(novelty.concept);
+        novelty.approves = conceptData.approves;
+        const firstModule = novelty.approves.find(role => role.position == 1);
+        const clavesAExcluir = ['nextModule', 'previusModule','position'];
+        const infoModule = Object.keys(firstModule)
+            .filter(key => !clavesAExcluir.includes(key))
+            .reduce((obj, key) => {
+                obj[key] = firstModule[key];
+                return obj;
+            }, {});
+        novelty.moduleApprove = Object.keys(infoModule)[0];
         const createdNovelty = new this.noveltyModel({
             uid: counter.count,
             ...novelty,
@@ -52,6 +62,9 @@ export class NoveltyService {
 
     async update(id: string, updateNoveltyDto: UpdateNoveltyDto): Promise<UpdateNoveltyDto> {
         const noveltyToUpdate = await this.noveltyModel.findById(id);
+        const clientData = await this.clientModel
+        .find({  _id: noveltyToUpdate.client})
+        .exec();
         if (!noveltyToUpdate) {
             throw new NotFoundException('Novedad no encontrada');
         }
@@ -95,7 +108,15 @@ export class NoveltyService {
                 }
             });
         }
-    
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        const endDate = new Date(`${year}-${month}-${clientData[0].cutoffDate}`); // Fecha que deseas comparar
+
+        if (currentDate > endDate) {
+            updateNoveltyDto.moduleApprove = 'out_of_time';
+            updateNoveltyDto.statusTemporApp = false;
+        }
 
         const updateNovelty = await this.noveltyModel.findByIdAndUpdate(
             id,
