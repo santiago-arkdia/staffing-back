@@ -112,10 +112,18 @@ export class NoveltyService {
         const year = currentDate.getFullYear();
         const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
         const endDate = new Date(`${year}-${month}-${clientData[0].cutoffDate}`); // Fecha que deseas comparar
-
-        if (currentDate > endDate) {
+        let lastApprovation = false ;
+        noveltyToUpdate.approves.forEach( item  => {
+            Object.entries(item).forEach(([key, value]) => {
+                if (value === "APPROVED" && item.position == noveltyToUpdate.approves.length - 1 ) {
+                  lastApprovation = true;
+                } 
+          });
+        });
+        if (currentDate > endDate && lastApprovation ) {
             updateNoveltyDto.moduleApprove = 'out_of_time';
-            updateNoveltyDto.statusTemporApp = false;
+            // updateNoveltyDto.statusTemporApp = false;
+            await this.sendNoveltyTemporApp(noveltyToUpdate._id);
         }
 
         const updateNovelty = await this.noveltyModel.findByIdAndUpdate(
