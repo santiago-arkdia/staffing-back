@@ -78,6 +78,7 @@ export class PayrollsService {
       .find({
         createdAt: { $gte: startDate, $lt: endDate },
         client: payrollsDto.client,
+        moduleApprove: 'payroll',
         state:1
         // outDate: 0,
       })
