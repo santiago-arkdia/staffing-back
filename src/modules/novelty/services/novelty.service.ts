@@ -113,9 +113,9 @@ export class NoveltyService {
         const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
         const endDate = new Date(`${year}-${month}-${clientData[0].cutoffDate}`); // Fecha que deseas comparar
         let lastApprovation = false ;
-        noveltyToUpdate.approves.forEach( item  => {
+        updateNoveltyDto.approves.forEach( item  => {
             Object.entries(item).forEach(([key, value]) => {
-                if (value === "APPROVED" && item.position == noveltyToUpdate.approves.length - 1 ) {
+                if (value === "APPROVED" && parseInt(item.position) == updateNoveltyDto.approves.length ) {
                   lastApprovation = true;
                 } 
           });
