@@ -41,6 +41,9 @@ export class NoveltyService {
             { $inc: { count: 1 } },
             { upsert: true, new: true },
         );
+        const clientData = await this.clientModel
+        .find({  _id: noveltyToUpdate.client})
+        .exec();
         const conceptData = await this.conceptModel.findById(novelty.concept);
         novelty.approves = conceptData.approves;
         const firstModule = novelty.approves.find(role => role.position == 1);
@@ -61,8 +64,15 @@ export class NoveltyService {
         // PASAR DIRECTO A TEMPORAPP
         if(JSON.stringify(novelty.approves).includes('APROBADO')){
             noveltyCreated.moduleApprove =  novelty.approves[0]['nextModule'];
-            await this.sendNoveltyTemporApp(noveltyCreated._id);
-            console.log(noveltyCreated);
+            noveltyCreated.state = 1;
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+            const endDate = new Date(`${year}-${month}-${clientData[0].cutoffDate}`); 
+            if (currentDate > endDate ) {
+                noveltyCreated.moduleApprove = 'out_of_time';
+                await this.sendNoveltyTemporApp(noveltyCreated._id);
+            }
             await this.noveltyModel.findByIdAndUpdate(
                 noveltyCreated._id,
                 noveltyCreated,
