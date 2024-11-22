@@ -61,7 +61,7 @@ export class NoveltyService {
         // PASAR DIRECTO A TEMPORAPP
         if(JSON.stringify(novelty.approves).includes('APROBADO')){
             noveltyCreated.moduleApprove =  novelty.approves[0]['nextModule'];
-            await this.sendNoveltyTemporApp(noveltyCreated._id);
+            noveltyCreated.state = 1;
             console.log(noveltyCreated);
             await this.noveltyModel.findByIdAndUpdate(
                 noveltyCreated._id,
