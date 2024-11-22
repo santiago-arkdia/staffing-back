@@ -57,7 +57,24 @@ export class NoveltyService {
             ...novelty,
         });
 
-        return await createdNovelty.save();
+        const noveltyCreated = await createdNovelty.save();
+        // PASAR DIRECTO A TEMPORAPP
+        if(JSON.stringify(novelty.approves).includes('APROBADO')){
+            noveltyCreated.moduleApprove =  novelty.approves[0]['nextModule'];
+            await this.sendNoveltyTemporApp(noveltyCreated._id);
+            console.log(noveltyCreated);
+            await this.noveltyModel.findByIdAndUpdate(
+                noveltyCreated._id,
+                noveltyCreated,
+                {
+                    new: true,
+                    useFindAndModify: false
+                },
+            );
+        }
+        
+
+        return noveltyCreated;
     }
 
     async update(id: string, updateNoveltyDto: UpdateNoveltyDto): Promise<UpdateNoveltyDto> {
