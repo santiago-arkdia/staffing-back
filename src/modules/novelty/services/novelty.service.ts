@@ -42,7 +42,7 @@ export class NoveltyService {
             { upsert: true, new: true },
         );
         const clientData = await this.clientModel
-        .find({  _id: noveltyToUpdate.client})
+        .find({  _id: novelty.client})
         .exec();
         const conceptData = await this.conceptModel.findById(novelty.concept);
         novelty.approves = conceptData.approves;
