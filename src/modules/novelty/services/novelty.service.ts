@@ -181,8 +181,8 @@ export class NoveltyService {
         const query = { typeNovelty: typeNovelty };
 
         if (year) {
-            let startDate = new Date();
-            let endDate = new Date();
+            const startDate = new Date();
+            const endDate = new Date();
 
             startDate.setFullYear(parseInt(year), month ? parseInt(month) - 1 : 0, 1);
             startDate.setHours(0, 0, 0, 0);
