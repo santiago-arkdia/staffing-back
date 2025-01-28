@@ -60,5 +60,8 @@ export class CreateNoveltyDto {
   @IsOptional()
   statusTemporApp: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  tri: boolean;
 }
 

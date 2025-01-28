@@ -16,7 +16,7 @@ import { Model } from 'mongoose';
 
 
 @Injectable()
-export class NoveltyTemporAppService {
+export class NoveltyTriAppService {
     constructor(
         @InjectModel(Novelty.name)
         private readonly noveltyModel: Model<Novelty>,
@@ -34,9 +34,9 @@ export class NoveltyTemporAppService {
     async getToken():Promise<string>{
         let responseLogin = '';
         try {
-            const response = await axios.post('http://54.245.197.90:9896/ws/usuarios/login', {
-                "usuario": "usrStaffingWeb",
-                "clave": "L5M6ctb5I@jF"
+            const response = await axios.post('https://qa.api.t3rsc.co/api/login', {
+                "email": "samuel@tecnopac.com.co",
+                "clave": "Tecnop@acTr1"
             })
             responseLogin = response.data.accessToken;
         } catch (error) {
@@ -52,7 +52,7 @@ export class NoveltyTemporAppService {
             .populate('collaborator')
             .exec();
         // console.log(info);
-        const url = 'http://54.245.197.90:9896/ws/novedades/maestro';
+        const url = 'https://qa.api.t3rsc.co/api/sending-document';
                     
         const item = {
             "tipoOperacion": noveltyInfo.typeNovelty,

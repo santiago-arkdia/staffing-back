@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Schema } from '@nestjs/mongoose';
-import { IsOptional, IsString, IsArray,  IsObject} from 'class-validator';
+import { IsOptional, IsString, IsArray,  IsObject, IsBoolean} from 'class-validator';
 import {CategoriesNovelty} from 'src/modules/categories-novelty/entities/categories-novelties.entity';
 
 
@@ -30,6 +30,14 @@ export class CreateConceptsDto {
   @IsArray()
   @IsOptional()
   formObject?: any[];
+
+  @IsBoolean()
+  @IsOptional()
+  sendInfoTri: string;
+
+  @IsString()
+  @IsOptional()
+  moduleApprovedTri: string;
 
   // @IsString()
   // typeNovelty: string
