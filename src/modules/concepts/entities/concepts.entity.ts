@@ -24,6 +24,12 @@ export class Concept {
     @Prop({ type: Array })
     formObject: any[];
 
+    @Prop({type: Boolean})
+    sendInfoTri: boolean;
+
+    @Prop({type: String})
+    moduleApprovedTri: string;
+
     // @Prop({type: String})
     // typeNovelty: string;
     /*
