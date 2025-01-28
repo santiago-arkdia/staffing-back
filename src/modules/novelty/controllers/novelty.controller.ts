@@ -191,10 +191,10 @@ export class NoveltyController {
       return await this.noveltyService.sendNoveltyTemporApp(novelty);
   }
 
-  @Get('response-tri')
+  @Post('response-tri')
   @ApiOperation({ summary: 'Recibir info tri' })
-  async responseTri(@Query() query: any) {
-      return query;
+  async responseTri(@Body() body: any) {
+      return body;
   }
 
 }
