@@ -103,8 +103,13 @@ export class NoveltyService {
             updateNoveltyDto.approves = noveltyToUpdate.approves;
         }
         if (updateNoveltyDto.role && updateNoveltyDto.role.length > 0 && updateNoveltyDto.stateRole && updateNoveltyDto.stateRole.length > 0) {
-            noveltyToUpdate.approves.forEach((approve, index) => {
-               if (Object.keys(approve).includes(updateNoveltyDto.role)) {
+            const filteredData = noveltyToUpdate.approves
+                .map((item, index) => ({ item, index })) // Asocia cada objeto con su índice
+                .filter(({ item }) => updateNoveltyDto.role in item);
+            console.log(filteredData[0].index);
+            // noveltyToUpdate.approves.forEach((approve, index) => {
+               if (filteredData.length) {
+                    const index = filteredData[0].index;
                     updateNoveltyDto.approves[index][updateNoveltyDto.role] = updateNoveltyDto.stateRole;  
                     
                     if(updateNoveltyDto.approves[index]['nextModule'] == 'payroll'){
@@ -119,7 +124,8 @@ export class NoveltyService {
                                 updateNoveltyDto.approves[index2][updateNoveltyDto.approves[index]['nextModule']] = 'CORRECTION';
                             }
                         });
-                        updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['previusModule'];
+                        updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['correction'];
+                        console.log(updateNoveltyDto);
                         
                     }  if(updateNoveltyDto.stateRole == 'PENDING' ){
                         noveltyToUpdate.approves.forEach((approve2, index2) => {
@@ -129,11 +135,14 @@ export class NoveltyService {
                         });
                         updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['previusModule'];
                         
-                    } else{
+                    }  if(updateNoveltyDto.stateRole == 'APPROVED' && updateNoveltyDto.approves[index]['tri'] ){
+
+                    }else {
                         updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['nextModule'];
+                        console.log("aca");
                     }
                 }
-            });
+            // });
         }
         const currentDate = new Date();
         const year = currentDate.getFullYear();
@@ -152,7 +161,7 @@ export class NoveltyService {
             // updateNoveltyDto.statusTemporApp = false;
             await this.sendNoveltyTemporApp(noveltyToUpdate._id);
         }
-
+        
         const updateNovelty = await this.noveltyModel.findByIdAndUpdate(
             id,
             updateNoveltyDto,
@@ -477,7 +486,7 @@ export class NoveltyService {
         }
      
 
-        console.log(requestBodyFilters);
+        
         const queryNovelty = {}
         if (Object.keys(requestBodyFilters).length > 0) {
             Object.entries(requestBodyFilters).forEach(([key, val]) => {
@@ -499,7 +508,7 @@ export class NoveltyService {
         const flattenedObject  = flattenObject(requestBodyFilters);   
         Object.assign(queryNovelty, flattenedObject);
 
-         console.log(request['user'].roleKey);   
+         
         if (request['user'].roleKey != "admin_payroll") {
 
             // if (typeNovelty != "all") {
@@ -527,6 +536,7 @@ export class NoveltyService {
                     queryNovelty['client'] = request['user'].userEntity;
                 } else {
                     const clients = await this.clientModel.find({ analysts: { $in: request['user'].userEntity } }).exec();
+                    console.log(request['user']);
                     queryNovelty['client'] = { '$in': clients.map(client => client._id) };
                 }
             } else {
@@ -546,7 +556,7 @@ export class NoveltyService {
             ? await this.noveltyModel.countDocuments(queryNovelty).exec()
             : await this.noveltyModel.countDocuments(queryNovelty).exec();
         const totalPages = Math.ceil(total / limit);
-        console.log(queryNovelty);
+        // console.log(queryNovelty);
         let search = await this.noveltyModel
             .find(queryNovelty)
             .skip((page - 1) * limit)

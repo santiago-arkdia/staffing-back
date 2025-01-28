@@ -32,7 +32,7 @@ export class PayrollsTemporAppService {
         statusTemporApp: true,
         moduleApprove: novelty.moduleApprove,
       };
-      if(result['response']['mensaje'][0][0]['respuesta'] == 0 ){
+      if(result['error']  ){
         //ACTUALIZAR NOVEDADES RECHAZADAS POR TEMPORAPP
         objectNovelty.moduleApprove = 'out_of_time';
         objectNovelty.statusTemporApp = false;
@@ -41,7 +41,7 @@ export class PayrollsTemporAppService {
         noveltySuccessfull.push(novelty._id);
       }
       await this.noveltyModel.findByIdAndUpdate(novelty._id, objectNovelty);
-      console.log(result['response']['mensaje'][0][0]['respuesta']);
+      // console.log(result['response']['mensaje'][0][0]['respuesta']);
     }
     if(noveltySuccessfull.length > 0){
       //ACTUALIZAR NOMINA CON NOVEDADES APROBADAS POR TEMPORAPP
