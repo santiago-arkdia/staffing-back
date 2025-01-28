@@ -33,7 +33,7 @@ export class CreateConceptsDto {
 
   @IsBoolean()
   @IsOptional()
-  sendInfoTri: string;
+  sendInfoTri: boolean;
 
   @IsString()
   @IsOptional()

@@ -63,5 +63,13 @@ export class CreateNoveltyDto {
   @IsBoolean()
   @IsOptional()
   tri: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  sendInfoTri: boolean;
+
+  @IsString()
+  @IsOptional()
+  moduleApprovedTri: string;
 }
 

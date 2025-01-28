@@ -59,7 +59,12 @@ export class Novelty {
     @Prop({type: String})
     moduleApprove: string;
     
-    
+    @Prop({type: Boolean, default: null})
+    sendInfoTri: boolean;
+
+    @Prop({type: String, default: null})
+    moduleApprovedTri: string;
+
 }
 
 export const NoveltySchema = SchemaFactory.createForClass(Novelty);

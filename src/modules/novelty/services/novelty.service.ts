@@ -46,6 +46,8 @@ export class NoveltyService {
         .exec();
         const conceptData = await this.conceptModel.findById(novelty.concept);
         novelty.approves = conceptData.approves;
+        novelty.sendInfoTri = conceptData.sendInfoTri ?? null ;
+        novelty.moduleApprovedTri = conceptData.moduleApprovedTri ?? null ;
         const firstModule = novelty.approves.find(role => role.position == 1);
         const clavesAExcluir = ['nextModule', 'previusModule','position'];
         const infoModule = Object.keys(firstModule)
@@ -59,7 +61,7 @@ export class NoveltyService {
             uid: counter.count,
             ...novelty,
         });
-
+        console.log(conceptData);
         const noveltyCreated = await createdNovelty.save();
         // PASAR DIRECTO A TEMPORAPP
         if(JSON.stringify(novelty.approves).includes('APROBADO')){
