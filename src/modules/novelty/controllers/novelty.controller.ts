@@ -6,7 +6,6 @@ import { CreateNoveltyDto } from '../dto/create-novelty.dto';
 import { Novelty } from '../entities/novelty.entity';
 import { AuthGuard } from "../../auth/auth.guard";
 import { Request } from 'express';
-import { NoveltyMasterTemporappDto } from '../dto/novelty-master-temporapp.dto';
 import { UpdateNoveltyDto } from '../dto/update-novelty.dto';
 import { NoveltyTemporAppService } from '../services/novelty-temporapp.service';
 import { ConceptsService } from 'src/modules/concepts/services/concepts.service';
@@ -190,6 +189,12 @@ export class NoveltyController {
   @ApiOperation({ summary: 'Enviar novedad a temporapp' })
   async sendTemporapp(@Param('novelty') novelty: string) {
       return await this.noveltyService.sendNoveltyTemporApp(novelty);
+  }
+
+  @Get('response-tri')
+  @ApiOperation({ summary: 'Recibir info tri' })
+  async responseTri(@Query() query: any) {
+      return query;
   }
 
 }
