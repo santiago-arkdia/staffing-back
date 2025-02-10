@@ -71,5 +71,9 @@ export class CreateNoveltyDto {
   @IsString()
   @IsOptional()
   moduleApprovedTri: string;
+
+  @IsString()
+  @IsOptional()
+  documentIdTri: string;
 }
 

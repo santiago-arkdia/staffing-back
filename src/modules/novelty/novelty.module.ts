@@ -13,6 +13,7 @@ import { NNoveltySocialSecuritySchema, NoveltySocialSecurity } from '../novelty-
 import { Payrolls, PayrollsSchema } from '../payrolls/entities/payrolls.entity';
 import { NoveltyTemporAppService } from './services/novelty-temporapp.service';
 import { ConceptsService } from '../concepts/services/concepts.service';
+import { NoveltyTriService } from './services/novelty-tri.service';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { ConceptsService } from '../concepts/services/concepts.service';
     MongooseModule.forFeature([{ name: Payrolls.name, schema: PayrollsSchema }]),
   ],
   controllers: [NoveltyController],
-  providers: [NoveltyService,NoveltyTemporAppService,ConceptsService],
+  providers: [NoveltyService,NoveltyTemporAppService,ConceptsService,NoveltyTriService],
   exports: [NoveltyTemporAppService]
 })
 export class NoveltyModule {}
