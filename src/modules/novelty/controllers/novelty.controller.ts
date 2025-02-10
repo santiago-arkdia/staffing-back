@@ -194,7 +194,9 @@ export class NoveltyController {
   @Post('response-tri')
   @ApiOperation({ summary: 'Recibir info tri' })
   async responseTri(@Body() body: any) {
-      return body;
+
+     return await this.noveltyService.updateNoveltyTri(body);
+    
   }
 
 }

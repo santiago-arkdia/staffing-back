@@ -65,6 +65,9 @@ export class Novelty {
     @Prop({type: String, default: null})
     moduleApprovedTri: string;
 
+    @Prop({type: String, default: null})
+    documentIdTri: string;
+
 }
 
 export const NoveltySchema = SchemaFactory.createForClass(Novelty);

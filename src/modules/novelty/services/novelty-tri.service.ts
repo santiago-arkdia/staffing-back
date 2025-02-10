@@ -16,7 +16,7 @@ import { Model } from 'mongoose';
 
 
 @Injectable()
-export class NoveltyTriAppService {
+export class NoveltyTriService {
     constructor(
         @InjectModel(Novelty.name)
         private readonly noveltyModel: Model<Novelty>,
@@ -31,16 +31,18 @@ export class NoveltyTriAppService {
     }
 
    
-    async getToken():Promise<string>{
+    async getToken(){
         let responseLogin = '';
         try {
             const response = await axios.post('https://qa.api.t3rsc.co/api/login', {
                 "email": "samuel@tecnopac.com.co",
-                "clave": "Tecnop@acTr1"
+                "password": "Tecnop@acTr1"
             })
-            responseLogin = response.data.accessToken;
+            responseLogin = response.data.access_token;
+            
         } catch (error) {
-            console.log(error.message);
+            
+            console.log("aca"+error.message);
         }
         return responseLogin;
     }
@@ -49,25 +51,31 @@ export class NoveltyTriAppService {
         const accessToken = await this.getToken();
         const noveltyInfo = await this.noveltyModel.findById(noveltyId)
             .populate('client')
-            .populate('collaborator')
+            // .populate('collaborator')
+            .populate({
+                path: 'collaborator',
+                populate: {
+                    path: 'utilityCenter',
+                    populate: {
+                      path: 'region',
+                    }
+                },
+              })
+            .populate('concept')
             .exec();
-        // console.log(info);
+        console.log("aca arranca");
+        console.log(noveltyInfo.collaborator.utilityCenter);
         const url = 'https://qa.api.t3rsc.co/api/sending-document';
-                    
-        const item = {
-            "tipoOperacion": noveltyInfo.typeNovelty,
-            "instancia": "pruebas",
-            "usuarioExterno": noveltyInfo.client.idTri.toString(),
-            "datos":{
-                "canal": "NELV2",
-                "dimension": "0",
-                "nitCliente": noveltyInfo.client.nit,
-                "idCliente": noveltyInfo.client.idTri,
-                "documento": noveltyInfo.collaborator.document,
-                ... noveltyInfo.reportingObject                
-            }
-            
-        };
+        const itemTri = {
+            "instancia": "26",
+            "category_code": this.getCodeTri(noveltyInfo.concept,noveltyInfo.reportingObject.concepto),
+            "A":noveltyInfo.collaborator.name,
+            // "B":noveltyInfo.collaborator.document,
+            "B": "1005479634",
+            "D":noveltyInfo.collaborator.utilityCenter.region.name,
+            ...this.getItemsTri(noveltyInfo.concept,noveltyInfo.reportingObject)
+        }
+        console.log(itemTri);
         const config: AxiosRequestConfig = {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -77,12 +85,48 @@ export class NoveltyTriAppService {
         let response: { data: any } = { data: { init: {} } };
         try {
             
-           response = await axios.post(url, item, config);
+           response = await axios.post(url, itemTri, config);
+           console.log(response);
         } catch (error) {
+            console.log(error);
             response = {data:{message:error.message}};
         }
 
-        return {data:item,response:response.data};
+        return {data:itemTri,response:response.data};
 
+    }
+
+    /**
+     * Obtiene el codigo la categoria
+     * @param concept 
+     * @param codeOption 
+     * @returns 
+     */
+    getCodeTri(concept,codeOption){
+        const code = concept.formObject[0].options.filter(option => option.key == codeOption)
+        .map(option => option.categoryTri);
+        return code[0]
+    }
+
+    /**
+     * 
+     * @param concept 
+     * @param optionsNovelty 
+     * @returns 
+     */
+    getItemsTri(concept,optionsNovelty){
+        const result = {};
+        concept.formObject.filter(option => option.hasOwnProperty('codeTri'))
+            .map(option => {
+                if(option.type === 'select'){
+                    const optionValue = option.options.filter(optionValue => optionValue.key == optionsNovelty[option.id] ) 
+                    .map(optionValue => optionValue.value);
+
+                    result[option.codeTri] = optionValue[0] ;
+                }else{
+                    result[option.codeTri]= optionsNovelty[option.id] ;
+                }
+            });
+        return result;
     }
 }

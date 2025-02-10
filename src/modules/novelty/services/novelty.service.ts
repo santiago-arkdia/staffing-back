@@ -16,6 +16,7 @@ import { NoveltySocialSecurity } from 'src/modules/novelty-social-security/entit
 import { Payrolls } from 'src/modules/payrolls/entities/payrolls.entity';
 import { APIFeatures } from 'src/utils/api.features';
 import { NoveltyTemporAppService } from './novelty-temporapp.service';
+import { NoveltyTriService } from './novelty-tri.service';
 
 @Injectable()
 export class NoveltyService {
@@ -30,6 +31,7 @@ export class NoveltyService {
         @InjectModel(Roles.name) private readonly rolesModel: Model<Roles>,
         @InjectModel(Payrolls.name) private readonly payrollsModel: Model<Payrolls>,
         @Inject(NoveltyTemporAppService) private readonly noveltyTemporAppService: NoveltyTemporAppService, // Inyecta el servicio
+        @Inject(NoveltyTriService) private readonly noveltyTriService: NoveltyTriService, // Inyecta el servicio
     ) {
     }
 
@@ -101,6 +103,7 @@ export class NoveltyService {
             noveltyToUpdate.comments.push(...updateNoveltyDto.comments);
         }
         updateNoveltyDto.comments = noveltyToUpdate.comments;
+        updateNoveltyDto.sendInfoTri = noveltyToUpdate.sendInfoTri;
         if (!updateNoveltyDto.approves) {
             updateNoveltyDto.approves = noveltyToUpdate.approves;
         }
@@ -108,19 +111,21 @@ export class NoveltyService {
             const filteredData = noveltyToUpdate.approves
                 .map((item, index) => ({ item, index })) // Asocia cada objeto con su índice
                 .filter(({ item }) => updateNoveltyDto.role in item);
-            console.log(filteredData[0].index);
             // noveltyToUpdate.approves.forEach((approve, index) => {
                if (filteredData.length) {
                     const index = filteredData[0].index;
-                    updateNoveltyDto.approves[index][updateNoveltyDto.role] = updateNoveltyDto.stateRole;  
+                    
                     
                     if(updateNoveltyDto.approves[index]['nextModule'] == 'payroll'){
                         updateNoveltyDto.state = 1;
                     }
+                    if(updateNoveltyDto.stateRole == 'APPROVED' ){
+                    }
                     if(updateNoveltyDto.stateRole == 'REJECTED' ){
                         updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['previusModule'];
                     
-                    }if(updateNoveltyDto.stateRole == 'CORRECTION' ){
+                    }
+                    if(updateNoveltyDto.stateRole == 'CORRECTION' ){
                         noveltyToUpdate.approves.forEach((approve2, index2) => {
                             if (Object.keys(approve2).includes(updateNoveltyDto.approves[index]['nextModule'])) {
                                 updateNoveltyDto.approves[index2][updateNoveltyDto.approves[index]['nextModule']] = 'CORRECTION';
@@ -129,7 +134,8 @@ export class NoveltyService {
                         updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['correction'];
                         console.log(updateNoveltyDto);
                         
-                    }  if(updateNoveltyDto.stateRole == 'PENDING' ){
+                    }  
+                    if(updateNoveltyDto.stateRole == 'PENDING' ){
                         noveltyToUpdate.approves.forEach((approve2, index2) => {
                             if (Object.keys(approve2).includes(updateNoveltyDto.approves[index]['previusModule'])) {
                                 updateNoveltyDto.approves[index2][updateNoveltyDto.approves[index]['previusModule']] = 'PENDING';
@@ -137,11 +143,19 @@ export class NoveltyService {
                         });
                         updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['previusModule'];
                         
-                    }  if(updateNoveltyDto.stateRole == 'APPROVED' && updateNoveltyDto.approves[index]['tri'] ){
+                    }  
+                    console.log("========2",updateNoveltyDto.approves[index][updateNoveltyDto.role]);
+
+                    if(updateNoveltyDto.stateRole == 'APPROVED' && updateNoveltyDto.sendInfoTri && updateNoveltyDto.role == noveltyToUpdate.moduleApprovedTri && updateNoveltyDto.approves[index][updateNoveltyDto.role] == 'PENDING'){
+                        console.log(updateNoveltyDto);
+                        updateNoveltyDto.approves[index][updateNoveltyDto.role] = 'TRI_FRIMA';
+                        //updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['nextModule'];
+                        const responseTri = await this.noveltyTriService.createNovelty(noveltyToUpdate._id);
+                        updateNoveltyDto.documentIdTri = responseTri.response.firma_documento_id;
 
                     }else {
+                        updateNoveltyDto.approves[index][updateNoveltyDto.role] = updateNoveltyDto.stateRole;  
                         updateNoveltyDto.moduleApprove = updateNoveltyDto.approves[index]['nextModule'];
-                        console.log("aca");
                     }
                 }
             // });
@@ -163,7 +177,7 @@ export class NoveltyService {
             // updateNoveltyDto.statusTemporApp = false;
             await this.sendNoveltyTemporApp(noveltyToUpdate._id);
         }
-        
+        console.log(updateNoveltyDto);
         const updateNovelty = await this.noveltyModel.findByIdAndUpdate(
             id,
             updateNoveltyDto,
@@ -211,7 +225,7 @@ export class NoveltyService {
         const totalPagesNovelties = Math.ceil(totalNovelties / validLimit);
         const totalPagesNoveltyTers = Math.ceil(totalNoveltyTers / validLimit);
 
-        let skipAmount = (validPage - 1) * validLimit;
+        const skipAmount = (validPage - 1) * validLimit;
 
         const novelties = await this.noveltyModel.find(query)
             .limit(validLimit)
@@ -767,223 +781,6 @@ export class NoveltyService {
                 continue;
             }
 
-            // if ([
-            //         'Por motivación'
-            //     ].includes(concept.name)) { //TODO: Auxilio Extra Legal
-            //     data.push({
-            //         "tipoOperacion": concept.name,
-            //         "instancia": "staffing",
-            //         "usuarioExterno": payroll.client.user.email,
-            //         "datos": {
-            //             "canal": "NELV2",
-            //             "nitCliente": payroll.client.nit,
-            //             "idCliente": payroll.client.idTri.toString(),
-            //             "documento": payroll.document,
-            //             "concepto": concept.code,
-            //             "proporcional": "0",
-            //             "cantidad": "",
-            //             "fechaInicial": "",
-            //         }
-            //     })
-
-            //     continue;
-            // }
-
-            // if ([''].includes(concept.name)) { //TODO: Libranza
-            //     data.push({
-            //         "tipoOperacion": concept.name,
-            //         "instancia": "staffing",
-            //         "usuarioExterno": payroll.client.user.email,
-            //         "datos": {
-            //             "canal": "NELV2",
-            //             "nitCliente": payroll.client.nit,
-            //             "idCliente": payroll.client.idTri.toString(),
-            //             "documento": payroll.document,
-            //             "concepto": concept.code,
-            //             "proporcional": "0",
-            //             "cantidad": "",
-            //             "fechaInicial": "",
-            //             "cuotas": "0",
-            //             "observacion": ""
-            //         }
-            //     })
-
-            //     continue;
-            // }
-
-            // if ([''].includes(concept.name)) { //TODO: SLN
-            //     data.push({
-            //         "tipoOperacion": concept.name,
-            //         "instancia": "staffing",
-            //         "usuarioExterno": payroll.client.user.email,
-            //         "datos": {
-            //             "canal": "NELV2",
-            //             "nitCliente": payroll.client.nit,
-            //             "idCliente": payroll.client.idTri.toString(),
-            //             "documento": payroll.document,
-            //             "concepto": concept.code,
-            //             "proporcional": "0",
-            //             "cantidad": "",
-            //             "fechaInicial": "",
-            //             "fechaAusenticmo": "",
-            //             "observacion": ""
-            //         }
-            //     })
-
-            //     continue;
-            // }
-
-            // if ([''].includes(concept.name)) { //TODO: LR
-            //     data.push({
-            //         "tipoOperacion": concept.name,
-            //         "instancia": "staffing",
-            //         "usuarioExterno": payroll.client.user.email,
-            //         "datos": {
-            //             "canal": "NELV2",
-            //             "nitCliente": payroll.client.nit,
-            //             "idCliente": payroll.client.idTri.toString(),
-            //             "documento": payroll.document,
-            //             "concepto": concept.code,
-            //             "proporcional": "0",
-            //             "cantidad": "",
-            //             "fechaInicial": "",
-            //             "fechaAusenticmo": "",
-            //             "observacion": ""
-            //         }
-            //     })
-
-            //     continue;
-            // }
-
-            // if ([''].includes(concept.name)) { //TODO: Vacaciones
-            //     data.push({
-            //         "tipoOperacion": concept.name,
-            //         "instancia": "staffing",
-            //         "usuarioExterno": payroll.client.user.email,
-            //         "datos": {
-            //             "canal": "NELV2",
-            //             "nitCliente": payroll.client.nit,
-            //             "idCliente": payroll.client.idTri.toString(),
-            //             "documento": payroll.document,
-            //             "concepto": concept.code,
-            //             "cantidad": "",
-            //             "fechaInicial": "",
-            //             "fechaAusenticmo": "",
-            //             "diasEnDinero": "0",
-            //             "proporcional": "0",
-            //             "dia31": "0",
-            //             "observacion": ""
-            //         }
-            //     })
-
-            //     continue;
-            // }
-
-            // if (['Incapacidades'].includes(concept.name)) { //TODO: incapasidadEG
-            //     data.push({
-            //         "tipoOperacion": concept.name,
-            //         "instancia": "staffing",
-            //         "usuarioExterno": payroll.client.user.email,
-            //         "datos": {
-            //             "canal": "NELV2",
-            //             "nitCliente": payroll.client.nit,
-            //             "idCliente": payroll.client.idTri.toString(),
-            //             "documento": payroll.document,
-            //             "concepto": concept.code,
-            //             "cantidad": "",
-            //             "fechaInicial": "",
-            //             "fechaAusenticmo": "",
-            //             "numinCapacidad": "",
-            //             "prorroga": "0",
-            //             "numprorroga": "",
-            //             "tipoAtencion": "",
-            //             "diagnostico": "",
-            //             "valor2": "0.00",
-            //             "observacion": ""
-            //         }
-            //     })
-
-            //     continue;
-            // }
-
-            // if ([''].includes(concept.name)) { //TODO: incapasidadLMA
-            //     data.push({
-            //         "tipoOperacion": concept.name,
-            //         "instancia": "staffing",
-            //         "usuarioExterno": payroll.client.user.email,
-            //         "datos": {
-            //             "canal": "NELV2",
-            //             "nitCliente": payroll.client.nit,
-            //             "idCliente": payroll.client.idTri.toString(),
-            //             "documento": payroll.document,
-            //             "concepto": concept.code,
-            //             "cantidad": "",
-            //             "fechaInicial": "",
-            //             "fechaAusenticmo": "",
-            //             "numinCapacidad": "",
-            //             "prorroga": "0",
-            //             "numprorroga": "",
-            //             "diagnostico": "",
-            //             "valor2": "0.00",
-            //             "observacion": ""
-            //         }
-            //     })
-
-            //     continue;
-            // }
-
-            // if ([''].includes(concept.name)) { //TODO: incapasidadLPA
-            //     data.push({
-            //         "tipoOperacion": concept.name,
-            //         "instancia": "staffing",
-            //         "usuarioExterno": payroll.client.user.email,
-            //         "datos": {
-            //             "canal": "NELV2",
-            //             "nitCliente": payroll.client.nit,
-            //             "idCliente": payroll.client.idTri.toString(),
-            //             "documento": payroll.document,
-            //             "concepto": concept.code,
-            //             "cantidad": "",
-            //             "fechaInicial": "",
-            //             "fechaAusenticmo": "",
-            //             "numinCapacidad": "",
-            //             "prorroga": "0",
-            //             "numprorroga": "",
-            //             "diagnostico": "",
-            //             "valor2": "0.00",
-            //             "observacion": ""
-            //         }
-            //     })
-
-            //     continue;
-            // }
-
-            // if ([''].includes(concept.name)) { //TODO: incapasidadAT
-            //     data.push({
-            //         "tipoOperacion": concept.name,
-            //         "instancia": "staffing",
-            //         "usuarioExterno": payroll.client.user.email,
-            //         "datos": {
-            //             "canal": "NELV2",
-            //             "nitCliente": payroll.client.nit,
-            //             "idCliente": payroll.client.idTri.toString(),
-            //             "documento": payroll.document,
-            //             "concepto": concept.code,
-            //             "cantidad": "",
-            //             "fechaInicial": "",
-            //             "fechaAusenticmo": "",
-            //             "fechaSuceso": "",
-            //             "numinCapacidad": "",
-            //             "prorroga": "0",
-            //             "numprorroga": "",
-            //             "diagnostico": "",
-            //             "valor2": "0.00",
-            //             "observacion": ""
-            //         }
-            //     })
-
-            //     continue;
-            // }
         }
 
         const dataResponse = [];
@@ -1048,6 +845,19 @@ export class NoveltyService {
         }
         await this.noveltyModel.findByIdAndUpdate(novelty, objectNovelty)
         return await this.noveltyModel.findById(novelty).exec();
+    }
+
+    async updateNoveltyTri(responseTri){
+        const novelty = await this.noveltyModel.find({documentIdTri:responseTri.firma_documento_id}).exec();
+        console.log(novelty);
+        if(responseTri.estado == 'firmado'){
+            const updateNoveltyDto = {
+                "role": novelty[0].moduleApprovedTri,
+                "stateRole": "APPROVED"
+            };
+            return this.update(novelty[0]._id,updateNoveltyDto);
+        }
+        return {};
     }
 }
 
