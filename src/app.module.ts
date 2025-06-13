@@ -65,7 +65,7 @@ import { AwsS3Module } from './modules/aws/s3/aws-s3.module';
 @Module({
     imports: [
         ConfigModule.forRoot(),
-        MongooseModule.forRoot(process.env.MONGO_DATABASE_URL, {
+        MongooseModule.forRoot("mongodb+srv://dbStaffing:Colombia123@staffing.xmqkbgb.mongodb.net/Staffing", {
             autoIndex: true,
         }),
         MongooseModule.forFeature([
