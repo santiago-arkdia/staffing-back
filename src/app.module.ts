@@ -121,8 +121,8 @@ import { AwsS3Module } from './modules/aws/s3/aws-s3.module';
         ContractsModule,
 
         /**Integracion con MySQL para StoreProcedures */
-        MySqlModule,
-        DatasourcesModule,
+        // MySqlModule,
+        // DatasourcesModule,
         
     ],
     controllers: [AppController, ConnectionController],
