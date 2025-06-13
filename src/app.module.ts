@@ -123,8 +123,8 @@ import { AccountingInterfaceModule } from './modules/accounting-interface/accoun
         ContractsModule,
         PucModule,
         AccountingInterfaceModule,
-        MySqlModule,
-        DatasourcesModule,
+        // MySqlModule,
+        // DatasourcesModule,
         
     ],
     controllers: [AppController, ConnectionController],
